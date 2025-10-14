@@ -1,0 +1,383 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{449DC59F-6702-416F-B769-D0271BADB1E3}|AgriConnectMarket.WebApi\\AgriConnectMarket.WebApi.csproj|d:\\_data\\data\\datn_baoloc\\agriconnectmarket\\agriconnectmarket.webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{449DC59F-6702-416F-B769-D0271BADB1E3}|AgriConnectMarket.WebApi\\AgriConnectMarket.WebApi.csproj|solutionrelative:agriconnectmarket.webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA663AB5-261A-4164-8D74-FD7599CA2F65}|AgriConnectMarket.Infrastructure\\AgriConnectMarket.Infrastructure.csproj|d:\\_data\\data\\datn_baoloc\\agriconnectmarket\\agriconnectmarket.infrastructure\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA663AB5-261A-4164-8D74-FD7599CA2F65}|AgriConnectMarket.Infrastructure\\AgriConnectMarket.Infrastructure.csproj|solutionrelative:agriconnectmarket.infrastructure\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{449DC59F-6702-416F-B769-D0271BADB1E3}|AgriConnectMarket.WebApi\\AgriConnectMarket.WebApi.csproj|d:\\_data\\data\\datn_baoloc\\agriconnectmarket\\agriconnectmarket.webapi\\controllers\\authenticationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{449DC59F-6702-416F-B769-D0271BADB1E3}|AgriConnectMarket.WebApi\\AgriConnectMarket.WebApi.csproj|solutionrelative:agriconnectmarket.webapi\\controllers\\authenticationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACA025A8-5E90-420D-81E5-93DF26C03A2F}|AgriConnectMarket.Application\\AgriConnectMarket.Application.csproj|d:\\_data\\data\\datn_baoloc\\agriconnectmarket\\agriconnectmarket.application\\interfaces\\iaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ACA025A8-5E90-420D-81E5-93DF26C03A2F}|AgriConnectMarket.Application\\AgriConnectMarket.Application.csproj|solutionrelative:agriconnectmarket.application\\interfaces\\iaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6E08BE74-E0F5-43A9-A21B-0E6FE1023C28}|AgriConnectMarket.SharedKernel\\AgriConnectMarket.SharedKernel.csproj|d:\\_data\\data\\datn_baoloc\\agriconnectmarket\\agriconnectmarket.sharedkernel\\interfaces\\igenericinterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6E08BE74-E0F5-43A9-A21B-0E6FE1023C28}|AgriConnectMarket.SharedKernel\\AgriConnectMarket.SharedKernel.csproj|solutionrelative:agriconnectmarket.sharedkernel\\interfaces\\igenericinterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EA663AB5-261A-4164-8D74-FD7599CA2F65}|AgriConnectMarket.Infrastructure\\AgriConnectMarket.Infrastructure.csproj|d:\\_data\\data\\datn_baoloc\\agriconnectmarket\\agriconnectmarket.infrastructure\\services\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EA663AB5-261A-4164-8D74-FD7599CA2F65}|AgriConnectMarket.Infrastructure\\AgriConnectMarket.Infrastructure.csproj|solutionrelative:agriconnectmarket.infrastructure\\services\\accountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{449DC59F-6702-416F-B769-D0271BADB1E3}|AgriConnectMarket.WebApi\\AgriConnectMarket.WebApi.csproj|d:\\_data\\data\\datn_baoloc\\agriconnectmarket\\agriconnectmarket.webapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{449DC59F-6702-416F-B769-D0271BADB1E3}|AgriConnectMarket.WebApi\\AgriConnectMarket.WebApi.csproj|solutionrelative:agriconnectmarket.webapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.Infrastructure\\Data\\Migrations\\20251014161121_Init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:AgriConnectMarket.Infrastructure\\Data\\Migrations\\20251014161121_Init.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACA025A8-5E90-420D-81E5-93DF26C03A2F}|AgriConnectMarket.Application\\AgriConnectMarket.Application.csproj|d:\\_data\\data\\datn_baoloc\\agriconnectmarket\\agriconnectmarket.application\\dtos\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{ACA025A8-5E90-420D-81E5-93DF26C03A2F}|AgriConnectMarket.Application\\AgriConnectMarket.Application.csproj|solutionrelative:agriconnectmarket.application\\dtos\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6E08BE74-E0F5-43A9-A21B-0E6FE1023C28}|AgriConnectMarket.SharedKernel\\AgriConnectMarket.SharedKernel.csproj|d:\\_data\\data\\datn_baoloc\\agriconnectmarket\\agriconnectmarket.sharedkernel\\result\\result.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6E08BE74-E0F5-43A9-A21B-0E6FE1023C28}|AgriConnectMarket.SharedKernel\\AgriConnectMarket.SharedKernel.csproj|solutionrelative:agriconnectmarket.sharedkernel\\result\\result.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53DDB470-768D-4E89-9531-C6F4C2BEDB70}|AgriConnectMarket.Domain\\AgriConnectMarket.Domain.csproj|d:\\_data\\data\\datn_baoloc\\agriconnectmarket\\agriconnectmarket.domain\\entities\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53DDB470-768D-4E89-9531-C6F4C2BEDB70}|AgriConnectMarket.Domain\\AgriConnectMarket.Domain.csproj|solutionrelative:agriconnectmarket.domain\\entities\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6E08BE74-E0F5-43A9-A21B-0E6FE1023C28}|AgriConnectMarket.SharedKernel\\AgriConnectMarket.SharedKernel.csproj|d:\\_data\\data\\datn_baoloc\\agriconnectmarket\\agriconnectmarket.sharedkernel\\guards\\guard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6E08BE74-E0F5-43A9-A21B-0E6FE1023C28}|AgriConnectMarket.SharedKernel\\AgriConnectMarket.SharedKernel.csproj|solutionrelative:agriconnectmarket.sharedkernel\\guards\\guard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6E08BE74-E0F5-43A9-A21B-0E6FE1023C28}|AgriConnectMarket.SharedKernel\\AgriConnectMarket.SharedKernel.csproj|d:\\_data\\data\\datn_baoloc\\agriconnectmarket\\agriconnectmarket.sharedkernel\\entities\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6E08BE74-E0F5-43A9-A21B-0E6FE1023C28}|AgriConnectMarket.SharedKernel\\AgriConnectMarket.SharedKernel.csproj|solutionrelative:agriconnectmarket.sharedkernel\\entities\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6E08BE74-E0F5-43A9-A21B-0E6FE1023C28}|AgriConnectMarket.SharedKernel\\AgriConnectMarket.SharedKernel.csproj|d:\\_data\\data\\datn_baoloc\\agriconnectmarket\\agriconnectmarket.sharedkernel\\constants\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6E08BE74-E0F5-43A9-A21B-0E6FE1023C28}|AgriConnectMarket.SharedKernel\\AgriConnectMarket.SharedKernel.csproj|solutionrelative:agriconnectmarket.sharedkernel\\constants\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6E08BE74-E0F5-43A9-A21B-0E6FE1023C28}|AgriConnectMarket.SharedKernel\\AgriConnectMarket.SharedKernel.csproj|d:\\_data\\data\\datn_baoloc\\agriconnectmarket\\agriconnectmarket.sharedkernel\\constants\\ledgerconstant.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6E08BE74-E0F5-43A9-A21B-0E6FE1023C28}|AgriConnectMarket.SharedKernel\\AgriConnectMarket.SharedKernel.csproj|solutionrelative:agriconnectmarket.sharedkernel\\constants\\ledgerconstant.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 11,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "20251014161121_Init.cs",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.Infrastructure\\Data\\Migrations\\20251014161121_Init.cs",
+              "RelativeDocumentMoniker": "AgriConnectMarket.Infrastructure\\Data\\Migrations\\20251014161121_Init.cs",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.Infrastructure\\Data\\Migrations\\20251014161121_Init.cs",
+              "RelativeToolTip": "AgriConnectMarket.Infrastructure\\Data\\Migrations\\20251014161121_Init.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-14T16:11:21.414Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.WebApi\\Program.cs",
+              "RelativeDocumentMoniker": "AgriConnectMarket.WebApi\\Program.cs",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.WebApi\\Program.cs",
+              "RelativeToolTip": "AgriConnectMarket.WebApi\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-14T16:09:09.167Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.WebApi\\appsettings.json",
+              "RelativeDocumentMoniker": "AgriConnectMarket.WebApi\\appsettings.json",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.WebApi\\appsettings.json",
+              "RelativeToolTip": "AgriConnectMarket.WebApi\\appsettings.json",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAUwAkAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-10-14T16:08:30.329Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.Infrastructure\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "AgriConnectMarket.Infrastructure\\Data\\AppDbContext.cs",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.Infrastructure\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "AgriConnectMarket.Infrastructure\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T15:24:31.663Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AuthenticationController.cs",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.WebApi\\Controllers\\AuthenticationController.cs",
+              "RelativeDocumentMoniker": "AgriConnectMarket.WebApi\\Controllers\\AuthenticationController.cs",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.WebApi\\Controllers\\AuthenticationController.cs",
+              "RelativeToolTip": "AgriConnectMarket.WebApi\\Controllers\\AuthenticationController.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAxwBQAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T15:20:22.823Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "RegisterDTO.cs",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.Application\\DTOs\\RegisterDTO.cs",
+              "RelativeDocumentMoniker": "AgriConnectMarket.Application\\DTOs\\RegisterDTO.cs",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.Application\\DTOs\\RegisterDTO.cs",
+              "RelativeToolTip": "AgriConnectMarket.Application\\DTOs\\RegisterDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T15:17:09.622Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AccountService.cs",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.Infrastructure\\Services\\AccountService.cs",
+              "RelativeDocumentMoniker": "AgriConnectMarket.Infrastructure\\Services\\AccountService.cs",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.Infrastructure\\Services\\AccountService.cs",
+              "RelativeToolTip": "AgriConnectMarket.Infrastructure\\Services\\AccountService.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA4AAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T15:06:27.386Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IAccount.cs",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.Application\\Interfaces\\IAccount.cs",
+              "RelativeDocumentMoniker": "AgriConnectMarket.Application\\Interfaces\\IAccount.cs",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.Application\\Interfaces\\IAccount.cs",
+              "RelativeToolTip": "AgriConnectMarket.Application\\Interfaces\\IAccount.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAkAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T15:02:20.584Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IGenericInterface.cs",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.SharedKernel\\Interfaces\\IGenericInterface.cs",
+              "RelativeDocumentMoniker": "AgriConnectMarket.SharedKernel\\Interfaces\\IGenericInterface.cs",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.SharedKernel\\Interfaces\\IGenericInterface.cs",
+              "RelativeToolTip": "AgriConnectMarket.SharedKernel\\Interfaces\\IGenericInterface.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T14:58:37.638Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Account.cs",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.Domain\\Entities\\Account.cs",
+              "RelativeDocumentMoniker": "AgriConnectMarket.Domain\\Entities\\Account.cs",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.Domain\\Entities\\Account.cs",
+              "RelativeToolTip": "AgriConnectMarket.Domain\\Entities\\Account.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T14:51:49.85Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Role.cs",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.SharedKernel\\Constants\\Role.cs",
+              "RelativeDocumentMoniker": "AgriConnectMarket.SharedKernel\\Constants\\Role.cs",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.SharedKernel\\Constants\\Role.cs",
+              "RelativeToolTip": "AgriConnectMarket.SharedKernel\\Constants\\Role.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T14:49:15.229Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "LedgerConstant.cs",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.SharedKernel\\Constants\\LedgerConstant.cs",
+              "RelativeDocumentMoniker": "AgriConnectMarket.SharedKernel\\Constants\\LedgerConstant.cs",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.SharedKernel\\Constants\\LedgerConstant.cs",
+              "RelativeToolTip": "AgriConnectMarket.SharedKernel\\Constants\\LedgerConstant.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T14:48:19.862Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Guard.cs",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.SharedKernel\\Guards\\Guard.cs",
+              "RelativeDocumentMoniker": "AgriConnectMarket.SharedKernel\\Guards\\Guard.cs",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.SharedKernel\\Guards\\Guard.cs",
+              "RelativeToolTip": "AgriConnectMarket.SharedKernel\\Guards\\Guard.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAwAcAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T14:44:44.639Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "BaseEntity.cs",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.SharedKernel\\Entities\\BaseEntity.cs",
+              "RelativeDocumentMoniker": "AgriConnectMarket.SharedKernel\\Entities\\BaseEntity.cs",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.SharedKernel\\Entities\\BaseEntity.cs",
+              "RelativeToolTip": "AgriConnectMarket.SharedKernel\\Entities\\BaseEntity.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T09:40:55.993Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Result.cs",
+              "DocumentMoniker": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.SharedKernel\\Result\\Result.cs",
+              "RelativeDocumentMoniker": "AgriConnectMarket.SharedKernel\\Result\\Result.cs",
+              "ToolTip": "D:\\_DATA\\Data\\DATN_BaoLoc\\AgriConnectMarket\\AgriConnectMarket.SharedKernel\\Result\\Result.cs",
+              "RelativeToolTip": "AgriConnectMarket.SharedKernel\\Result\\Result.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-12T09:11:52.239Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:5:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:6:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:2:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:7:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:16:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:34:0:{e8034f19-ab72-4f06-83fd-f6832b41aa63}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{a80febb4-e7e0-4147-b476-21aaf2453969}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
