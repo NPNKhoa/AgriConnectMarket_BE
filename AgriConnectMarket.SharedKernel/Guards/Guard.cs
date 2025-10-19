@@ -8,6 +8,11 @@
                 throw new ArgumentNullException(paramName);
         }
 
+        public static void AgainstNullOrEmpty(string? argument, string name)
+        {
+            if (string.IsNullOrWhiteSpace(argument)) throw new ArgumentException($"{name} cannot be null or empty.", name);
+        }
+
         public static void AgainstNullOrWhiteSpace(string? input, string paramName)
         {
             if (string.IsNullOrWhiteSpace(input))

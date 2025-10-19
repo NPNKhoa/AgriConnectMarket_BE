@@ -1,33 +1,23 @@
 ﻿using AgriConnectMarket.Application.DTOs;
-using AgriConnectMarket.Application.Interfaces;
+using AgriConnectMarket.Infrastructure.Services;
+using AgriConnectMarket.SharedKernel.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AgriConnectMarket.WebApi.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    public class AuthenticationController(IAccount _account) : ControllerBase
+    public class AuthenticationController(AuthService _authService) : ControllerBase
     {
-        [HttpPost]
-        public async Task<IActionResult> GetAllPetTypes([FromBody] RegisterDTO dto)
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
-            try
-            {
-                await _account.CreateAsync(new Domain.Entities.Account()
-                {
-                    UserName = dto.Username,
-                    Password = dto.Password,
-                    IsActive = true,
-                    IsDeLeted = false,
-                    Role = "CUSTOMER"
-                });
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal Server Error, {ex}");
-            }
-        }
+            var result = await _authService.RegisterAsync(dto);
 
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, "User registered successfully."));
+        }
     }
 }

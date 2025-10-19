@@ -1,6 +1,5 @@
-using AgriConnectMarket.Infrastructure.Data;
-
 using AgriConnectMarket.Infrastructure.Extensions;
+using AgriConnectMarket.Infrastructure.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +14,7 @@ builder.Services.AddSwaggerGen();
 
 //builder.Services.AddScoped<IAccount, AccountService>();
 
-builder.Services.AddPersistence<AppDbContext>(builder.Configuration);
-builder.Services.AddRepositories();
-builder.Services.AddExternalServices(builder.Configuration);
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 
 var app = builder.Build();
@@ -29,6 +26,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseAuthorization();
 

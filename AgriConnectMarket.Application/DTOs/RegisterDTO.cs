@@ -1,6 +1,6 @@
 ﻿namespace AgriConnectMarket.Application.DTOs
 {
-    public record RegisterDTO
+    public record RegisterDto
     (
         string Username,
         string Password
