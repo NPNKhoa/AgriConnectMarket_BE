@@ -1,27 +1,54 @@
 ﻿using AgriConnectMarket.SharedKernel.Entities;
 using AgriConnectMarket.SharedKernel.Guards;
+using AgriConnectMarket.SharedKernel.Interfaces;
 using AgriConnectMarket.SharedKernel.Normalization;
 
 namespace AgriConnectMarket.Domain.Entities
 {
-    public class Profile : BaseEntity<Guid>
+    public class Profile : BaseEntity<Guid>, IAuditableEntity
     {
         public string Fullname { get; set; }
-        public string Username { get; set; }
+        public string Email { get; set; }
         public string Phone { get; set; }
-        public string AvatarUrl { get; set; }
+        public string? AvatarUrl { get; set; }
+        //public string? AvatarPublicId { get; set; }
 
-        public Profile(string fullname, string Username, string phone, string avatarUrl)
+        public Guid AccountId { get; set; }
+        public Account Account { get; set; }
+
+        // Audit field
+        public DateTime CreatedAt { get; set; }
+        public string? CreatedBy { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public string? UpdatedBy { get; set; }
+
+        public Profile(string fullname, string email, string phone, Guid accountId, string avatarUrl = "")
         {
             Guard.AgainstNullOrEmpty(fullname, nameof(fullname));
-            Guard.AgainstNullOrEmpty(Username, nameof(Username));
+            Guard.AgainstNullOrEmpty(email, nameof(email));
             Guard.AgainstNullOrEmpty(phone, nameof(phone));
             Guard.AgainstNullOrEmpty(avatarUrl, nameof(avatarUrl));
 
             // basic normalization
-            Username = Normalizer.NormalizeUsername(Username);
+            Email = Normalizer.NormalizeEmail(email);
             Phone = Normalizer.NormalizePhone(phone);
             AvatarUrl = Normalizer.NormalizeUrl(avatarUrl);
+            Fullname = fullname;
+            AccountId = accountId;
+        }
+
+        public void SetProfileAvatar(string publicId, string? url = null)
+        {
+            AvatarUrl = url;
+            //AvatarPublicId = publicId;
+            CreatedAt = DateTime.UtcNow;
+        }
+
+        public void RemoveProfileImage()
+        {
+            AvatarUrl = null;
+            //AvatarPublicId = null;
+            CreatedAt = DateTime.UtcNow;
         }
     }
 }

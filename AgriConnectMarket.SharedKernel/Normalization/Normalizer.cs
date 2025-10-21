@@ -2,6 +2,11 @@
 {
     public static class Normalizer
     {
+        public static string NormalizeEmail(string Email)
+        {
+            return Email?.Trim().ToLowerInvariant() ?? string.Empty;
+        }
+
         public static string NormalizeUsername(string Username)
         {
             return Username?.Trim().ToLowerInvariant() ?? string.Empty;

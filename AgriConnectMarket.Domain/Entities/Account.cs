@@ -18,6 +18,8 @@ namespace AgriConnectMarket.Domain.Entities
         public DateTime? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
 
+        public Profile Profile { get; set; }
+
         public Account() { }
         public Account(string username, string password)
         {
