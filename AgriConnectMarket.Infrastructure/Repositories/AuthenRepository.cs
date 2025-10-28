@@ -11,5 +11,17 @@ namespace AgriConnectMarket.Infrastructure.Repositories
         {
             return await _dbContext.Set<Account>().FirstOrDefaultAsync(u => u.UserName == username);
         }
+
+        public async Task<Account?> GetByUsernameAsync(string username, bool includeProfile = false)
+        {
+            var query = _dbContext.Set<Account>().Where(u => u.UserName == username);
+
+            if (includeProfile)
+            {
+                query.Include(u => u.Profile);
+            }
+
+            return await query.FirstOrDefaultAsync();
+        }
     }
 }

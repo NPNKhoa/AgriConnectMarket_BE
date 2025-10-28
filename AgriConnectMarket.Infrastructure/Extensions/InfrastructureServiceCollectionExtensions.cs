@@ -17,12 +17,18 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("Default"),
                     sql => sql.EnableRetryOnFailure()));
+
             services.AddCloudinaryService(configuration);
+            services.AddJwtAuthentication(configuration);
 
             services.AddRepositories();
 
             services.AddScoped<IAuthenRepository, AuthenRepository>();
+            services.AddScoped<IProfileRepository, ProfileRepository>();
+
             services.AddScoped<AuthService>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IDateTimeProvider, SystemDateTimeProvider>();
 
