@@ -1,10 +1,10 @@
 ﻿namespace AgriConnectMarket.SharedKernel.Constants
 {
-    public static class RoleNames
+    public static class ROLE
     {
-        public const string Admin = "Admin";
-        public const string Farmer = "Farmer";
-        public const string Buyer = "Buyer";
+        public const string ADMIN = "Admin";
+        public const string FARMER = "Farmer";
+        public const string BUYER = "Buyer";
     }
 
 }
