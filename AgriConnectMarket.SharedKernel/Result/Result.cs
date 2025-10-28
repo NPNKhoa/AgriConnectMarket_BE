@@ -1,12 +1,27 @@
 ﻿namespace AgriConnectMarket.SharedKernel.Result
 {
+    public sealed class Result
+    {
+        public bool IsSuccess { get; }
+        public string? Error { get; }
+
+        private Result(bool isSuccess, string error)
+        {
+            IsSuccess = isSuccess;
+            Error = error;
+        }
+
+        public static Result Success() => new(true, null!);
+        public static Result Fail(string error) => new(false, error);
+    }
+
     public sealed class Result<T>
     {
         public bool IsSuccess { get; }
         public string Error { get; }
         public T? Value { get; }
 
-        protected Result(bool isSuccess, string error, T value)
+        private Result(bool isSuccess, string error, T value)
         {
             IsSuccess = isSuccess;
             Error = error;
