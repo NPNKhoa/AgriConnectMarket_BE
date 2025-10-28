@@ -136,28 +136,6 @@ namespace AgriConnectMarket.Infrastructure.CloudinarySettings
 
             var transformation = new Transformation();
 
-            //if (transform != null)
-            //{
-            //    if (transform.Width.HasValue || transform.Height.HasValue)
-            //        transformation = transformation.Resize(
-            //            transform.Crop == "fill" ? FillCrop.Fill : (transform.Crop == "fit" ? FillCrop.Fit : FillCrop.Scale),
-            //            transform.Width ?? transform.Height ?? 0,
-            //            transform.Height ?? transform.Width ?? 0);
-
-            //    if (!string.IsNullOrWhiteSpace(transform.Gravity))
-            //        transformation = transformation.Gravity(transform.Gravity);
-
-            //    if (!string.IsNullOrWhiteSpace(transform.Quality))
-            //        transformation = transformation.Quality(transform.Quality);
-
-            //    if (!string.IsNullOrWhiteSpace(transform.Format))
-            //        transformation = transformation.FetchFormat(transform.Format);
-            //}
-            //else
-            //{
-            //    transformation = transformation.FetchFormat("auto").Quality("auto");
-            //}
-
             transformation = transformation.FetchFormat("auto").Quality("auto");
 
             var url = _client.Api.UrlImgUp
@@ -170,7 +148,6 @@ namespace AgriConnectMarket.Infrastructure.CloudinarySettings
         public void Dispose()
         {
             if (_disposed) return;
-            // Cloudinary doesn't require explicit dispose, but if you added HttpClient or other disposables, dispose them here
             _disposed = true;
         }
     }

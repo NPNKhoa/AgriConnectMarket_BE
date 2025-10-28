@@ -1,4 +1,4 @@
-﻿namespace AgriConnectMarket.Application.DTOs
+﻿namespace AgriConnectMarket.Application.DTOs.RequestDtos
 {
     public record RegisterDto
     (

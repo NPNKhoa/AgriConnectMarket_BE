@@ -1,4 +1,4 @@
-﻿using AgriConnectMarket.Application.DTOs;
+﻿using AgriConnectMarket.Application.DTOs.RequestDtos;
 using AgriConnectMarket.Infrastructure.CloudinarySettings;
 using AgriConnectMarket.Infrastructure.Services;
 using AgriConnectMarket.SharedKernel.Responses;
@@ -36,6 +36,28 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
 
             return Ok(ApiResponse.SuccessResponse(result.Value, "User registered successfully."));
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto dto, CancellationToken ct)
+        {
+            var result = await _authService.LoginAsync(dto, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, "Login successfully."));
+        }
+
+        [HttpPatch("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto, CancellationToken ct)
+        {
+            var result = await _authService.ChangePasswordAsync(dto, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, "Login successfully."));
         }
     }
 }
