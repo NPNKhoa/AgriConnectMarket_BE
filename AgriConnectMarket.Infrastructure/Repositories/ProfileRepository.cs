@@ -11,5 +11,10 @@ namespace AgriConnectMarket.Infrastructure.Repositories
         {
             return await _dbContext.Set<Profile>().FirstOrDefaultAsync(u => u.Email == email);
         }
+
+        public async Task<Profile?> GetByAccountIdAsync(Guid accountId)
+        {
+            return await _dbContext.Set<Profile>().FirstOrDefaultAsync(u => u.AccountId == accountId);
+        }
     }
 }
