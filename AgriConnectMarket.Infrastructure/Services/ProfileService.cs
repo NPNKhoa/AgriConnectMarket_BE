@@ -17,7 +17,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<Profile>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
             }
 
-            var entity = new Profile(dto.Fullname, dto.Email, dto.Phone, existingProfile.AccountId);
+            var entity = new Profile(dto.Fullname, dto.Email, dto.Phone, existingProfile.AccountId, "");
 
             await _profileRepository.UpdateAsync(entity);
 

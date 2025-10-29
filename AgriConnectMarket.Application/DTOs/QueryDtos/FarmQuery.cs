@@ -2,7 +2,7 @@
 {
     public class FarmQuery
     {
-        public bool? IsMallFarm;
-        public string? searchTerm;
+        public bool? IsMallFarm { get; set; }
+        public string? searchTerm { get; set; }
     }
 }

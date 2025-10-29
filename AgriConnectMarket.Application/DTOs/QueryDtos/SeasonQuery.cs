@@ -2,6 +2,6 @@
 {
     public class SeasonQuery
     {
-        public string? searchTerm;
+        public string? searchTerm { get; set; }
     }
 }

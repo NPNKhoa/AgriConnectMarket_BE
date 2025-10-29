@@ -79,7 +79,9 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<ChangePasswordResultDto>> ChangePasswordAsync(ChangePasswordDto dto, CancellationToken ct = default)
         {
-            var existing = await _uow.ProfileRepository.GetByEmailAsync(dto.Email);
+            var existing = await _uow.ProfileRepository.GetByEmailAsync(dto.Email, true);
+
+            Console.WriteLine("Here", existing?.Email);
 
             if (existing is null)
             {
