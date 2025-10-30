@@ -35,7 +35,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             // Create domain user
 
             var user = new Account(dto.Username, passwordHash);
-            var profile = new Profile(dto.Fullname, dto.Email, dto.Phone, dto.AvatarUrl)
+            var profile = new Profile(dto.Fullname, dto.Email, dto.Phone, user.Id, dto.AvatarUrl)
             {
                 Account = user
             };
@@ -68,7 +68,9 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<LoginResultDto>.Fail(MessageConstant.WRONG_CREDENTIALS);
             }
 
-            var token = _jwtService.GenerateAccessToken(existing.Profile.Id, existing.UserName, existing.Role);
+            var user = await _uow.ProfileRepository.GetByAccountIdAsync(existing.Id);
+
+            var token = _jwtService.GenerateAccessToken(user.Id, existing.UserName, existing.Role);
 
             var result = new LoginResultDto { UserId = existing.Id, Token = token };
 
@@ -77,7 +79,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<ChangePasswordResultDto>> ChangePasswordAsync(ChangePasswordDto dto, CancellationToken ct = default)
         {
-            var existing = await _uow.ProfileRepository.GetByEmailAsync(dto.Email);
+            var existing = await _uow.ProfileRepository.GetByEmailAsync(dto.Email, true);
 
             if (existing is null)
             {
@@ -96,7 +98,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<ChangePasswordResultDto>.Fail(MessageConstant.WRONG_CREDENTIALS);
             }
 
-            account.Password = dto.NewPassword;
+            account.Password = HashPassword(dto.NewPassword);
             await _uow.SaveChangesAsync();
 
             var result = new ChangePasswordResultDto()
