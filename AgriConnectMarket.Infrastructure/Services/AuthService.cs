@@ -81,8 +81,6 @@ namespace AgriConnectMarket.Infrastructure.Services
         {
             var existing = await _uow.ProfileRepository.GetByEmailAsync(dto.Email, true);
 
-            Console.WriteLine("Here", existing?.Email);
-
             if (existing is null)
             {
                 return Result<ChangePasswordResultDto>.Fail(MessageConstant.EMAIL_NOT_FOUND);
@@ -100,7 +98,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<ChangePasswordResultDto>.Fail(MessageConstant.WRONG_CREDENTIALS);
             }
 
-            account.Password = dto.NewPassword;
+            account.Password = HashPassword(dto.NewPassword);
             await _uow.SaveChangesAsync();
 
             var result = new ChangePasswordResultDto()
