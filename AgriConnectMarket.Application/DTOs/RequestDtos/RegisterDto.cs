@@ -7,6 +7,7 @@
         string Email,
         string Phone,
         string Fullname,
+        bool IsFarmer,
         string? AvatarUrl
     );
 }

@@ -30,7 +30,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 avatarUrl = uploadResult.Url ?? string.Empty;
             }
 
-            var dto = new RegisterDto(request.Username, request.Password, request.Email, request.Phone, request.Fullname, avatarUrl);
+            var dto = new RegisterDto(request.Username, request.Password, request.Email, request.Phone, request.Fullname, request.IsFarmer, avatarUrl);
 
             var result = await _authService.RegisterAsync(dto, ct);
 
