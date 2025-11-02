@@ -14,6 +14,8 @@ namespace AgriConnectMarket.Infrastructure.Extensions
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
             //services.AddPersistence<AppDbContext>(configuration);
+            services.AddHttpContextAccessor();
+
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("Default"),
                     sql => sql.EnableRetryOnFailure()));
@@ -27,11 +29,13 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddScoped<IProfileRepository, ProfileRepository>();
             services.AddScoped<IFarmRepository, FarmRepository>();
             services.AddScoped<ISeasonRepository, SeasonRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
 
             services.AddScoped<AuthService>();
             services.AddScoped<ProfileService>();
             services.AddScoped<FarmService>();
             services.AddScoped<SeasonService>();
+            services.AddScoped<AddressService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 

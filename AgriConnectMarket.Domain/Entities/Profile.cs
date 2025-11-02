@@ -11,10 +11,11 @@ namespace AgriConnectMarket.Domain.Entities
         public string Email { get; set; }
         public string Phone { get; set; }
         public string? AvatarUrl { get; set; }
-        //public string? AvatarPublicId { get; set; }
 
         public Guid AccountId { get; set; }
         public Account Account { get; set; }
+
+        public IEnumerable<Address> Addresses { get; set; }
 
         // Audit field
         public DateTime CreatedAt { get; set; }
@@ -40,14 +41,12 @@ namespace AgriConnectMarket.Domain.Entities
         public void SetProfileAvatar(string publicId, string? url = null)
         {
             AvatarUrl = url;
-            //AvatarPublicId = publicId;
             CreatedAt = DateTime.UtcNow;
         }
 
         public void RemoveProfileImage()
         {
             AvatarUrl = null;
-            //AvatarPublicId = null;
             CreatedAt = DateTime.UtcNow;
         }
     }

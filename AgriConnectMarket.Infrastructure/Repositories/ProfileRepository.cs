@@ -19,9 +19,16 @@ namespace AgriConnectMarket.Infrastructure.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<Profile?> GetByAccountIdAsync(Guid accountId)
+        public async Task<Profile?> GetByAccountIdAsync(Guid accountId, bool includeAccount = false)
         {
-            return await _dbContext.Set<Profile>().FirstOrDefaultAsync(u => u.AccountId == accountId);
+            var query = _dbContext.Set<Profile>().Where(u => u.AccountId == accountId);
+
+            if (includeAccount)
+            {
+                query = query.Include(u => u.Account);
+            }
+
+            return await query.FirstOrDefaultAsync();
         }
     }
 }
