@@ -8,10 +8,12 @@ namespace AgriConnectMarket.Domain.Entities
     public class Farm : BaseEntity<Guid>, IAuditableEntity
     {
         public string FarmName { get; set; }
+        public string? FarmDesc { get; set; }
         public string? BannerUrl { get; set; }
         public string? CertificateUrl { get; set; }
         public string Phone { get; set; }
         public string Area { get; set; }
+        public bool IsDelete { get; set; }
 
 
         // Auditable properties
@@ -28,21 +30,20 @@ namespace AgriConnectMarket.Domain.Entities
         public ICollection<Season> Seasons { get; set; }
 
         public Farm() { }
-        public Farm(string farmName, string? bannerUrl, string phone, string area, Guid farmerId, Guid addressId)
+        public Farm(string farmName, string? FarmDesc, string? bannerUrl, string phone, string area, Guid farmerId)
         {
             Guard.AgainstNullOrWhiteSpace(farmName, nameof(farmName));
             Guard.AgainstNullOrWhiteSpace(bannerUrl, nameof(bannerUrl));
             Guard.AgainstNullOrWhiteSpace(phone, nameof(phone));
             Guard.AgainstNullOrEmpty(area, nameof(area));
             Guard.AgainstNull(farmerId, nameof(farmerId));
-            Guard.AgainstNull(addressId, nameof(addressId));
 
-            this.FarmName = farmName;
-            this.BannerUrl = Normalizer.NormalizeUrl(bannerUrl);
-            this.Phone = Normalizer.NormalizePhone(phone);
-            this.Area = area;
-            this.FarmerId = farmerId;
-            this.AddressId = addressId;
+            FarmName = farmName;
+            BannerUrl = Normalizer.NormalizeUrl(bannerUrl ?? string.Empty);
+            Phone = Normalizer.NormalizePhone(phone);
+            Area = area;
+            FarmerId = farmerId;
+            IsDelete = false;
         }
     }
 }
