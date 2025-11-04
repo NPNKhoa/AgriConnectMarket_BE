@@ -38,6 +38,20 @@ namespace AgriConnectMarket.Domain.Entities
             AccountId = accountId;
         }
 
+        public Profile(string fullname, string email, string phone, string avatarUrl = "")
+        {
+            Guard.AgainstNullOrEmpty(fullname, nameof(fullname));
+            Guard.AgainstNullOrEmpty(email, nameof(email));
+            Guard.AgainstNullOrEmpty(phone, nameof(phone));
+            Guard.AgainstNullOrEmpty(avatarUrl, nameof(avatarUrl));
+
+            // basic normalization
+            Email = Normalizer.NormalizeEmail(email);
+            Phone = Normalizer.NormalizePhone(phone);
+            AvatarUrl = Normalizer.NormalizeUrl(avatarUrl);
+            Fullname = fullname;
+        }
+
         public void SetProfileAvatar(string publicId, string? url = null)
         {
             AvatarUrl = url;

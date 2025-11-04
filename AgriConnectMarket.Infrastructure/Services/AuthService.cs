@@ -28,13 +28,10 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<RegisterResultDto>.Fail(MessageConstant.EXISTING_USERNAME);
 
             // Hash the password
-            //var passwordHash = _passwordHasher.Hash(dto.Password); LATER
-
             var passwordHash = HashPassword(dto.Password);
 
             // Create domain user
-
-            var user = new Account(dto.Username, passwordHash);
+            var user = new Account(dto.Username, passwordHash, dto.IsFarmer);
             var profile = new Profile(dto.Fullname, dto.Email, dto.Phone, user.Id, dto.AvatarUrl)
             {
                 Account = user

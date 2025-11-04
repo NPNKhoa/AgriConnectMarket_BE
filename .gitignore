@@ -115,3 +115,4 @@ docker-compose.local.yml
 
 # Optional: prevent accidental commits of launch configs
 Properties/launchSettings.json
+.vs
