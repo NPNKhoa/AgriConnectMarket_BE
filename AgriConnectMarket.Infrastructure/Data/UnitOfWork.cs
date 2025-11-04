@@ -7,14 +7,24 @@ namespace AgriConnectMarket.Infrastructure.Data
         private readonly AppDbContext _context;
         public IAuthenRepository AuthenRepository { get; }
         public IProfileRepository ProfileRepository { get; }
+        public IFarmRepository FarmRepository { get; }
+        public IAddressRepository AddressRepository { get; }
 
-        public UnitOfWork(AppDbContext context,
-                          IAuthenRepository authenRepository,
-                          IProfileRepository profileRepository)
+        public UnitOfWork
+            (
+                AppDbContext context,
+                IAuthenRepository authenRepository,
+                IProfileRepository profileRepository,
+                IFarmRepository farmRepository,
+                IAddressRepository addressRepository
+            )
         {
             _context = context;
+
             AuthenRepository = authenRepository;
             ProfileRepository = profileRepository;
+            FarmRepository = farmRepository;
+            AddressRepository = addressRepository;
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

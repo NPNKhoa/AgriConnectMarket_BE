@@ -13,9 +13,9 @@ namespace AgriConnectMarket.Domain.Entities
         public bool IsDefault { get; set; }
 
         // Aggregatred properties
-        public Guid ProfileId { get; set; }
-        public Profile Profile { get; set; }
-        public Farm Farm { get; set; }
+        public Guid? ProfileId { get; set; }
+        public Profile? Profile { get; set; }
+        public Farm? Farm { get; set; }
 
         // Auditable properties
         public DateTime CreatedAt { get; set; }
@@ -25,9 +25,8 @@ namespace AgriConnectMarket.Domain.Entities
 
         private Address() { }
         // Constructor
-        public Address(string province, string district, string ward, string? detail, Guid profileId, bool isDefault = true)
+        public Address(string province, string district, string ward, string? detail, Guid? profileId = null, bool isDefault = true)
         {
-            Guard.AgainstNull(profileId, nameof(profileId));
             Guard.AgainstNullOrEmpty(province, nameof(province));
             Guard.AgainstNullOrEmpty(district, nameof(district));
             Guard.AgainstNullOrEmpty(ward, nameof(ward));
@@ -37,8 +36,12 @@ namespace AgriConnectMarket.Domain.Entities
             this.District = district;
             this.Ward = ward;
             this.Detail = detail;
-            this.ProfileId = profileId;
             this.IsDefault = isDefault;
+
+            if (profileId is not null)
+            {
+                this.ProfileId = profileId;
+            }
         }
     }
 }
