@@ -6,6 +6,7 @@
         IProfileRepository ProfileRepository { get; }
         IFarmRepository FarmRepository { get; }
         IAddressRepository AddressRepository { get; }
+        ICategoryRepository CategoryRepository { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

@@ -9,6 +9,7 @@ namespace AgriConnectMarket.Infrastructure.Data
         public IProfileRepository ProfileRepository { get; }
         public IFarmRepository FarmRepository { get; }
         public IAddressRepository AddressRepository { get; }
+        public ICategoryRepository CategoryRepository { get; }
 
         public UnitOfWork
             (
@@ -16,7 +17,8 @@ namespace AgriConnectMarket.Infrastructure.Data
                 IAuthenRepository authenRepository,
                 IProfileRepository profileRepository,
                 IFarmRepository farmRepository,
-                IAddressRepository addressRepository
+                IAddressRepository addressRepository,
+                ICategoryRepository categoryRepository
             )
         {
             _context = context;
@@ -25,6 +27,7 @@ namespace AgriConnectMarket.Infrastructure.Data
             ProfileRepository = profileRepository;
             FarmRepository = farmRepository;
             AddressRepository = addressRepository;
+            CategoryRepository = categoryRepository;
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
