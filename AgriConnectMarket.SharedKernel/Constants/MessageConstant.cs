@@ -18,5 +18,7 @@
         public const string FARM_NOT_FOUND = "Can not found farm(s)";
         public const string SEASON_NOT_FOUND = "Can not found season(s)";
         public const string ADDRESS_NOT_FOUND = "Can not found address(es)";
+        public const string EXISTING_CATEGORY = "This category already exist!";
+        public const string CATEGORY_NOT_FOUND = "Can not found category(s)";
     }
 }

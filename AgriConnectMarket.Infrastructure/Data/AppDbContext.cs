@@ -11,6 +11,7 @@ namespace AgriConnectMarket.Infrastructure.Data
         public DbSet<Farm> Farms { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Season> Seasons { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -38,11 +39,11 @@ namespace AgriConnectMarket.Infrastructure.Data
             modelBuilder.Entity<Account>(b =>
             {
                 b.ToTable("Accounts");
-                b.HasKey(u => u.Id);
+
+                b.HasKey(u => u.Id).HasName("AccountId");
                 b.Property(u => u.UserName).IsRequired().HasMaxLength(50);
                 b.HasIndex(u => u.UserName).IsUnique();
                 b.Property(u => u.Password).IsRequired().HasMaxLength(100);
-                // audit fields
                 b.Property(u => u.CreatedAt).IsRequired();
                 b.Property(u => u.CreatedBy).HasMaxLength(100);
                 b.Property(u => u.UpdatedAt);
@@ -52,12 +53,19 @@ namespace AgriConnectMarket.Infrastructure.Data
             modelBuilder.Entity<Profile>(b =>
             {
                 b.ToTable("Profiles");
-                b.HasKey(p => p.Id);
+                b.HasKey(p => p.Id).HasName("ProfileId");
 
                 b.HasOne(p => p.Account)
                     .WithOne(a => a.Profile)
                     .HasForeignKey<Profile>(p => p.AccountId)
                     .IsRequired();
+            });
+
+            modelBuilder.Entity<Address>(a =>
+            {
+                a.ToTable("Addresses");
+
+                a.HasKey(a => a.Id).HasName("AddressId");
             });
 
             modelBuilder.Entity<Farm>(f =>
@@ -75,6 +83,26 @@ namespace AgriConnectMarket.Infrastructure.Data
                     .HasForeignKey<Farm>(f => f.AddressId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.NoAction);
+
+                f.HasMany(f => f.Seasons)
+                    .WithOne(s => s.Farm)
+                    .HasForeignKey(s => s.FarmId);
+            });
+
+            modelBuilder.Entity<Season>(s =>
+            {
+                s.ToTable("Seasons");
+
+                s.HasKey(s => s.Id).HasName("SeasonId");
+
+
+            });
+
+            modelBuilder.Entity<Category>(c =>
+            {
+                c.ToTable("Categories");
+
+                c.HasKey(c => c.Id).HasName("CategoryId");
             });
         }
     }

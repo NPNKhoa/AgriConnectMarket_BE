@@ -22,5 +22,10 @@
         {
             return url?.Trim().ToLowerInvariant() ?? string.Empty;
         }
+
+        public static string NormalizeStringToUpper(string name)
+        {
+            return name?.Trim().ToUpper() ?? string.Empty;
+        }
     }
 }

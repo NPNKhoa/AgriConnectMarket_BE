@@ -30,12 +30,14 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddScoped<IFarmRepository, FarmRepository>();
             services.AddScoped<ISeasonRepository, SeasonRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             services.AddScoped<AuthService>();
             services.AddScoped<ProfileService>();
             services.AddScoped<FarmService>();
             services.AddScoped<SeasonService>();
             services.AddScoped<AddressService>();
+            services.AddScoped<CategoryService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
