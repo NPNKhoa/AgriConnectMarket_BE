@@ -26,7 +26,7 @@ namespace AgriConnectMarket.Domain.Entities
 
         }
 
-        public Season(string seasonName, string? seasonDesc, string status, DateTime startDate, DateTime endDate)
+        public Season(string seasonName, string? seasonDesc, DateTime startDate, DateTime endDate, string status = SeasonStatusEnums.PENDING)
         {
             Guard.AgainstNullOrWhiteSpace(seasonName, nameof(seasonName));
             Guard.AgainstNullOrEmpty(status, nameof(status));
