@@ -12,6 +12,7 @@ namespace AgriConnectMarket.Infrastructure.Data
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Season> Seasons { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -103,6 +104,19 @@ namespace AgriConnectMarket.Infrastructure.Data
                 c.ToTable("Categories");
 
                 c.HasKey(c => c.Id).HasName("CategoryId");
+            });
+
+            modelBuilder.Entity<Product>(p =>
+            {
+                p.ToTable("Products");
+
+                p.HasKey(p => p.Id).HasName("ProductId");
+
+                p.HasOne(p => p.Category)
+                    .WithMany(c => c.Products)
+                    .HasForeignKey(p => p.CategoryId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.NoAction);
             });
         }
     }

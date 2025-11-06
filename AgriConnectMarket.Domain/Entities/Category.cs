@@ -10,6 +10,8 @@ namespace AgriConnectMarket.Domain.Entities
         public string IllustrativeImageUrl { get; set; }
         public bool IsDelete { get; set; } = true;
 
+        public IEnumerable<Product> Products { get; set; }
+
         public Category() { }
 
         public Category(string name, string desc, string imageUrl = "")
