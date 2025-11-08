@@ -8,6 +8,7 @@
         IAddressRepository AddressRepository { get; }
         ICategoryRepository CategoryRepository { get; }
         ISeasonRepository SeasonRepository { get; }
+        IProductRepository ProductRepository { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

@@ -20,5 +20,6 @@
         public const string ADDRESS_NOT_FOUND = "Can not found address(es)";
         public const string EXISTING_CATEGORY = "This category already exist!";
         public const string CATEGORY_NOT_FOUND = "Can not found category(s)";
+        public const string PRODUCT_NOT_FOUND = "Can not found product(s)";
     }
 }
