@@ -33,5 +33,10 @@ namespace AgriConnectMarket.Domain.Entities
             Password = password;
             Role = isFarmer ? ROLE.FARMER : ROLE.BUYER;
         }
+
+        public void ToggleAccountBannedStatus()
+        {
+            this.IsActive = !this.IsActive;
+        }
     }
 }
