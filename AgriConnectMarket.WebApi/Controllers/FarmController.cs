@@ -11,7 +11,7 @@ namespace AgriConnectMarket.WebApi.Controllers
 {
     [Route("api/farms")]
     [ApiController]
-    public class FarmController(FarmService _farmService, ICloudinaryAdapter _cloudinaryService) : ControllerBase
+    public class FarmController(FarmService _farmService, CertificateService _certificateService, ICloudinaryAdapter _cloudinaryService) : ControllerBase
     {
         [HttpGet("")]
         public async Task<IActionResult> GetAll([FromQuery] FarmQuery? query, CancellationToken ct)
@@ -91,7 +91,6 @@ namespace AgriConnectMarket.WebApi.Controllers
         {
             string bannerUrl = string.Empty;
 
-            // Upload avatar to Cloudinary
             if (request.FarmBanner is not null)
             {
                 var uploadResult = await _cloudinaryService.UploadAsync(request.FarmBanner, ct);
@@ -122,7 +121,7 @@ namespace AgriConnectMarket.WebApi.Controllers
             if (!result.IsSuccess)
                 return BadRequest(ApiResponse.FailResponse(result.Error));
 
-            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_CREATE_SUCCESS_MESSAGE));
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_UPDATE_SUCCESS_MESSAGE));
         }
 
         [HttpDelete("{farmId}")]
@@ -136,6 +135,74 @@ namespace AgriConnectMarket.WebApi.Controllers
             }
 
             return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
+        [HttpPost("{farmId}/certificate")]
+        public async Task<IActionResult> UploadCertificate([FromRoute] Guid farmId, [FromForm] UploadCertificateCommand request, CancellationToken ct)
+        {
+            string certificateUrl = string.Empty;
+
+            if (request.Certificate is not null)
+            {
+                var uploadResult = await _cloudinaryService.UploadAsync(request.Certificate, ct);
+
+                if (!uploadResult.Success)
+                {
+                    return BadRequest(ApiResponse.FailResponse(uploadResult.Error!));
+                }
+
+                certificateUrl = uploadResult.Url ?? string.Empty;
+            }
+
+            var dto = new UploadCertificateDto()
+            {
+                CertificateUrl = certificateUrl,
+                FarmId = farmId
+            };
+
+            var result = await _certificateService.UploadCertificate(dto, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_CREATE_SUCCESS_MESSAGE));
+        }
+
+
+        [HttpPut("{farmId}/certificates")]
+        public async Task<IActionResult> UpdateCertificate([FromRoute] Guid farmId, [FromForm] IFormFile certificate, CancellationToken ct)
+        {
+            string certificateUrl = string.Empty;
+
+            if (certificate is not null)
+            {
+                var uploadResult = await _cloudinaryService.UploadAsync(certificate, ct);
+
+                if (!uploadResult.Success)
+                {
+                    return BadRequest(ApiResponse.FailResponse(uploadResult.Error!));
+                }
+
+                certificateUrl = uploadResult.Url ?? string.Empty;
+            }
+
+            var result = await _certificateService.UpdateCertificate(farmId, certificateUrl, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_UPDATE_SUCCESS_MESSAGE));
+        }
+
+        [HttpDelete("{farmId}/certificate")]
+        public async Task<IActionResult> DeleteCertificate([FromRoute] Guid farmId, CancellationToken ct)
+        {
+            var result = await _certificateService.DeleteCertificate(farmId, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_DELETE_SUCCESS_MESSAGE));
         }
     }
 }
