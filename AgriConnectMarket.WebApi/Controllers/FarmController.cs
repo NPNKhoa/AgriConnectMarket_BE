@@ -91,7 +91,6 @@ namespace AgriConnectMarket.WebApi.Controllers
         {
             string bannerUrl = string.Empty;
 
-            // Upload avatar to Cloudinary
             if (request.FarmBanner is not null)
             {
                 var uploadResult = await _cloudinaryService.UploadAsync(request.FarmBanner, ct);
@@ -122,7 +121,7 @@ namespace AgriConnectMarket.WebApi.Controllers
             if (!result.IsSuccess)
                 return BadRequest(ApiResponse.FailResponse(result.Error));
 
-            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_CREATE_SUCCESS_MESSAGE));
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_UPDATE_SUCCESS_MESSAGE));
         }
 
         [HttpDelete("{farmId}")]
@@ -138,12 +137,11 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
-        [HttpPost("{farmId}/upload-certificate")]
+        [HttpPost("{farmId}/certificate")]
         public async Task<IActionResult> UploadCertificate([FromRoute] Guid farmId, [FromForm] UploadCertificateCommand request, CancellationToken ct)
         {
             string certificateUrl = string.Empty;
 
-            // Upload banner to Cloudinary
             if (request.Certificate is not null)
             {
                 var uploadResult = await _cloudinaryService.UploadAsync(request.Certificate, ct);
@@ -170,7 +168,33 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_CREATE_SUCCESS_MESSAGE));
         }
 
-        [HttpDelete("{farmId}/upload-certificate")]
+
+        [HttpPut("{farmId}/certificates")]
+        public async Task<IActionResult> UpdateCertificate([FromRoute] Guid farmId, [FromForm] IFormFile certificate, CancellationToken ct)
+        {
+            string certificateUrl = string.Empty;
+
+            if (certificate is not null)
+            {
+                var uploadResult = await _cloudinaryService.UploadAsync(certificate, ct);
+
+                if (!uploadResult.Success)
+                {
+                    return BadRequest(ApiResponse.FailResponse(uploadResult.Error!));
+                }
+
+                certificateUrl = uploadResult.Url ?? string.Empty;
+            }
+
+            var result = await _certificateService.UpdateCertificate(farmId, certificateUrl, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_UPDATE_SUCCESS_MESSAGE));
+        }
+
+        [HttpDelete("{farmId}/certificate")]
         public async Task<IActionResult> DeleteCertificate([FromRoute] Guid farmId, CancellationToken ct)
         {
             var result = await _certificateService.DeleteCertificate(farmId, ct);
