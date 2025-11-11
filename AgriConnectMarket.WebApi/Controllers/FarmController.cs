@@ -170,13 +170,13 @@ namespace AgriConnectMarket.WebApi.Controllers
 
 
         [HttpPut("{farmId}/certificates")]
-        public async Task<IActionResult> UpdateCertificate([FromRoute] Guid farmId, [FromForm] IFormFile certificate, CancellationToken ct)
+        public async Task<IActionResult> UpdateCertificate([FromRoute] Guid farmId, [FromForm] UpdateCertificateRequest request, CancellationToken ct)
         {
             string certificateUrl = string.Empty;
 
-            if (certificate is not null)
+            if (request.Certificate is not null)
             {
-                var uploadResult = await _cloudinaryService.UploadAsync(certificate, ct);
+                var uploadResult = await _cloudinaryService.UploadAsync(request.Certificate, ct);
 
                 if (!uploadResult.Success)
                 {
