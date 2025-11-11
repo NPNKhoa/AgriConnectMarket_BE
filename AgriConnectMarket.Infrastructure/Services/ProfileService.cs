@@ -6,11 +6,11 @@ using AgriConnectMarket.SharedKernel.Result;
 
 namespace AgriConnectMarket.Infrastructure.Services
 {
-    public class ProfileService(IProfileRepository _profileRepository, ICurrentUserService _currentUserService)
+    public class ProfileService(IUnitOfWork _uow, ICurrentUserService _currentUserService)
     {
         public async Task<Result<Profile>> UpdateProfile(Guid profileId, UpdateProfileDto dto, CancellationToken ct = default)
         {
-            var existingProfile = await _profileRepository.GetByIdAsync(profileId, ct);
+            var existingProfile = await _uow.ProfileRepository.GetByIdAsync(profileId, ct);
 
             if (existingProfile is null)
             {
@@ -21,14 +21,14 @@ namespace AgriConnectMarket.Infrastructure.Services
             existingProfile.Email = dto.Email;
             existingProfile.Phone = dto.Phone;
 
-            await _profileRepository.UpdateAsync(existingProfile, ct);
+            await _uow.ProfileRepository.UpdateAsync(existingProfile, ct);
 
             return Result<Profile>.Success(existingProfile);
         }
 
         public async Task<Result<Profile>> GetProfileById(Guid profileId, CancellationToken ct = default)
         {
-            var existing = await _profileRepository.GetByIdAsync(profileId, ct);
+            var existing = await _uow.ProfileRepository.GetByIdAsync(profileId, ct);
 
             if (existing is null)
             {
@@ -46,7 +46,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             }
 
             var userId = _currentUserService.UserId.Value;
-            var profile = await _profileRepository.GetByIdAsync(userId, ct);
+            var profile = await _uow.ProfileRepository.GetByIdAsync(userId, ct);
 
             if (profile is null)
             {
