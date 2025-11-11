@@ -76,5 +76,16 @@ namespace AgriConnectMarket.WebApi.Controllers
 
             return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.DEACTIVE_ACCOUNT_SUCCESS));
         }
+
+        [HttpPatch("{accountId}/toggle-ban")]
+        public async Task<IActionResult> ChangePassword([FromRoute] Guid accountId, CancellationToken ct)
+        {
+            var result = await _authService.ToggleAccountBanned(accountId, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_UPDATE_SUCCESS_MESSAGE));
+        }
     }
 }

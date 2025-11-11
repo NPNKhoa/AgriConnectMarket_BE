@@ -140,6 +140,23 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<Guid>.Success(userId);
         }
 
+        public async Task<Result<Account>> ToggleAccountBanned(Guid accountId, CancellationToken ct = default)
+        {
+
+            var account = await _uow.AuthenRepository.GetByIdAsync(accountId, ct);
+
+            if (account is null)
+            {
+                return Result<Account>.Fail(MessageConstant.ACCOUNT_NOT_FOUND);
+            }
+
+            account.ToggleAccountBannedStatus();
+
+            await _uow.SaveChangesAsync(ct);
+
+            return Result<Account>.Success(account);
+        }
+
         // ============ HELPERS ============
 
         private static string HashPassword(string password)
