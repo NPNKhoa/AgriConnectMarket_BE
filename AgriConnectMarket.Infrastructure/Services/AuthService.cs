@@ -116,7 +116,7 @@ namespace AgriConnectMarket.Infrastructure.Services
         {
             if (_currentUserService.UserId is null)
             {
-                return Result<Guid>.Fail(MessageConstant.NOTE_AUTHENTICATED_USER);
+                return Result<Guid>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
             }
 
             var userId = _currentUserService.UserId.Value;

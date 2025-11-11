@@ -14,7 +14,7 @@
         public const string DEACTIVE_ACCOUNT_SUCCESS = "Deactive account successfully!";
         public const string PROFILE_ID_NOT_FOUND = "Can not find any profile with this ID";
         public const string WRONG_CREDENTIALS = "Wrong username or password. Please try again!";
-        public const string NOTE_AUTHENTICATED_USER = "User not authenticated!";
+        public const string NOT_AUTHENTICATED_USER = "User not authenticated!";
         public const string FARM_NOT_FOUND = "Can not found farm(s)";
         public const string SEASON_NOT_FOUND = "Can not found season(s)";
         public const string ADDRESS_NOT_FOUND = "Can not found address(es)";

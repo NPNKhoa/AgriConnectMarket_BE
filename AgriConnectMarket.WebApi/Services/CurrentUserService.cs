@@ -1,5 +1,4 @@
 ﻿using AgriConnectMarket.Application.Interfaces;
-using AgriConnectMarket.SharedKernel.Constants;
 using System.Security.Claims;
 
 namespace AgriConnectMarket.WebApi.Services
@@ -14,7 +13,7 @@ namespace AgriConnectMarket.WebApi.Services
                 if (user == null || !user.Identity?.IsAuthenticated == true)
                     return null;
 
-                var idValue = user.FindFirstValue(JwtConstants.UserIdClaim);
+                var idValue = user.FindFirstValue(ClaimTypes.NameIdentifier);
                 return Guid.TryParse(idValue, out var guid) ? guid : null;
             }
         }

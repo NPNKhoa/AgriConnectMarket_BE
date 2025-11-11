@@ -56,7 +56,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(_key),
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.Zero,
             };
 
             try
