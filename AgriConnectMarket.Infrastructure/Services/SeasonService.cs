@@ -1,34 +1,22 @@
-﻿using AgriConnectMarket.Application.DTOs.QueryDtos;
-using AgriConnectMarket.Application.DTOs.RequestDtos;
+﻿using AgriConnectMarket.Application.DTOs.RequestDtos;
 using AgriConnectMarket.Application.DTOs.ResponseDtos;
 using AgriConnectMarket.Application.Interfaces;
-using AgriConnectMarket.Application.Specifications.FarmSpecs;
 using AgriConnectMarket.Domain.Entities;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Guards;
 using AgriConnectMarket.SharedKernel.Result;
-using AgriConnectMarket.SharedKernel.Specifications;
 
 namespace AgriConnectMarket.Infrastructure.Services
 {
     public class SeasonService(IUnitOfWork _uow)
     {
-        public async Task<Result<ICollection<Season>>> GetAllSeasons(SeasonQuery? query, CancellationToken ct = default)
+        public async Task<Result<ICollection<Season>>> GetAllSeasons(CancellationToken ct = default)
         {
-            BaseSpecification<Season> spec;
-
-            if (query?.searchTerm is not null)
-            {
-                spec = new FilterSeasonBySearchTermSpecification(query.searchTerm);
-            }
-
-            spec = new NameOrderedSeasonsSpecification();
-
-            var farms = await _uow.SeasonRepository.ListAsync(spec, ct);
+            var farms = await _uow.SeasonRepository.ListAllAsync(ct);
 
             if (!farms.Any())
             {
-                return Result<ICollection<Season>>.Fail(MessageConstant.FARM_NOT_FOUND);
+                return Result<ICollection<Season>>.Fail(MessageConstant.SEASON_NOT_FOUND);
             }
 
             return Result<ICollection<Season>>.Success(farms.ToList());
@@ -42,7 +30,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             if (season == null)
             {
-                return Result<Season>.Fail(MessageConstant.FARM_NOT_FOUND);
+                return Result<Season>.Fail(MessageConstant.SEASON_NOT_FOUND);
             }
 
             return Result<Season>.Success(season);
@@ -75,7 +63,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             if (season == null)
             {
-                return Result<UpdateSeasonResponseDto>.Fail(MessageConstant.FARM_NOT_FOUND);
+                return Result<UpdateSeasonResponseDto>.Fail(MessageConstant.SEASON_NOT_FOUND);
             }
 
             season.SeasonName = dto.SeasonName;
@@ -107,7 +95,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             if (season == null)
             {
-                return Result<Guid>.Fail(MessageConstant.FARM_NOT_FOUND);
+                return Result<Guid>.Fail(MessageConstant.SEASON_NOT_FOUND);
             }
 
             await _uow.SeasonRepository.DeleteAsync(season, ct);

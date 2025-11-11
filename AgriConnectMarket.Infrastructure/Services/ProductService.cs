@@ -3,13 +3,14 @@ using AgriConnectMarket.Application.DTOs.ResponseDtos;
 using AgriConnectMarket.Application.Interfaces;
 using AgriConnectMarket.Domain.Entities;
 using AgriConnectMarket.SharedKernel.Constants;
+using AgriConnectMarket.SharedKernel.Guards;
 using AgriConnectMarket.SharedKernel.Result;
 
 namespace AgriConnectMarket.Infrastructure.Services
 {
     public class ProductService(IUnitOfWork _uow)
     {
-        public async Task<Result<IEnumerable<Product>>> GetProductsAsync(CancellationToken ct)
+        public async Task<Result<IEnumerable<Product>>> GetProductsAsync(CancellationToken ct = default)
         {
             var products = await _uow.ProductRepository.ListAllAsync(ct);
 
@@ -21,8 +22,10 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<IEnumerable<Product>>.Success(products);
         }
 
-        public async Task<Result<Product>> GetProductByIdAsync(Guid productId, CancellationToken ct)
+        public async Task<Result<Product>> GetProductByIdAsync(Guid productId, CancellationToken ct = default)
         {
+            Guard.AgainstNull(productId, nameof(productId));
+
             var product = await _uow.ProductRepository.GetByIdAsync(productId, ct);
 
             if (product is null)
@@ -33,7 +36,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<Product>.Success(product);
         }
 
-        public async Task<Result<CreateProductResponseDto>> CreateProductAsync(CreateProductDto dto, CancellationToken ct)
+        public async Task<Result<CreateProductResponseDto>> CreateProductAsync(CreateProductDto dto, CancellationToken ct = default)
         {
             var category = await _uow.CategoryRepository.GetByIdAsync(dto.CategoryId);
 
@@ -59,8 +62,10 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<CreateProductResponseDto>.Success(response);
         }
 
-        public async Task<Result<UpdateProductResponseDto>> UpdateProductAsync(Guid productId, UpdateProductDto dto, CancellationToken ct)
+        public async Task<Result<UpdateProductResponseDto>> UpdateProductAsync(Guid productId, UpdateProductDto dto, CancellationToken ct = default)
         {
+            Guard.AgainstNull(productId, nameof(productId));
+
             var category = await _uow.CategoryRepository.GetByIdAsync(dto.CategoryId, ct);
 
             if (category is null)
@@ -95,7 +100,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<UpdateProductResponseDto>.Success(response);
         }
 
-        public async Task<Result<Guid>> DeleteProductAsync(Guid productId, CancellationToken ct)
+        public async Task<Result<Guid>> DeleteProductAsync(Guid productId, CancellationToken ct = default)
         {
             var product = await _uow.ProductRepository.GetByIdAsync(productId, ct);
 

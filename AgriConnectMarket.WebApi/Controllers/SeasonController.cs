@@ -14,7 +14,7 @@ namespace AgriConnectMarket.WebApi.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetAllSeasons([FromQuery] SeasonQuery? query, CancellationToken ct)
         {
-            var result = await _seasonService.GetAllSeasons(query, ct);
+            var result = await _seasonService.GetAllSeasons(ct);
 
             if (!result.IsSuccess)
                 return BadRequest(ApiResponse.FailResponse(result.Error));
