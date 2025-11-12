@@ -1,5 +1,6 @@
 ﻿using AgriConnectMarket.Application.DTOs.RequestDtos;
 using AgriConnectMarket.Application.Interfaces;
+using AgriConnectMarket.Application.Specifications.ProfileSpecs;
 using AgriConnectMarket.Domain.Entities;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Result;
@@ -24,6 +25,32 @@ namespace AgriConnectMarket.Infrastructure.Services
             await _uow.ProfileRepository.UpdateAsync(existingProfile, ct);
 
             return Result<Profile>.Success(existingProfile);
+        }
+
+        public async Task<Result<IEnumerable<Profile>>> GetFullListAsync(CancellationToken ct = default)
+        {
+            var profiles = await _uow.ProfileRepository.ListAllAsync(ct);
+
+            if (!profiles.Any())
+            {
+                return Result<IEnumerable<Profile>>.Fail(MessageConstant.PROFILE_NOT_FOUND);
+            }
+
+            return Result<IEnumerable<Profile>>.Success(profiles);
+        }
+
+        public async Task<Result<IEnumerable<Profile>>> GetProfilesAsync(string? searchTerm = null, CancellationToken ct = default)
+        {
+            var searchSpec = new FilterProfileBySearchTermSpecification(searchTerm ?? ""); // Can sua them
+
+            var profiles = await _uow.ProfileRepository.ListAsync(searchSpec, ct);
+
+            if (!profiles.Any())
+            {
+                return Result<IEnumerable<Profile>>.Fail(MessageConstant.PROFILE_NOT_FOUND);
+            }
+
+            return Result<IEnumerable<Profile>>.Success(profiles);
         }
 
         public async Task<Result<Profile>> GetProfileById(Guid profileId, CancellationToken ct = default)

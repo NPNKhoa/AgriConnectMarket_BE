@@ -204,6 +204,17 @@ namespace AgriConnectMarket.WebApi.Controllers
 
             return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_DELETE_SUCCESS_MESSAGE));
         }
+
+        [HttpPatch("{farmId}/toggle-banned")]
+        public async Task<IActionResult> ToggleFarmBanned([FromRoute] Guid farmId, CancellationToken ct)
+        {
+            var result = await _farmService.ToggleFarmBanned(farmId, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.BAN_FARM_SUCCESS));
+        }
     }
 }
 
