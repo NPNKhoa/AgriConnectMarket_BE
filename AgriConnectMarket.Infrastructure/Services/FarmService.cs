@@ -182,5 +182,23 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             return Result<Guid>.Success(farm.Id);
         }
+
+        public async Task<Result<Guid>> ToggleFarmBanned(Guid farmId, CancellationToken ct = default)
+        {
+            Guard.AgainstNull(farmId, nameof(farmId));
+
+            var farm = await _uow.FarmRepository.GetByIdAsync(farmId, ct);
+
+            if (farm == null)
+            {
+                return Result<Guid>.Fail(MessageConstant.FARM_NOT_FOUND);
+            }
+
+            farm.ToggleFarmBanned();
+            await _uow.FarmRepository.UpdateAsync(farm);
+            await _uow.SaveChangesAsync();
+
+            return Result<Guid>.Success(farm.Id);
+        }
     }
 }

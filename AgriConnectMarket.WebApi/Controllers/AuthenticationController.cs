@@ -48,8 +48,6 @@ namespace AgriConnectMarket.WebApi.Controllers
             if (!result.IsSuccess)
                 return BadRequest(ApiResponse.FailResponse(result.Error));
 
-            Console.WriteLine(result.Value.ToString());
-
             return Ok(ApiResponse<LoginResultDto>.SuccessResponse(result.Value, MessageConstant.LOGIN_SUCCESS));
         }
 
