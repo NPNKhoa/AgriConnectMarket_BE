@@ -103,5 +103,23 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             return Result<Guid>.Success(seasonId);
         }
+
+        public async Task<Result<Season>> CloseSeasonAsync(Guid seasonId, CancellationToken ct = default)
+        {
+            Guard.AgainstNull(seasonId, nameof(seasonId));
+
+            var season = await _uow.SeasonRepository.GetByIdAsync(seasonId, ct);
+
+            if (season == null)
+            {
+                return Result<Season>.Fail(MessageConstant.SEASON_NOT_FOUND);
+            }
+
+            season.Status = SeasonStatusEnums.HARVESTED;
+            await _uow.SeasonRepository.UpdateAsync(season, ct);
+            await _uow.SaveChangesAsync();
+
+            return Result<Season>.Success(season);
+        }
     }
 }
