@@ -170,13 +170,13 @@ namespace AgriConnectMarket.WebApi.Controllers
 
 
         [HttpPut("{farmId}/certificates")]
-        public async Task<IActionResult> UpdateCertificate([FromRoute] Guid farmId, [FromForm] IFormFile certificate, CancellationToken ct)
+        public async Task<IActionResult> UpdateCertificate([FromRoute] Guid farmId, [FromForm] UpdateCertificateRequest request, CancellationToken ct)
         {
             string certificateUrl = string.Empty;
 
-            if (certificate is not null)
+            if (request.Certificate is not null)
             {
-                var uploadResult = await _cloudinaryService.UploadAsync(certificate, ct);
+                var uploadResult = await _cloudinaryService.UploadAsync(request.Certificate, ct);
 
                 if (!uploadResult.Success)
                 {
@@ -203,6 +203,17 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
 
             return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_DELETE_SUCCESS_MESSAGE));
+        }
+
+        [HttpPatch("{farmId}/toggle-banned")]
+        public async Task<IActionResult> ToggleFarmBanned([FromRoute] Guid farmId, CancellationToken ct)
+        {
+            var result = await _farmService.ToggleFarmBanned(farmId, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.BAN_FARM_SUCCESS));
         }
     }
 }

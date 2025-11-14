@@ -57,7 +57,7 @@ namespace AgriConnectMarket.Infrastructure.Services
         {
             if (_currentUser.UserId is null)
             {
-                return Result<Farm>.Fail(MessageConstant.NOTE_AUTHENTICATED_USER);
+                return Result<Farm>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
             }
 
             var userId = (Guid)_currentUser.UserId;
@@ -177,6 +177,24 @@ namespace AgriConnectMarket.Infrastructure.Services
             }
 
             farm.IsDelete = true;
+            await _uow.FarmRepository.UpdateAsync(farm);
+            await _uow.SaveChangesAsync();
+
+            return Result<Guid>.Success(farm.Id);
+        }
+
+        public async Task<Result<Guid>> ToggleFarmBanned(Guid farmId, CancellationToken ct = default)
+        {
+            Guard.AgainstNull(farmId, nameof(farmId));
+
+            var farm = await _uow.FarmRepository.GetByIdAsync(farmId, ct);
+
+            if (farm == null)
+            {
+                return Result<Guid>.Fail(MessageConstant.FARM_NOT_FOUND);
+            }
+
+            farm.ToggleFarmBanned();
             await _uow.FarmRepository.UpdateAsync(farm);
             await _uow.SaveChangesAsync();
 

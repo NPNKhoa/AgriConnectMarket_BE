@@ -9,7 +9,7 @@ namespace AgriConnectMarket.Infrastructure.Services
     {
         public async Task<Result<string>> UploadCertificate(UploadCertificateDto dto, CancellationToken ct = default)
         {
-            var farm = await _uow.FarmRepository.GetByIdAsync(dto.FarmId);
+            var farm = await _uow.FarmRepository.GetByIdAsync(dto.FarmId, ct);
 
             if (farm is null)
             {
@@ -26,7 +26,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<string>> UpdateCertificate(Guid farmId, string newUrl, CancellationToken ct = default)
         {
-            var farm = await _uow.FarmRepository.GetByIdAsync(farmId);
+            var farm = await _uow.FarmRepository.GetByIdAsync(farmId, ct);
 
             if (farm is null)
             {
@@ -43,7 +43,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<Guid>> DeleteCertificate(Guid farmId, CancellationToken ct = default)
         {
-            var farm = await _uow.FarmRepository.GetByIdAsync(farmId);
+            var farm = await _uow.FarmRepository.GetByIdAsync(farmId, ct);
 
             if (farm is null)
             {

@@ -14,6 +14,7 @@ namespace AgriConnectMarket.Domain.Entities
         public string Phone { get; set; }
         public string Area { get; set; }
         public bool IsDelete { get; set; }
+        public bool IsBanned { get; set; }
 
 
         // Auditable properties
@@ -44,6 +45,12 @@ namespace AgriConnectMarket.Domain.Entities
             Area = area;
             FarmerId = farmerId;
             IsDelete = false;
+            IsBanned = false;
+        }
+
+        public void ToggleFarmBanned()
+        {
+            this.IsBanned = !this.IsBanned;
         }
     }
 }

@@ -4,6 +4,7 @@ using AgriConnectMarket.Infrastructure.CloudinarySettings;
 using AgriConnectMarket.Infrastructure.Services;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AgriConnectMarket.WebApi.Controllers
@@ -48,8 +49,6 @@ namespace AgriConnectMarket.WebApi.Controllers
             if (!result.IsSuccess)
                 return BadRequest(ApiResponse.FailResponse(result.Error));
 
-            Console.WriteLine(result.Value.ToString());
-
             return Ok(ApiResponse<LoginResultDto>.SuccessResponse(result.Value, MessageConstant.LOGIN_SUCCESS));
         }
 
@@ -77,6 +76,7 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.DEACTIVE_ACCOUNT_SUCCESS));
         }
 
+        [Authorize(Policy = "AdminOnly")]
         [HttpPatch("{accountId}/toggle-ban")]
         public async Task<IActionResult> ChangePassword([FromRoute] Guid accountId, CancellationToken ct)
         {

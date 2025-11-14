@@ -3,13 +3,14 @@ using AgriConnectMarket.Application.DTOs.ResponseDtos;
 using AgriConnectMarket.Application.Interfaces;
 using AgriConnectMarket.Domain.Entities;
 using AgriConnectMarket.SharedKernel.Constants;
+using AgriConnectMarket.SharedKernel.Guards;
 using AgriConnectMarket.SharedKernel.Result;
 
 namespace AgriConnectMarket.Infrastructure.Services
 {
     public class CategoryService(IUnitOfWork _uow)
     {
-        public async Task<Result<IEnumerable<Category>>> GetAllCategoryAsync(CancellationToken ct)
+        public async Task<Result<IEnumerable<Category>>> GetAllCategoryAsync(CancellationToken ct = default)
         {
             var result = await _uow.CategoryRepository.ListAllAsync(ct);
 
@@ -48,6 +49,8 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<UpdateCategoryResultDto>> UpdateCategoryAsync(Guid categoryId, UpdateCategoryDto dto, CancellationToken ct = default)
         {
+            Guard.AgainstNull(categoryId, nameof(categoryId));
+
             var existing = await _uow.CategoryRepository.GetByIdAsync(categoryId);
 
             if (existing is null || existing.IsDelete)
@@ -74,6 +77,8 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<Guid>> DeleteCategoryAsync(Guid categoryId, CancellationToken ct = default)
         {
+            Guard.AgainstNull(categoryId, nameof(categoryId));
+
             var existing = await _uow.CategoryRepository.GetByIdAsync(categoryId);
 
             if (existing is null)

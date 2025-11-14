@@ -14,7 +14,7 @@ namespace AgriConnectMarket.WebApi.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetAllSeasons([FromQuery] SeasonQuery? query, CancellationToken ct)
         {
-            var result = await _seasonService.GetAllSeasons(query, ct);
+            var result = await _seasonService.GetAllSeasons(ct);
 
             if (!result.IsSuccess)
                 return BadRequest(ApiResponse.FailResponse(result.Error));
@@ -64,6 +64,19 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
 
             return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_DELETE_SUCCESS_MESSAGE));
+        }
+
+        [HttpPatch("{seasonId}")]
+        public async Task<IActionResult> CloseSeason([FromRoute] Guid seasonId, CancellationToken ct)
+        {
+            var result = await _seasonService.CloseSeasonAsync(seasonId, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.CLOSE_SEASON_SUCCESS));
         }
     }
 }

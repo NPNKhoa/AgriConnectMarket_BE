@@ -23,5 +23,12 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
             return await query.FirstOrDefaultAsync();
         }
+
+        public async Task<string> GetRolesAsync(Guid accountId)
+        {
+            var account = await _dbContext.Set<Account>().FirstOrDefaultAsync(a => a.Id == accountId);
+
+            return account?.Role ?? "";
+        }
     }
 }

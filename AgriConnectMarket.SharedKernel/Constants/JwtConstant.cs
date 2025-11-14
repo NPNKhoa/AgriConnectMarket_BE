@@ -4,6 +4,6 @@
     {
         public const string AuthorizationHeader = "Authorization";
         public const string BearerPrefix = "Bearer ";
-        public const string UserIdClaim = "sub"; // or "uid" depending on your token
+        public const string UserIdClaim = "sub";
     }
 }
