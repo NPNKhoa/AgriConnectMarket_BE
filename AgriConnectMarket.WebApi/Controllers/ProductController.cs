@@ -1,4 +1,5 @@
-﻿using AgriConnectMarket.Application.DTOs.RequestDtos;
+﻿using AgriConnectMarket.Application.DTOs.QueryDtos;
+using AgriConnectMarket.Application.DTOs.RequestDtos;
 using AgriConnectMarket.Infrastructure.Services;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Responses;
@@ -11,9 +12,14 @@ namespace AgriConnectMarket.WebApi.Controllers
     public class ProductController(ProductService _productService) : ControllerBase
     {
         [HttpGet("")]
-        public async Task<IActionResult> GetAllProducts(CancellationToken ct)
+        public async Task<IActionResult> GetAllProducts([FromQuery] ProductQueryRequest? query, CancellationToken ct)
         {
-            var result = await _productService.GetProductsAsync(ct);
+            dynamic result = await _productService.GetAllProductsAsync(ct);
+
+            if (query is not null)
+            {
+                result = await _productService.GetProductsAsync(query, ct);
+            }
 
             if (!result.IsSuccess)
                 return BadRequest(ApiResponse.FailResponse(result.Error));

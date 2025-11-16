@@ -1,6 +1,8 @@
-﻿using AgriConnectMarket.Application.DTOs.RequestDtos;
+﻿using AgriConnectMarket.Application.DTOs.QueryDtos;
+using AgriConnectMarket.Application.DTOs.RequestDtos;
 using AgriConnectMarket.Application.DTOs.ResponseDtos;
 using AgriConnectMarket.Application.Interfaces;
+using AgriConnectMarket.Application.Specifications.ProductsSpecs;
 using AgriConnectMarket.Domain.Entities;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Guards;
@@ -10,9 +12,41 @@ namespace AgriConnectMarket.Infrastructure.Services
 {
     public class ProductService(IUnitOfWork _uow)
     {
-        public async Task<Result<IEnumerable<Product>>> GetProductsAsync(CancellationToken ct = default)
+        public async Task<Result<IEnumerable<Product>>> GetAllProductsAsync(CancellationToken ct = default)
         {
             var products = await _uow.ProductRepository.ListAllAsync(ct);
+
+            if (!products.Any())
+            {
+                return Result<IEnumerable<Product>>.Fail(MessageConstant.PRODUCT_NOT_FOUND);
+            }
+
+            return Result<IEnumerable<Product>>.Success(products);
+        }
+
+
+        public async Task<Result<IEnumerable<Product>>> GetProductsAsync(ProductQueryRequest query, CancellationToken ct = default)
+        {
+            dynamic specs;
+
+            if (query.searchTerm is not null)
+            {
+                specs = new FilterProductBySearchTerm(query.searchTerm);
+            }
+
+            if (query.categoryId is not null)
+            {
+                specs = new FilterProductsByCategory((Guid)query.categoryId);
+            }
+
+            if (query.location is not null)
+            {
+                specs = new FilterProductsByLocation(query.location);
+            }
+
+            specs = new SortProductsDefaultSpecs();
+
+            var products = await _uow.ProductRepository.ListAsync(specs, ct);
 
             if (!products.Any())
             {
