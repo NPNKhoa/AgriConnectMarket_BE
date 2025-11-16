@@ -1,4 +1,5 @@
-﻿using AgriConnectMarket.SharedKernel.Entities;
+﻿using AgriConnectMarket.SharedKernel.Constants;
+using AgriConnectMarket.SharedKernel.Entities;
 using AgriConnectMarket.SharedKernel.Guards;
 using AgriConnectMarket.SharedKernel.Interfaces;
 using AgriConnectMarket.SharedKernel.Normalization;
@@ -11,10 +12,12 @@ namespace AgriConnectMarket.Domain.Entities
         public string? FarmDesc { get; set; }
         public string? BannerUrl { get; set; }
         public string? CertificateUrl { get; set; }
-        public string Phone { get; set; }
-        public string Area { get; set; }
+        public string? Phone { get; set; }
+        public string? Area { get; set; }
         public bool IsDelete { get; set; }
         public bool IsBanned { get; set; }
+        public bool IsValidForSelling { get; set; }
+        public bool IsConfirmAsMall { get; set; }
 
 
         // Auditable properties
@@ -51,6 +54,31 @@ namespace AgriConnectMarket.Domain.Entities
         public void ToggleFarmBanned()
         {
             this.IsBanned = !this.IsBanned;
+        }
+
+        public void AllowSelling()
+        {
+            if (string.IsNullOrEmpty(this.FarmDesc)
+                || string.IsNullOrEmpty(this.BannerUrl)
+                || string.IsNullOrEmpty(this.Area)
+                || string.IsNullOrEmpty(this.Phone))
+            {
+                throw new Exception(MessageConstant.FARM_MISSING_INFO_FOR_SELL);
+            }
+
+            this.IsValidForSelling = true;
+        }
+
+        public bool ConfirmMallFarm()
+        {
+            if (string.IsNullOrEmpty(this.CertificateUrl))
+            {
+                return false;
+            }
+
+            this.IsConfirmAsMall = true;
+
+            return true;
         }
     }
 }
