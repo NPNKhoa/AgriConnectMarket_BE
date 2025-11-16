@@ -215,6 +215,28 @@ namespace AgriConnectMarket.WebApi.Controllers
 
             return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.BAN_FARM_SUCCESS));
         }
+
+        [HttpPatch("{farmId}/allow-selling")]
+        public async Task<IActionResult> AllowFarmSellProducts([FromRoute] Guid farmId, CancellationToken ct)
+        {
+            var result = await _farmService.AllowForSell(farmId, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.FARM_SELL_ALLOWING_SUCCESS));
+        }
+
+        [HttpPatch("{farmId}/mark-as-mall")]
+        public async Task<IActionResult> MarkFarmAsMallOne([FromRoute] Guid farmId, CancellationToken ct)
+        {
+            var result = await _farmService.MarkFarmAsMall(farmId, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.FARM_MARKED_MALL));
+        }
     }
 }
 

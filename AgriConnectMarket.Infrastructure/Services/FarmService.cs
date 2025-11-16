@@ -200,5 +200,37 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             return Result<Guid>.Success(farm.Id);
         }
+
+        public async Task<Result<Farm>> AllowForSell(Guid farmId, CancellationToken ct = default)
+        {
+            var farm = await _uow.FarmRepository.GetByIdAsync(farmId, ct);
+
+            if (farm is null)
+            {
+                return Result<Farm>.Fail(MessageConstant.FARM_NOT_FOUND);
+            }
+
+            farm.AllowSelling();
+            await _uow.FarmRepository.UpdateAsync(farm);
+            await _uow.SaveChangesAsync();
+
+            return Result<Farm>.Success(farm);
+        }
+
+        public async Task<Result<Farm>> MarkFarmAsMall(Guid farmId, CancellationToken ct = default)
+        {
+            var farm = await _uow.FarmRepository.GetByIdAsync(farmId, ct);
+
+            if (farm is null)
+            {
+                return Result<Farm>.Fail(MessageConstant.FARM_NOT_FOUND);
+            }
+
+            farm.ConfirmMallFarm();
+            await _uow.FarmRepository.UpdateAsync(farm);
+            await _uow.SaveChangesAsync();
+
+            return Result<Farm>.Success(farm);
+        }
     }
 }
