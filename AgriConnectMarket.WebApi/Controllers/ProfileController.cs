@@ -2,6 +2,7 @@
 using AgriConnectMarket.Infrastructure.Services;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AgriConnectMarket.WebApi.Controllers
@@ -51,6 +52,7 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_RETRIVE_SUCCESS_MESSAGE));
         }
 
+        [Authorize(Policy = "AdminOnly")]
         [HttpGet("{profileId}")]
         public async Task<IActionResult> GetProfileById([FromRoute] Guid profileId, CancellationToken ct)
         {
