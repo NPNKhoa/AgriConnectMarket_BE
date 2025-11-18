@@ -32,6 +32,7 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductBatchRepository, ProductBatchRepository>();
 
             services.AddScoped<AuthService>();
             services.AddScoped<ProfileService>();
@@ -40,10 +41,12 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddScoped<AddressService>();
             services.AddScoped<CategoryService>();
             services.AddScoped<ProductService>();
+            services.AddScoped<ProductBatchService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IDateTimeProvider, SystemDateTimeProvider>();
+            services.AddScoped<IBatchCodeGenerator, SqlBatchCodeGenerator>();
 
             return services;
         }

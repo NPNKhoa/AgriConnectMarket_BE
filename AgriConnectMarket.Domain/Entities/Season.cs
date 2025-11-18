@@ -21,6 +21,8 @@ namespace AgriConnectMarket.Domain.Entities
         public Guid FarmId { get; set; }
         public Farm Farm { get; set; }
 
+        public IEnumerable<ProductBatch> ProductBatches { get; set; }
+
         public Season()
         {
 

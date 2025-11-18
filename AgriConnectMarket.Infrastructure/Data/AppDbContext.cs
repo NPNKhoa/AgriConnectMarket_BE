@@ -1,4 +1,5 @@
 ﻿using AgriConnectMarket.Domain.Entities;
+using AgriConnectMarket.Infrastructure.Entities;
 using AgriConnectMarket.SharedKernel.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,8 @@ namespace AgriConnectMarket.Infrastructure.Data
         public DbSet<Season> Seasons { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductBatch> ProductBatches { get; set; }
+        public DbSet<BatchCodeSequence> BatchCodeSequences { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -95,8 +98,6 @@ namespace AgriConnectMarket.Infrastructure.Data
                 s.ToTable("Seasons");
 
                 s.HasKey(s => s.Id).HasName("SeasonId");
-
-
             });
 
             modelBuilder.Entity<Category>(c =>
@@ -117,6 +118,34 @@ namespace AgriConnectMarket.Infrastructure.Data
                     .HasForeignKey(p => p.CategoryId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<ProductBatch>(pb =>
+            {
+                pb.ToTable("ProductBatchs");
+
+                pb.HasKey(pb => pb.Id).HasName("BatchId");
+
+                pb.OwnsOne(o => o.BatchCode, bc =>
+                {
+                    bc.Property(x => x.Value).HasColumnName("BacthCode");
+                });
+
+                pb.HasOne(pb => pb.Season)
+                    .WithMany(s => s.ProductBatches)
+                    .HasForeignKey(pb => pb.SeasonId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<BatchCodeSequence>(b =>
+            {
+                b.ToTable("OrderCodeSequences");
+
+                b.HasKey(x => x.Prefix);
+
+                b.Property(x => x.Prefix).HasMaxLength(50).IsRequired();
+                b.Property(x => x.LastNumber).IsRequired();
             });
         }
     }
