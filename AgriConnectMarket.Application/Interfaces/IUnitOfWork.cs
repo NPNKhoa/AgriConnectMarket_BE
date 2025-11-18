@@ -10,6 +10,7 @@
         ISeasonRepository SeasonRepository { get; }
         IProductRepository ProductRepository { get; }
         IProductBatchRepository ProductBatchRepository { get; }
+        IFavoriteFarmRepository FavoriteFarmRepository { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

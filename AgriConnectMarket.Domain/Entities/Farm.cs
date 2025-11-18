@@ -32,7 +32,9 @@ namespace AgriConnectMarket.Domain.Entities
         public Account Farmer { get; set; }
         public Guid AddressId { get; set; }
         public Address Address { get; set; }
+
         public ICollection<Season> Seasons { get; set; }
+        public ICollection<FavoriteFarm> FavoriteFarms { get; set; }
 
         public Farm() { }
         public Farm(string farmName, string? FarmDesc, string? bannerUrl, string phone, string area, Guid farmerId)
