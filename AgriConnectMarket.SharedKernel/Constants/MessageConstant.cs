@@ -28,5 +28,7 @@
             "Please ask the farmer provide them or they will not be able to sell their products";
         public const string FARM_SELL_ALLOWING_SUCCESS = "This farm is allowed for selling products successfully!";
         public const string FARM_MARKED_MALL = "This farm is marked as a mall farm successfully!";
+        public const string BATCH_NOT_FOUND = "Can not found batch(es)";
+        public const string FARM_MISSING_PREFIX = "Please configure the prefix before creating a batch";
     }
 }

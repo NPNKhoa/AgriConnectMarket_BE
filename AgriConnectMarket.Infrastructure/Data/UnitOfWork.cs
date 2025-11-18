@@ -12,6 +12,7 @@ namespace AgriConnectMarket.Infrastructure.Data
         public ICategoryRepository CategoryRepository { get; }
         public ISeasonRepository SeasonRepository { get; }
         public IProductRepository ProductRepository { get; }
+        public IProductBatchRepository ProductBatchRepository { get; }
 
         public UnitOfWork
             (
@@ -22,7 +23,8 @@ namespace AgriConnectMarket.Infrastructure.Data
                 IAddressRepository addressRepository,
                 ICategoryRepository categoryRepository,
                 ISeasonRepository seasonRepository,
-                IProductRepository productRepository
+                IProductRepository productRepository,
+                IProductBatchRepository productBatchRepository
             )
         {
             _context = context;
@@ -34,6 +36,7 @@ namespace AgriConnectMarket.Infrastructure.Data
             CategoryRepository = categoryRepository;
             SeasonRepository = seasonRepository;
             ProductRepository = productRepository;
+            ProductBatchRepository = productBatchRepository;
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
