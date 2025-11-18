@@ -148,6 +148,10 @@ namespace AgriConnectMarket.Infrastructure.Data
                     .HasForeignKey(pb => pb.SeasonId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.NoAction);
+
+                pb.Property(pb => pb.Price).HasPrecision(18, 2);
+                pb.Property(pb => pb.TotalYield).HasPrecision(18, 4);
+                pb.Property(pb => pb.AvailableQuantity).HasPrecision(18, 4);
             });
 
             modelBuilder.Entity<BatchCodeSequence>(b =>

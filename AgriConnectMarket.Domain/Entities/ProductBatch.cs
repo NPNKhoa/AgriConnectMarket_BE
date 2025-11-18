@@ -11,6 +11,7 @@ namespace AgriConnectMarket.Domain.Entities
         public decimal TotalYield { get; set; }
         public decimal AvailableQuantity { get; set; }
         public string Units { get; set; }
+        public decimal Price { get; set; }
         public DateTime PlantingDate { get; set; }
         public DateTime HarvestDate { get; set; }
 
@@ -28,7 +29,7 @@ namespace AgriConnectMarket.Domain.Entities
         public ProductBatch() { }
 
         private ProductBatch(decimal totalYield, decimal availableQuantity,
-            string units, DateTime plantingDate, Guid seasonId)
+            string units, DateTime plantingDate, Guid seasonId, decimal price)
         {
             TotalYield = totalYield;
             AvailableQuantity = availableQuantity;
@@ -36,17 +37,19 @@ namespace AgriConnectMarket.Domain.Entities
             PlantingDate = plantingDate;
             SeasonId = seasonId;
             HarvestDate = DateTime.UtcNow;
+            Price = price;
         }
 
         public static ProductBatch Create(Guid seasonId, decimal totalYield, decimal availableQuantity,
-            DateTime plantingDate, string units = "kg")
+            DateTime plantingDate, decimal price, string units = "kg")
         {
             Guard.AgainstNull(seasonId, nameof(seasonId));
             Guard.AgainstNegative(totalYield, nameof(totalYield));
             Guard.AgainstNegative(availableQuantity, nameof(availableQuantity));
             Guard.AgainstNull(plantingDate, nameof(plantingDate));
+            Guard.AgainstNegative(price, nameof(price));
 
-            return new ProductBatch(totalYield, availableQuantity, units, plantingDate, seasonId);
+            return new ProductBatch(totalYield, availableQuantity, units, plantingDate, seasonId, price);
         }
 
         public void SetBatchCode(BatchCode code)
