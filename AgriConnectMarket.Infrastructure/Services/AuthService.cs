@@ -74,7 +74,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             var token = _jwtService.GenerateAccessToken(user.Id, existing.UserName, existing.Role); // user.Id is the ProfileID
 
-            var result = new LoginResultDto { AccountId = existing.Id, UserId = user.Id, Token = token };
+            var result = new LoginResultDto { AccountId = existing.Id, UserId = user.Id, Role = existing.Role, Token = token };
 
             return Result<LoginResultDto>.Success(result);
         }
