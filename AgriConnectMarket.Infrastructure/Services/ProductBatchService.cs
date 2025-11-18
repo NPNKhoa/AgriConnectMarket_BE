@@ -7,7 +7,7 @@ using AgriConnectMarket.SharedKernel.Result;
 
 namespace AgriConnectMarket.Infrastructure.Services
 {
-    public class ProductBatchService(IUnitOfWork _uow, ICurrentUserService _currentUser, IBatchCodeGenerator _codeGenerator)
+    public class ProductBatchService(IUnitOfWork _uow, IBatchCodeGenerator _codeGenerator)
     {
         public async Task<Result<IEnumerable<ProductBatch>>> GetBatchesBySeasonAsync(Guid seasonId, CancellationToken ct = default)
         {
@@ -35,8 +35,8 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<CreateProductBatchResultDto>> CreateBatchAsync(CreateProductBatchDto dto, CancellationToken ct = default)
         {
-            var entity = ProductBatch.Create(dto.SeasonId, dto.TotalYield, dto.AvailableQuantity, dto.PlantingDate, dto.Units);
-            var season = await _uow.SeasonRepository.GetByIdAsync(dto.SeasonId);
+            var entity = ProductBatch.Create(dto.SeasonId, dto.TotalYield, dto.AvailableQuantity, dto.PlantingDate, dto.Price, dto.Units);
+            var season = await _uow.SeasonRepository.GetByIdAsync(dto.SeasonId, ct);
 
             if (season is null)
             {
@@ -44,7 +44,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             }
 
             var farmId = season.FarmId;
-            var farm = await _uow.FarmRepository.GetByIdAsync(farmId);
+            var farm = await _uow.FarmRepository.GetByIdAsync(farmId, ct);
 
             if (farm is null)
             {
@@ -56,7 +56,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<CreateProductBatchResultDto>.Fail(MessageConstant.FARM_MISSING_PREFIX);
             }
 
-            var codeString = await _codeGenerator.GenerateNextCodeAsync(farm.BatchCodePrefix);
+            var codeString = await _codeGenerator.GenerateNextCodeAsync(farm.BatchCodePrefix, ct);
 
             entity.SetBatchCode(codeString);
 
@@ -70,6 +70,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 SeasonId = entity.SeasonId,
                 TotalYield = entity.TotalYield,
                 Units = entity.Units,
+                Price = entity.Price,
                 AvailableQuantity = entity.AvailableQuantity,
                 PlantingDate = entity.PlantingDate,
                 HarvestDate = entity.HarvestDate

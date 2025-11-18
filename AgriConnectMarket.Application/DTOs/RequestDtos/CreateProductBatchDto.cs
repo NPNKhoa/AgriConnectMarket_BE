@@ -8,5 +8,6 @@
         public string Units { get; set; }
         public DateTime PlantingDate { get; set; }
         public bool IsActive { get; set; }
+        public decimal Price { get; set; }
     }
 }
