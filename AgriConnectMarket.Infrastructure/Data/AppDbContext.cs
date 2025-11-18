@@ -63,6 +63,12 @@ namespace AgriConnectMarket.Infrastructure.Data
                     .WithOne(a => a.Profile)
                     .HasForeignKey<Profile>(p => p.AccountId)
                     .IsRequired();
+
+                b.HasMany(b => b.FavoriteFarms)
+                    .WithOne(f => f.Customer)
+                    .IsRequired()
+                    .HasForeignKey(f => f.CustomerId)
+                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<Address>(a =>
@@ -91,6 +97,12 @@ namespace AgriConnectMarket.Infrastructure.Data
                 f.HasMany(f => f.Seasons)
                     .WithOne(s => s.Farm)
                     .HasForeignKey(s => s.FarmId);
+
+                f.HasMany(f => f.FavoriteFarms)
+                    .WithOne(f => f.Farm)
+                    .IsRequired()
+                    .HasForeignKey(f => f.FarmId)
+                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<Season>(s =>
@@ -122,7 +134,7 @@ namespace AgriConnectMarket.Infrastructure.Data
 
             modelBuilder.Entity<ProductBatch>(pb =>
             {
-                pb.ToTable("ProductBatchs");
+                pb.ToTable("ProductBatches");
 
                 pb.HasKey(pb => pb.Id).HasName("BatchId");
 
@@ -146,6 +158,13 @@ namespace AgriConnectMarket.Infrastructure.Data
 
                 b.Property(x => x.Prefix).HasMaxLength(50).IsRequired();
                 b.Property(x => x.LastNumber).IsRequired();
+            });
+
+            modelBuilder.Entity<FavoriteFarm>(f =>
+            {
+                f.ToTable("FavoriteFarms");
+
+                f.HasKey(f => f.Id).HasName("FavoriteId");
             });
         }
     }

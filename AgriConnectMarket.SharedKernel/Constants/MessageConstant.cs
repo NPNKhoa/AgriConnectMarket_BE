@@ -30,5 +30,6 @@
         public const string FARM_MARKED_MALL = "This farm is marked as a mall farm successfully!";
         public const string BATCH_NOT_FOUND = "Can not found batch(es)";
         public const string FARM_MISSING_PREFIX = "Please configure the prefix before creating a batch";
+        public const string FAVORITE_FARM_NOT_FOUND = "Can not found favorite farm(s)";
     }
 }
