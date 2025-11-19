@@ -1,5 +1,4 @@
 ﻿using AgriConnectMarket.Application.Interfaces;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace AgriConnectMarket.WebApi.Services
@@ -13,8 +12,12 @@ namespace AgriConnectMarket.WebApi.Services
         {
             get
             {
-                var id = _principal?.FindFirstValue(ClaimTypes.NameIdentifier) ?? _principal?.FindFirstValue(JwtRegisteredClaimNames.Sub);
-                return Guid.TryParse(id, out var g) ? g : (Guid?)null;
+                var user = _httpContextAccessor.HttpContext?.User;
+                if (user == null || !user.Identity?.IsAuthenticated == true)
+                    return null;
+
+                var idValue = user.FindFirstValue(ClaimTypes.NameIdentifier);
+                return Guid.TryParse(idValue, out var guid) ? guid : null;
             }
         }
         public string? Username => _principal?.Identity?.Name;

@@ -47,6 +47,18 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OrderCodeSequences",
+                columns: table => new
+                {
+                    Prefix = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastNumber = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderCodeSequences", x => x.Prefix);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Profiles",
                 columns: table => new
                 {
@@ -105,11 +117,15 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FarmName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FarmDesc = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BatchCodePrefix = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BannerUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CertificateUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Area = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Area = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    IsBanned = table.Column<bool>(type: "bit", nullable: false),
+                    IsValidForSelling = table.Column<bool>(type: "bit", nullable: false),
+                    IsConfirmAsMall = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -130,6 +146,29 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                         name: "FK_Farms_Addresses_AddressId",
                         column: x => x.AddressId,
                         principalTable: "Addresses",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FavoriteFarms",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FarmId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("FavoriteId", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FavoriteFarms_Farms_FarmId",
+                        column: x => x.FarmId,
+                        principalTable: "Farms",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_FavoriteFarms_Profiles_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Profiles",
                         principalColumn: "Id");
                 });
 
@@ -160,6 +199,65 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ProductBatches",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BacthCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TotalYield = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
+                    AvailableQuantity = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
+                    Units = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    PlantingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HarvestDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SeasonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("BatchId", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductBatches_Seasons_SeasonId",
+                        column: x => x.SeasonId,
+                        principalTable: "Seasons",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductAttribute = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductDesc = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SeasonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("ProductId", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Products_Seasons_SeasonId",
+                        column: x => x.SeasonId,
+                        principalTable: "Seasons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_UserName",
                 table: "Accounts",
@@ -184,6 +282,31 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_FavoriteFarms_CustomerId",
+                table: "FavoriteFarms",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FavoriteFarms_FarmId",
+                table: "FavoriteFarms",
+                column: "FarmId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductBatches_SeasonId",
+                table: "ProductBatches",
+                column: "SeasonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_CategoryId",
+                table: "Products",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_SeasonId",
+                table: "Products",
+                column: "SeasonId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Profiles_AccountId",
                 table: "Profiles",
                 column: "AccountId",
@@ -198,6 +321,18 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "FavoriteFarms");
+
+            migrationBuilder.DropTable(
+                name: "OrderCodeSequences");
+
+            migrationBuilder.DropTable(
+                name: "ProductBatches");
+
+            migrationBuilder.DropTable(
+                name: "Products");
+
             migrationBuilder.DropTable(
                 name: "Categories");
 
