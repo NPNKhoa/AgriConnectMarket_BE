@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AgriConnectMarket.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251118174735_AddFavoriteFarmEntity")]
-    partial class AddFavoriteFarmEntity
+    [Migration("20251119161925_UpdateProductSeasonRelationship")]
+    partial class UpdateProductSeasonRelationship
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -265,9 +265,6 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("SeasonId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -279,8 +276,6 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("SeasonId");
-
                     b.ToTable("Products", (string)null);
                 });
 
@@ -291,7 +286,8 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("AvailableQuantity")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -305,11 +301,16 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                     b.Property<DateTime>("PlantingDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<Guid>("SeasonId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("TotalYield")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("Units")
                         .IsRequired()
@@ -392,6 +393,9 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                     b.Property<Guid>("FarmId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("SeasonDesc")
                         .HasColumnType("nvarchar(max)");
 
@@ -416,6 +420,8 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                         .HasName("SeasonId");
 
                     b.HasIndex("FarmId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Seasons", (string)null);
                 });
@@ -489,15 +495,7 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("AgriConnectMarket.Domain.Entities.Season", "Season")
-                        .WithMany()
-                        .HasForeignKey("SeasonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Category");
-
-                    b.Navigation("Season");
                 });
 
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.ProductBatch", b =>
@@ -551,6 +549,10 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AgriConnectMarket.Domain.Entities.Product", null)
+                        .WithMany("Seasons")
+                        .HasForeignKey("ProductId");
+
                     b.Navigation("Farm");
                 });
 
@@ -577,6 +579,11 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                 {
                     b.Navigation("FavoriteFarms");
 
+                    b.Navigation("Seasons");
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Product", b =>
+                {
                     b.Navigation("Seasons");
                 });
 

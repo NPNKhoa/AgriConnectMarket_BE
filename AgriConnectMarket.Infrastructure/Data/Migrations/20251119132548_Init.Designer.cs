@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AgriConnectMarket.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251118180513_AddPriceToProductBatch")]
-    partial class AddPriceToProductBatch
+    [Migration("20251119132548_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -215,6 +215,28 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Farms", (string)null);
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.FavoriteFarm", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FarmId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id")
+                        .HasName("FavoriteId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("FarmId");
+
+                    b.ToTable("FavoriteFarms", (string)null);
                 });
 
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Product", b =>
@@ -446,6 +468,25 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                     b.Navigation("Farmer");
                 });
 
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.FavoriteFarm", b =>
+                {
+                    b.HasOne("AgriConnectMarket.Domain.Entities.Profile", "Customer")
+                        .WithMany("FavoriteFarms")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("AgriConnectMarket.Domain.Entities.Farm", "Farm")
+                        .WithMany("FavoriteFarms")
+                        .HasForeignKey("FarmId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Farm");
+                });
+
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Product", b =>
                 {
                     b.HasOne("AgriConnectMarket.Domain.Entities.Category", "Category")
@@ -540,12 +581,16 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Farm", b =>
                 {
+                    b.Navigation("FavoriteFarms");
+
                     b.Navigation("Seasons");
                 });
 
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Profile", b =>
                 {
                     b.Navigation("Addresses");
+
+                    b.Navigation("FavoriteFarms");
                 });
 
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Season", b =>

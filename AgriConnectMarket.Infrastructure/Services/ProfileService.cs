@@ -36,12 +36,12 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<IEnumerable<Profile>>.Fail(MessageConstant.PROFILE_NOT_FOUND);
             }
 
-            return Result<IEnumerable<Profile>>.Success(profiles);
+            return Result<IEnumerable<Profile>>.Success(profiles.ToList());
         }
 
-        public async Task<Result<IEnumerable<Profile>>> GetProfilesAsync(string? searchTerm = null, CancellationToken ct = default)
+        public async Task<Result<IEnumerable<Profile>>> GetProfilesAsync(string searchTerm = "", CancellationToken ct = default)
         {
-            var searchSpec = new FilterProfileBySearchTermSpecification(searchTerm ?? ""); // Can sua them
+            var searchSpec = new FilterProfileBySearchTermSpecification(searchTerm);
 
             var profiles = await _uow.ProfileRepository.ListAsync(searchSpec, ct);
 

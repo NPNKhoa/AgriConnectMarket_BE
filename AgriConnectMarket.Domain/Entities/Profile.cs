@@ -1,5 +1,4 @@
 ﻿using AgriConnectMarket.SharedKernel.Entities;
-using AgriConnectMarket.SharedKernel.Guards;
 using AgriConnectMarket.SharedKernel.Interfaces;
 using AgriConnectMarket.SharedKernel.Normalization;
 
@@ -9,7 +8,7 @@ namespace AgriConnectMarket.Domain.Entities
     {
         public string Fullname { get; set; }
         public string Email { get; set; }
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
         public string? AvatarUrl { get; set; }
 
         public Guid AccountId { get; set; }
@@ -24,13 +23,13 @@ namespace AgriConnectMarket.Domain.Entities
         public DateTime? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
 
+        public Profile()
+        {
+
+        }
+
         public Profile(string fullname, string email, string phone, Guid accountId, string? avatarUrl = "")
         {
-            Guard.AgainstNullOrEmpty(fullname, nameof(fullname));
-            Guard.AgainstNullOrEmpty(email, nameof(email));
-            Guard.AgainstNullOrEmpty(phone, nameof(phone));
-            Guard.AgainstNullOrEmpty(avatarUrl, nameof(avatarUrl));
-
             // basic normalization
             Email = Normalizer.NormalizeEmail(email);
             Phone = Normalizer.NormalizePhone(phone);
@@ -41,11 +40,6 @@ namespace AgriConnectMarket.Domain.Entities
 
         public Profile(string fullname, string email, string phone, string avatarUrl = "")
         {
-            Guard.AgainstNullOrEmpty(fullname, nameof(fullname));
-            Guard.AgainstNullOrEmpty(email, nameof(email));
-            Guard.AgainstNullOrEmpty(phone, nameof(phone));
-            Guard.AgainstNullOrEmpty(avatarUrl, nameof(avatarUrl));
-
             // basic normalization
             Email = Normalizer.NormalizeEmail(email);
             Phone = Normalizer.NormalizePhone(phone);

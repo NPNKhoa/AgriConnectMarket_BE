@@ -110,6 +110,14 @@ namespace AgriConnectMarket.Infrastructure.Data
                 s.ToTable("Seasons");
 
                 s.HasKey(s => s.Id).HasName("SeasonId");
+
+                s.HasOne(s => s.Farm)
+                    .WithMany(f => f.Seasons)
+                    .HasForeignKey(s => s.FarmId);
+
+                s.HasOne(s => s.Product)
+                    .WithMany(p => p.Seasons)
+                    .HasForeignKey(s => s.ProductId);
             });
 
             modelBuilder.Entity<Category>(c =>
