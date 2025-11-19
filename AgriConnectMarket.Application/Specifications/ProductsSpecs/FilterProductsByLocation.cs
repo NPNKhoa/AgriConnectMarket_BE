@@ -9,11 +9,11 @@ namespace AgriConnectMarket.Application.Specifications.ProductsSpecs
         {
             string normalizedLocationString = location.Trim().ToLower();
 
-            ApplyCriteria(p => p.Season.Farm.Area.ToLower().Contains(normalizedLocationString)
-                            || p.Season.Farm.Address.Province.ToLower().Contains(normalizedLocationString)
-                            || p.Season.Farm.Address.District.ToLower().Contains(normalizedLocationString)
-                            || p.Season.Farm.Address.Ward.ToLower().Contains(normalizedLocationString)
-                            || p.Season.Farm.Address.Detail.ToLower().Contains(normalizedLocationString));
+            ApplyCriteria(p => p.Seasons.First().Farm.Area.ToLower().Contains(normalizedLocationString)
+                            || p.Seasons.First().Farm.Address.Province.ToLower().Contains(normalizedLocationString)
+                            || p.Seasons.First().Farm.Address.District.ToLower().Contains(normalizedLocationString)
+                            || p.Seasons.First().Farm.Address.Ward.ToLower().Contains(normalizedLocationString)
+                            || p.Seasons.First().Farm.Address.Detail.ToLower().Contains(normalizedLocationString));
         }
     }
 }

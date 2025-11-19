@@ -12,11 +12,11 @@ namespace AgriConnectMarket.WebApi.Controllers
     public class ProductController(ProductService _productService) : ControllerBase
     {
         [HttpGet("")]
-        public async Task<IActionResult> GetAllProducts([FromQuery] ProductQueryRequest? query, CancellationToken ct)
+        public async Task<IActionResult> GetAllProducts([FromQuery] ProductQueryRequest query, CancellationToken ct)
         {
             dynamic result = await _productService.GetAllProductsAsync(ct);
 
-            if (query is not null)
+            if (query.categoryId.HasValue || !string.IsNullOrWhiteSpace(query.searchTerm) || !string.IsNullOrWhiteSpace(query.location))
             {
                 result = await _productService.GetProductsAsync(query, ct);
             }

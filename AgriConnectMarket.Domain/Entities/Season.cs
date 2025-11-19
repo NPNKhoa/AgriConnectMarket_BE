@@ -21,6 +21,9 @@ namespace AgriConnectMarket.Domain.Entities
         public Guid FarmId { get; set; }
         public Farm Farm { get; set; }
 
+        public Guid ProductId { get; set; }
+        public Product Product { get; set; }
+
         public IEnumerable<ProductBatch> ProductBatches { get; set; }
 
         public Season()
@@ -28,7 +31,7 @@ namespace AgriConnectMarket.Domain.Entities
 
         }
 
-        public Season(string seasonName, string? seasonDesc, DateTime startDate, DateTime endDate, string status = SeasonStatusEnums.PENDING)
+        public Season(string seasonName, string? seasonDesc, DateTime startDate, DateTime endDate, Guid farmId, Guid productId, string status = SeasonStatusEnums.PENDING)
         {
             Guard.AgainstNullOrWhiteSpace(seasonName, nameof(seasonName));
             Guard.AgainstNullOrEmpty(status, nameof(status));

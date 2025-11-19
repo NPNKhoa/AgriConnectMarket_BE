@@ -28,20 +28,11 @@ namespace AgriConnectMarket.WebApi.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetCustomerList([FromQuery] string? searchTerm, CancellationToken ct)
         {
-            dynamic result;
+            var result = await _profileService.GetFullListAsync(ct);
 
-            if (searchTerm is null)
-            {
-                result = await _profileService.GetFullListAsync(ct);
-            }
-            else
+            if (searchTerm is not null)
             {
                 result = await _profileService.GetProfilesAsync(searchTerm, ct);
-            }
-
-            if (!result)
-            {
-                return BadRequest(ApiResponse.FailResponse(MessageConstant.UNKNOWN_ERROR));
             }
 
             if (!result.IsSuccess)

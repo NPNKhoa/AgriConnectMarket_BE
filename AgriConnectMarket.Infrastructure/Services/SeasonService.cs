@@ -38,7 +38,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<CreateSeasonResponseDto>> CreateSeason(CreateSeasonDto dto, CancellationToken ct = default)
         {
-            var entity = new Season(dto.SeasonName, dto.SeasonDesc, dto.StartDate, dto.EndDate);
+            var entity = new Season(dto.SeasonName, dto.SeasonDesc, dto.StartDate, dto.EndDate, dto.FarmId, dto.ProductId);
 
             await _uow.SeasonRepository.AddAsync(entity, ct);
             await _uow.SaveChangesAsync(ct);

@@ -38,6 +38,7 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddScoped<AuthService>();
             services.AddScoped<ProfileService>();
             services.AddScoped<FarmService>();
+            services.AddScoped<CertificateService>();
             services.AddScoped<SeasonService>();
             services.AddScoped<AddressService>();
             services.AddScoped<CategoryService>();

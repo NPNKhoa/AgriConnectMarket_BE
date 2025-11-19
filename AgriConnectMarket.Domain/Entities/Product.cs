@@ -14,7 +14,7 @@ namespace AgriConnectMarket.Domain.Entities
         // Navigations
         public Guid CategoryId { get; set; }
         public Category Category { get; set; }
-        public Season Season { get; set; }
+        public IEnumerable<Season> Seasons { get; set; }
 
         // Audit
         public DateTime CreatedAt { get; set; }
@@ -27,14 +27,16 @@ namespace AgriConnectMarket.Domain.Entities
 
         }
 
-        public Product(string productName, string productAttribute, string? productDesc = null)
+        public Product(string productName, string productAttribute, Guid categoryId, string? productDesc = null)
         {
             Guard.AgainstNullOrEmpty(productName, nameof(productName));
             Guard.AgainstNullOrEmpty(productAttribute, nameof(productAttribute));
+            Guard.AgainstNull(categoryId, nameof(categoryId));
 
             ProductName = productName;
             ProductAttribute = productAttribute;
             ProductDesc = productDesc;
+            CategoryId = categoryId;
         }
     }
 }
