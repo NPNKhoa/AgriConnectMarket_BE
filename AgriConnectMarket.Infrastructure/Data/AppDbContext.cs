@@ -178,6 +178,30 @@ namespace AgriConnectMarket.Infrastructure.Data
 
                 f.HasKey(f => f.Id).HasName("FavoriteId");
             });
+
+            modelBuilder.Entity<Cart>(c =>
+            {
+                c.ToTable("Carts");
+
+                c.HasKey(c => c.Id).HasName("CartId");
+
+                c.HasOne(c => c.Customer)
+                    .WithOne(p => p.Cart)
+                    .HasForeignKey<Cart>(c => c.CustomerId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<CartItem>(ci =>
+            {
+                ci.ToTable("CartItems");
+
+                ci.HasKey(ci => ci.Id).HasName("ItemId");
+
+                ci.HasOne(ci => ci.Cart)
+                    .WithMany(c => c.CartItems)
+                    .HasForeignKey(ci => ci.CartId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
         }
     }
 }

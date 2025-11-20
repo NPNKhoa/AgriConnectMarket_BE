@@ -11,6 +11,8 @@
         IProductRepository ProductRepository { get; }
         IProductBatchRepository ProductBatchRepository { get; }
         IFavoriteFarmRepository FavoriteFarmRepository { get; }
+        ICartRepository CartRepository { get; }
+        ICartItemRepository CartItemRepository { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
