@@ -57,5 +57,53 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             return Result<CartItem>.Success(cartItem);
         }
+
+        public async Task<Result<CartItem>> UpdateCartItemAsync(Guid cartId, UpdateCartItemDto dto, CancellationToken ct = default)
+        {
+            var cart = await _uow.CartRepository.GetByIdAsync(cartId, ct);
+
+            if (cart is null)
+            {
+                return Result<CartItem>.Fail(MessageConstant.CART_NOT_INIT);
+            }
+
+            var batch = await _uow.ProductBatchRepository.GetByIdAsync(dto.BatchId);
+
+            if (batch is null)
+            {
+                return Result<CartItem>.Fail(MessageConstant.BATCH_NOT_FOUND);
+            }
+
+            var item = await _uow.CartItemRepository.GetByCartAndBatchAsync(cartId, batch.Id, ct);
+
+            cart.TotalPrice -= item.ItemPrice;
+
+            item.Quantity = dto.Quantity;
+            item.ItemPrice = dto.Quantity * batch.Price;
+
+            cart.TotalPrice += item.ItemPrice;
+
+            await _uow.CartRepository.UpdateAsync(cart);
+            await _uow.CartItemRepository.UpdateAsync(item);
+
+            await _uow.SaveChangesAsync();
+
+            return Result<CartItem>.Success(item);
+        }
+
+        public async Task<Result<Guid>> DeleteItemFromCartAsync(Guid cartItemId, CancellationToken ct = default)
+        {
+            var item = await _uow.CartItemRepository.GetByIdAsync(cartItemId);
+
+            if (item is null)
+            {
+                return Result<Guid>.Fail(MessageConstant.CART_ITEM_NOT_FOUND);
+            }
+
+            await _uow.CartItemRepository.DeleteAsync(item);
+            await _uow.SaveChangesAsync();
+
+            return Result<Guid>.Success(cartItemId);
+        }
     }
 }

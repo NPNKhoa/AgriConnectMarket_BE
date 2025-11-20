@@ -32,5 +32,6 @@
         public const string FARM_MISSING_PREFIX = "Please configure the prefix before creating a batch";
         public const string FAVORITE_FARM_NOT_FOUND = "Can not found favorite farm(s)";
         public const string CART_NOT_INIT = "This cart was not initialized yet. Please try again!";
+        public const string CART_ITEM_NOT_FOUND = "Can not found this item";
     }
 }

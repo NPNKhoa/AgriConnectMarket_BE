@@ -23,5 +23,22 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
             return await query.FirstOrDefaultAsync();
         }
+
+        public async Task<Cart> GetByIdAsync(Guid cartId, bool includeItems = false, bool includeProfile = false, CancellationToken ct = default)
+        {
+            var query = _dbContext.Set<Cart>().Where(c => c.Id == cartId);
+
+            if (includeItems)
+            {
+                query = query.Include(c => c.CartItems);
+            }
+
+            if (includeProfile)
+            {
+                query = query.Include(c => c.Customer);
+            }
+
+            return await query.FirstOrDefaultAsync();
+        }
     }
 }
