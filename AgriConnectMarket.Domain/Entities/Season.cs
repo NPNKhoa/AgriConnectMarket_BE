@@ -44,6 +44,8 @@ namespace AgriConnectMarket.Domain.Entities
             this.Status = status;
             this.StartDate = startDate;
             this.EndDate = endDate;
+            this.FarmId = farmId;
+            this.ProductId = productId;
         }
     }
 }
