@@ -38,7 +38,8 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    // existing TokenValidationParameters...
+                    options.RequireHttpsMetadata = true;
+                    options.TokenValidationParameters = validationParameters;
                     options.Events = new JwtBearerEvents
                     {
                         OnTokenValidated = async context =>
@@ -77,10 +78,15 @@ namespace AgriConnectMarket.Infrastructure.Extensions
                                 identity.AddClaim(new Claim(ClaimTypes.Role, role));
                             }
 
-                            // populate current user service
-                            currentUser?.SetClaims(context.Principal!);
+                            // Set current user service
+                            currentUser?.SetClaims(context.Principal);
                         },
-                        OnAuthenticationFailed = ctx => Task.CompletedTask
+
+                        OnAuthenticationFailed = context =>
+                        {
+                            // optional logging
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 
