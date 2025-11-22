@@ -56,7 +56,9 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<IEnumerable<Order>>.Fail(MessageConstant.FARM_NOT_FOUND);
             }
 
+            var orders = await _uow.OrderRepository.GetOrdersByFarmIdAsync(farmId, true, true, true, ct);
 
+            return Result<IEnumerable<Order>>.Success(orders);
         }
 
         public async Task<Result<Order>> GetOrderDetailAsync(Guid orderId, CancellationToken ct = default)
@@ -81,7 +83,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             }
 
             string orderCode = _codeGenerator.GenerateOrderCode();
-            var order = Order.Create(dto.CustomerId, orderCode, _dateTimeProvider.UtcNow, OrderTypeConst.ORDER);
+            var order = Order.Create(dto.CustomerId, orderCode, _dateTimeProvider.UtcNow, dto.ShippingFee, OrderTypeConst.ORDER);
 
             foreach (var item in dto.OrderItems)
             {
@@ -162,7 +164,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             }
 
             string orderCode = _codeGenerator.GenerateOrderCode("PRE");
-            var order = Order.Create(dto.CustomerId, orderCode, _dateTimeProvider.UtcNow, OrderTypeConst.PREORDER);
+            var order = Order.Create(dto.CustomerId, orderCode, _dateTimeProvider.UtcNow, 0, OrderTypeConst.PREORDER);
 
             var preOrder = PreOrder.Create(order, dto.ProductId, dto.Quantity, dto.ExpectedReleaseDate, dto.Note!);
 
