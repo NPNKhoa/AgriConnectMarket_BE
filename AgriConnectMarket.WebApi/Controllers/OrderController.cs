@@ -77,7 +77,7 @@ namespace AgriConnectMarket.WebApi.Controllers
         }
 
         [HttpPatch("{orderId}/process")]
-        public async Task<IActionResult> CancelOrder([FromRoute] Guid orderId, CancellationToken ct)
+        public async Task<IActionResult> ProcessOrder([FromRoute] Guid orderId, CancellationToken ct)
         {
             var result = await _orderService.ProcessOrder(orderId, ct);
 
