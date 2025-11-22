@@ -6,6 +6,7 @@
         public string OrderCode { get; set; }
         public DateTime OrderDate { get; set; }
         public string OrderType { get; set; }
+        public decimal ShippingFee { get; set; }
         public ICollection<OrderItemDto> OrderItems { get; set; }
     }
 }

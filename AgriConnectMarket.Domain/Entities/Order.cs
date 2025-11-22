@@ -11,6 +11,7 @@ namespace AgriConnectMarket.Domain.Entities
         public string OrderCode { get; set; }
         public decimal TotalPrice { get; set; }
         public DateTime OrderDate { get; set; }
+        public decimal ShippingFee { get; set; }
         public string OrderStatus { get; set; } = OrderStatusEnum.PENDING;
         public string OrderType { get; set; } = OrderTypeConst.ORDER;
         public string PaymentStatus { get; set; } = PaymentStatusConst.PENDING;
@@ -34,20 +35,21 @@ namespace AgriConnectMarket.Domain.Entities
 
         }
 
-        private Order(Guid customerId, string orderCode, DateTime orderDate, string? orderType = "")
+        private Order(Guid customerId, string orderCode, DateTime orderDate, decimal shippingFee = 0, string? orderType = "")
         {
             CustomerId = customerId;
             OrderCode = orderCode;
             TotalPrice = 0;
             OrderDate = orderDate;
             OrderType = string.IsNullOrEmpty(orderType) ? OrderTypeConst.ORDER : orderType;
+            ShippingFee = OrderType == OrderTypeConst.PREORDER ? 0 : shippingFee;
 
             OrderStatus = OrderStatusEnum.PENDING;
             PaymentStatus = PaymentStatusConst.PENDING;
         }
 
-        public static Order Create(Guid customerId, string orderCode, DateTime orderDate, string? orderType = "")
-            => new Order(customerId, orderCode, orderDate, orderType);
+        public static Order Create(Guid customerId, string orderCode, DateTime orderDate, decimal shippingFee = 0, string? orderType = "")
+            => new Order(customerId, orderCode, orderDate, shippingFee, orderType);
 
         public void AddItem(ProductBatch batch, decimal quantity)
         {
