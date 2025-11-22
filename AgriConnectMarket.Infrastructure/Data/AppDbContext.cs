@@ -16,6 +16,11 @@ namespace AgriConnectMarket.Infrastructure.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductBatch> ProductBatches { get; set; }
         public DbSet<BatchCodeSequence> BatchCodeSequences { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<PreOrder> PreOrders { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -200,6 +205,51 @@ namespace AgriConnectMarket.Infrastructure.Data
                 ci.HasOne(ci => ci.Cart)
                     .WithMany(c => c.CartItems)
                     .HasForeignKey(ci => ci.CartId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<Order>(o =>
+            {
+                o.ToTable("Orders");
+
+                o.HasKey(o => o.Id).HasName("OrderId");
+
+                o.HasOne(o => o.Customer)
+                    .WithMany(c => c.Orders)
+                    .HasForeignKey(o => o.CustomerId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<OrderItem>(i =>
+            {
+                i.ToTable("OrderItems");
+
+                i.HasKey(i => i.Id).HasName("OrderItemId");
+
+                i.HasOne(i => i.Order)
+                    .WithMany(o => o.OrderItems)
+                    .HasForeignKey(i => i.OrderId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<PreOrder>(i =>
+            {
+                i.ToTable("PreOrders");
+
+                i.HasKey(i => i.OrderId).HasName("OrderId");
+
+                i.HasOne(i => i.Order)
+                    .WithOne(o => o.PreOrder)
+                    .HasForeignKey<PreOrder>(i => i.OrderId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                i.HasOne(p => p.Product)
+                    .WithOne(p => p.PreOrder)
+                    .HasForeignKey<PreOrder>(po => po.ProductId)
+                    .IsRequired()
                     .OnDelete(DeleteBehavior.NoAction);
             });
         }

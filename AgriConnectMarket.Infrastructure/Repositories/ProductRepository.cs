@@ -18,5 +18,28 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
             return await query.FirstOrDefaultAsync();
         }
+
+        public async Task<IEnumerable<Product>> GetProductsByFarmIdAsync(Guid farmId, bool includeCategory = false, bool includeSeason = false, bool includePreOrder = false, CancellationToken ct = default)
+        {
+            var query = _dbContext.Set<Product>()
+                    .Where(p => p.Seasons.Any(s => s.FarmId == farmId));
+
+            if (includeCategory)
+            {
+                query = query.Include(p => p.Category);
+            }
+
+            if (includeSeason)
+            {
+                query = query.Include(p => p.Seasons);
+            }
+
+            if (includePreOrder)
+            {
+                query = query.Include(p => p.PreOrder);
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }

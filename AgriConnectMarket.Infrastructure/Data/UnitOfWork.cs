@@ -16,6 +16,9 @@ namespace AgriConnectMarket.Infrastructure.Data
         public IFavoriteFarmRepository FavoriteFarmRepository { get; }
         public ICartRepository CartRepository { get; }
         public ICartItemRepository CartItemRepository { get; }
+        public IOrderRepository OrderRepository { get; }
+        public IOrderItemRepository OrderItemRepository { get; }
+        public IPreOrderRepository PreOrderRepository { get; }
 
         public UnitOfWork
             (
@@ -30,7 +33,10 @@ namespace AgriConnectMarket.Infrastructure.Data
                 IProductBatchRepository productBatchRepository,
                 IFavoriteFarmRepository favoriteFarmRepository,
                 ICartRepository cartRepository,
-                ICartItemRepository cartItemRepository
+                ICartItemRepository cartItemRepository,
+                IOrderRepository orderRepository,
+                IOrderItemRepository orderItemRepository,
+                IPreOrderRepository preOrderRepository
             )
         {
             _context = context;
@@ -46,6 +52,9 @@ namespace AgriConnectMarket.Infrastructure.Data
             FavoriteFarmRepository = favoriteFarmRepository;
             CartRepository = cartRepository;
             CartItemRepository = cartItemRepository;
+            OrderRepository = orderRepository;
+            OrderItemRepository = orderItemRepository;
+            PreOrderRepository = preOrderRepository;
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
