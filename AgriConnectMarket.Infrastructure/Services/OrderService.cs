@@ -10,6 +10,67 @@ namespace AgriConnectMarket.Infrastructure.Services
 {
     public class OrderService(IUnitOfWork _uow, IDateTimeProvider _dateTimeProvider, IOrderCodeGenerator _codeGenerator, ICurrentUserService _currentUserService)
     {
+        public async Task<Result<IEnumerable<Order>>> GetAllOrdersAsync(CancellationToken ct = default)
+        {
+            var orders = await _uow.OrderRepository.ListAllAsync(ct);
+
+            if (!orders.Any())
+            {
+                return Result<IEnumerable<Order>>.Fail(MessageConstant.ORDER_NOT_FOUND);
+            }
+
+            return Result<IEnumerable<Order>>.Success(orders);
+        }
+
+        public async Task<Result<IEnumerable<Order>>> GetMyOrdersAsync(CancellationToken ct = default)
+        {
+            if (_currentUserService.UserId is null)
+            {
+                return Result<IEnumerable<Order>>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
+            }
+
+            var userId = _currentUserService.UserId.Value;
+            var profile = await _uow.ProfileRepository.GetByIdAsync(userId, ct);
+
+            if (profile is null)
+            {
+                return Result<IEnumerable<Order>>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
+            }
+
+            var orders = await _uow.OrderRepository.GetOrderByProfileIdAsync(profile.Id, true, true, false, ct);
+
+            if (!orders.Any())
+            {
+                return Result<IEnumerable<Order>>.Fail(MessageConstant.ORDER_NOT_FOUND);
+            }
+
+            return Result<IEnumerable<Order>>.Success(orders);
+        }
+
+        public async Task<Result<IEnumerable<Order>>> GetFarmOrderAsync(Guid farmId, CancellationToken ct = default)
+        {
+            var farm = await _uow.FarmRepository.GetByIdAsync(farmId, ct);
+
+            if (farm is null)
+            {
+                return Result<IEnumerable<Order>>.Fail(MessageConstant.FARM_NOT_FOUND);
+            }
+
+
+        }
+
+        public async Task<Result<Order>> GetOrderDetailAsync(Guid orderId, CancellationToken ct = default)
+        {
+            var order = await _uow.OrderRepository.GetByIdAsync(orderId, ct);
+
+            if (order is null)
+            {
+                return Result<Order>.Fail(MessageConstant.ORDER_NOT_FOUND);
+            }
+
+            return Result<Order>.Success(order);
+        }
+
         public async Task<Result<Order>> CreateOrder(CreateOrderDto dto, CancellationToken ct = default)
         {
             var customer = await _uow.ProfileRepository.GetByIdAsync(dto.CustomerId);
@@ -84,53 +145,47 @@ namespace AgriConnectMarket.Infrastructure.Services
             });
         }
 
-        public async Task<Result<IEnumerable<Order>>> GetMyOrdersAsync(CancellationToken ct = default)
+        public async Task<Result<CreatePreOrderResponseDto>> CreatePreOrder(CreatePreOrderDto dto, CancellationToken ct = default)
         {
-            if (_currentUserService.UserId is null)
+            var customer = await _uow.ProfileRepository.GetByIdAsync(dto.CustomerId);
+
+            if (customer is null)
             {
-                return Result<IEnumerable<Order>>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
+                return Result<CreatePreOrderResponseDto>.Fail(MessageConstant.PROFILE_NOT_FOUND);
             }
 
-            var userId = _currentUserService.UserId.Value;
-            var profile = await _uow.ProfileRepository.GetByIdAsync(userId, ct);
+            var product = await _uow.ProductRepository.GetByIdAsync(dto.ProductId);
 
-            if (profile is null)
+            if (product is null)
             {
-                return Result<IEnumerable<Order>>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
+                return Result<CreatePreOrderResponseDto>.Fail(MessageConstant.PRODUCT_NOT_FOUND);
             }
 
-            var orders = await _uow.OrderRepository.GetOrderByProfileIdAsync(profile.Id, true, true, false, ct);
+            string orderCode = _codeGenerator.GenerateOrderCode("PRE");
+            var order = Order.Create(dto.CustomerId, orderCode, _dateTimeProvider.UtcNow, OrderTypeConst.PREORDER);
 
-            if (!orders.Any())
+            var preOrder = PreOrder.Create(order, dto.ProductId, dto.Quantity, dto.ExpectedReleaseDate, dto.Note!);
+
+            await _uow.PreOrderRepository.AddAsync(preOrder);
+            await _uow.SaveChangesAsync();
+
+            var response = new CreatePreOrderResponseDto()
             {
-                return Result<IEnumerable<Order>>.Fail(MessageConstant.ORDER_NOT_FOUND);
-            }
+                OrderCode = order.OrderCode,
+                OrderType = order.OrderType,
+                OrderStatus = order.OrderStatus,
+                OrderDate = order.OrderDate,
+                ExpectedReleaseDate = preOrder.ExpectedReleaseDate,
+                PaymentStatus = order.PaymentStatus,
+                PartiallyPaidAmount = preOrder.PartiallyPaidAmount,
+                PaidDate = order.PaidDate,
+                Note = preOrder.Note,
+                Product = product,
+                Quantity = preOrder.Quantity,
+                Order = order
+            };
 
-            return Result<IEnumerable<Order>>.Success(orders);
-        }
-
-        public async Task<Result<Order>> GetOrderDetailAsync(Guid orderId, CancellationToken ct = default)
-        {
-            var order = await _uow.OrderRepository.GetByIdAsync(orderId, ct);
-
-            if (order is null)
-            {
-                return Result<Order>.Fail(MessageConstant.ORDER_NOT_FOUND);
-            }
-
-            return Result<Order>.Success(order);
-        }
-
-        public async Task<Result<IEnumerable<Order>>> GetAllOrdersAsync(CancellationToken ct = default)
-        {
-            var orders = await _uow.OrderRepository.ListAllAsync(ct);
-
-            if (!orders.Any())
-            {
-                return Result<IEnumerable<Order>>.Fail(MessageConstant.ORDER_NOT_FOUND);
-            }
-
-            return Result<IEnumerable<Order>>.Success(orders);
+            return Result<CreatePreOrderResponseDto>.Success(response);
         }
     }
 }

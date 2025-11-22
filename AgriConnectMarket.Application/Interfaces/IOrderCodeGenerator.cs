@@ -2,6 +2,7 @@
 {
     public interface IOrderCodeGenerator
     {
-        string GenerateOrderCode();
+        private const string Prefix = "ORD";
+        string GenerateOrderCode(string? prefix = Prefix);
     }
 }

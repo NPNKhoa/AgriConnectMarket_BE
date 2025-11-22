@@ -28,5 +28,10 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
             return await query.ToListAsync();
         }
+
+        public async Task<IEnumerable<Order>> GetOrdersByFarmIdAsync(Guid farmId, bool includeItems = false, bool includepPreOrder = false, bool includeProfile = false, CancellationToken ct = default)
+        {
+
+        }
     }
 }

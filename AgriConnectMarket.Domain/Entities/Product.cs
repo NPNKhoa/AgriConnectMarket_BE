@@ -9,11 +9,12 @@ namespace AgriConnectMarket.Domain.Entities
         public string ProductName { get; set; }
         public string ProductAttribute { get; set; }
         public string? ProductDesc { get; set; }
+        public Guid CategoryId { get; set; }
         // And more...
 
         // Navigations
-        public Guid CategoryId { get; set; }
         public Category Category { get; set; }
+        public PreOrder PreOrder { get; set; }
         public IEnumerable<Season> Seasons { get; set; }
 
         // Audit

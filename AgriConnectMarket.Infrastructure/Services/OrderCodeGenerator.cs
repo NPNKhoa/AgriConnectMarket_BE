@@ -7,7 +7,7 @@ namespace AgriConnectMarket.Infrastructure.Services
     {
         private const string Prefix = "ORD";
 
-        public string GenerateOrderCode()
+        public string GenerateOrderCode(string? prefix = Prefix)
         {
             var ts = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
             var suffix = RandomAlphaNumeric(4);
