@@ -126,6 +126,27 @@ namespace AgriConnectMarket.Infrastructure.Services
             });
         }
 
+        public async Task<Result<UpdateOrderStatusResponseDto>> ProcessOrder(Guid orderId, CancellationToken ct = default)
+        {
+            var order = await _uow.OrderRepository.GetByIdAsync(orderId, ct);
+
+            if (order is null)
+            {
+                return Result<UpdateOrderStatusResponseDto>.Fail(MessageConstant.ORDER_NOT_FOUND);
+            }
+
+            order.ProcessOrder();
+
+            await _uow.OrderRepository.UpdateAsync(order, ct);
+            await _uow.SaveChangesAsync();
+
+            return Result<UpdateOrderStatusResponseDto>.Success(new UpdateOrderStatusResponseDto()
+            {
+                OrderId = order.Id,
+                OrderStatus = order.OrderStatus
+            });
+        }
+
         public async Task<Result<UpdateOrderStatusResponseDto>> CancelOrder(Guid orderId, CancellationToken ct = default)
         {
             var order = await _uow.OrderRepository.GetByIdAsync(orderId);

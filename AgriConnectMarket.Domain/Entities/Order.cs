@@ -85,6 +85,21 @@ namespace AgriConnectMarket.Domain.Entities
             DeliveredDate = deliveredDate;
         }
 
+        public void ProcessOrder()
+        {
+            if (!OrderStatus.Equals(OrderStatusEnum.PENDING))
+            {
+                throw new InvalidOperationException(MessageConstant.ORDER_ALREADY_PROCESSED);
+            }
+
+            if (OrderType.Equals(OrderTypeConst.PREORDER) && !PreOrder.PartiallyPaidAmount.HasValue)
+            {
+                throw new InvalidOperationException(MessageConstant.PREORDER_NOT_PAID);
+            }
+
+            OrderStatus = OrderStatusEnum.PROCESSING;
+        }
+
         public void UpdatePaymentStatus(string newStatus, DateTime? paidDate)
         {
             if (newStatus.Equals(PaymentStatusConst.PAID) && paidDate is null)
