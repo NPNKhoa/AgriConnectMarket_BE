@@ -62,7 +62,14 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             var userId = (Guid)_currentUser.UserId;
 
-            var farm = await _uow.FarmRepository.GetFarmByAccount(userId, true, true, true);
+            var user = await _uow.ProfileRepository.GetByIdAsync(userId);
+
+            if (user is null)
+            {
+                return Result<Farm>.Fail(MessageConstant.PRODUCT_NOT_FOUND);
+            }
+
+            var farm = await _uow.FarmRepository.GetFarmByAccount(user.AccountId, true, true, true);
 
             if (farm == null)
             {
