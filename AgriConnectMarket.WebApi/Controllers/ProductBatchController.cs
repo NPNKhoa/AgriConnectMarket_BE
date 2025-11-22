@@ -9,10 +9,23 @@ namespace AgriConnectMarket.WebApi.Controllers
     [ApiController]
     public class ProductBatchController(ProductBatchService _batchService) : ControllerBase
     {
-        [HttpGet("${seasonId}")]
+        [HttpGet("season/${seasonId}")]
         public async Task<IActionResult> GetBatchesBySeason([FromRoute] Guid seasonId, CancellationToken ct)
         {
             var result = await _batchService.GetBatchesBySeasonAsync(seasonId, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
+        [HttpGet("farm/${farmId}")]
+        public async Task<IActionResult> GetBatchesByFarm([FromRoute] Guid farmId, CancellationToken ct)
+        {
+            var result = await _batchService.GetBatchByFarmIdAsync(farmId, ct);
 
             if (!result.IsSuccess)
             {
