@@ -33,6 +33,18 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<ProductBatch>.Success(batch);
         }
 
+        public async Task<Result<IEnumerable<ProductBatch>>> GetBatchByFarmIdAsync(Guid farmId, CancellationToken ct = default)
+        {
+            var batch = await _uow.ProductBatchRepository.GetByFarmAsync(farmId);
+
+            if (batch is null)
+            {
+                return Result<IEnumerable<ProductBatch>>.Fail(MessageConstant.BATCH_NOT_FOUND);
+            }
+
+            return Result<IEnumerable<ProductBatch>>.Success(batch);
+        }
+
         public async Task<Result<CreateProductBatchResultDto>> CreateBatchAsync(CreateProductBatchDto dto, CancellationToken ct = default)
         {
             var entity = ProductBatch.Create(dto.SeasonId, dto.TotalYield, dto.AvailableQuantity, dto.PlantingDate, dto.Price, dto.Units);
