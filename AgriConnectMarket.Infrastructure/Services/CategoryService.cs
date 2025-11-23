@@ -1,6 +1,7 @@
 ﻿using AgriConnectMarket.Application.DTOs.RequestDtos;
 using AgriConnectMarket.Application.DTOs.ResponseDtos;
 using AgriConnectMarket.Application.Interfaces;
+using AgriConnectMarket.Application.Specifications.CategorySpecs;
 using AgriConnectMarket.Domain.Entities;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Guards;
@@ -12,7 +13,9 @@ namespace AgriConnectMarket.Infrastructure.Services
     {
         public async Task<Result<IEnumerable<Category>>> GetAllCategoryAsync(CancellationToken ct = default)
         {
-            var result = await _uow.CategoryRepository.ListAllAsync(ct);
+            var spec = new ExcludeDeletedCategorySpecification();
+
+            var result = await _uow.CategoryRepository.ListAsync(spec, ct);
 
             if (!result.Any())
             {
