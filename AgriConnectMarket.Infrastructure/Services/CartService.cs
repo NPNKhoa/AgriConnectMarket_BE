@@ -28,6 +28,9 @@ namespace AgriConnectMarket.Infrastructure.Services
             if (cart is null)
             {
                 cart = Cart.InitCart(profile.Id);
+
+                await _uow.CartRepository.AddAsync(cart);
+                await _uow.SaveChangesAsync();
             }
 
             return Result<Cart>.Success(cart);
@@ -36,40 +39,51 @@ namespace AgriConnectMarket.Infrastructure.Services
         public async Task<Result<CartItem>> AddToCartAsync(CreateCartItemDto dto, CancellationToken ct = default)
         {
             if (_currentUserService.UserId is null)
-            {
                 return Result<CartItem>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
-            }
 
             var userId = _currentUserService.UserId.Value;
             var profile = await _uow.ProfileRepository.GetByIdAsync(userId, ct);
 
             if (profile is null)
-            {
                 return Result<CartItem>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
-            }
 
-            var cart = await _uow.CartRepository.GetByIdAsync(dto.CartId, ct);
+            var cart = await _uow.CartRepository.GetByIdAsync(dto.CartId, true, false, ct);
 
             if (cart is null)
             {
                 cart = Cart.InitCart(profile.Id);
+                await _uow.CartRepository.AddAsync(cart);
+                await _uow.SaveChangesAsync();
             }
 
-            var batch = await _uow.ProductBatchRepository.GetByIdAsync(dto.BatchId);
+            var batch = await _uow.ProductBatchRepository.GetByIdAsync(dto.BatchId, ct);
 
             if (batch is null)
-            {
                 return Result<CartItem>.Fail(MessageConstant.BATCH_NOT_FOUND);
+
+            decimal unitPrice = batch.Price;
+
+            var existing = cart.CartItems!.FirstOrDefault(i => i.BatchId == dto.BatchId);
+
+            if (existing is not null)
+            {
+                existing.Quantity += dto.Quantity;
+                existing.ItemPrice = existing.Quantity * unitPrice;
+
+                await _uow.CartItemRepository.UpdateAsync(existing);
+                await _uow.SaveChangesAsync();
+
+                return Result<CartItem>.Success(existing);
             }
 
-            decimal itemPrice = batch.Price * dto.Quantity;
+            var newItem = CartItem.Create(cart.Id, dto.BatchId, dto.Quantity, unitPrice * dto.Quantity);
 
-            var cartItem = CartItem.Create(dto.CartId, dto.BatchId, dto.Quantity, itemPrice);
-            await _uow.CartItemRepository.AddAsync(cartItem);
+            await _uow.CartItemRepository.AddAsync(newItem);
             await _uow.SaveChangesAsync();
 
-            return Result<CartItem>.Success(cartItem);
+            return Result<CartItem>.Success(newItem);
         }
+
 
         public async Task<Result<CartItem>> UpdateCartItemAsync(Guid cartId, UpdateCartItemDto dto, CancellationToken ct = default)
         {
