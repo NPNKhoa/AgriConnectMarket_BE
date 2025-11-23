@@ -16,6 +16,8 @@
         IOrderRepository OrderRepository { get; }
         IOrderItemRepository OrderItemRepository { get; }
         IPreOrderRepository PreOrderRepository { get; }
+        IEventTypeRepository EventTypeRepository { get; }
+        ICareEventRepository CareEventRepository { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

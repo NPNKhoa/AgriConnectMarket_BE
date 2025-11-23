@@ -153,7 +153,7 @@ namespace AgriConnectMarket.Infrastructure.Data
 
                 pb.OwnsOne(o => o.BatchCode, bc =>
                 {
-                    bc.Property(x => x.Value).HasColumnName("BacthCode");
+                    bc.Property(x => x.Value).HasColumnName("BatchCode");
                 });
 
                 pb.HasOne(pb => pb.Season)
@@ -169,7 +169,7 @@ namespace AgriConnectMarket.Infrastructure.Data
 
             modelBuilder.Entity<BatchCodeSequence>(b =>
             {
-                b.ToTable("OrderCodeSequences");
+                b.ToTable("BatchCodeSequences");
 
                 b.HasKey(x => x.Prefix);
 
@@ -251,6 +251,25 @@ namespace AgriConnectMarket.Infrastructure.Data
                     .HasForeignKey<PreOrder>(po => po.ProductId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<CareEventType>(t =>
+            {
+                t.ToTable("CareEventTypes");
+
+                t.HasKey(t => t.Id).HasName("EventTypeId");
+            });
+
+            modelBuilder.Entity<CareEvent>(e =>
+            {
+                e.ToTable("CareEvents");
+
+                e.HasKey(e => e.Id).HasName("EventId");
+
+                e.HasOne(e => e.EventType)
+                    .WithMany(t => t.CareEvents)
+                    .HasForeignKey(e => e.EventTypeId)
+                    .IsRequired();
             });
         }
     }
