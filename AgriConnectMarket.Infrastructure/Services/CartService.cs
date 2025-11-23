@@ -35,11 +35,24 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<CartItem>> AddToCartAsync(CreateCartItemDto dto, CancellationToken ct = default)
         {
+            if (_currentUserService.UserId is null)
+            {
+                return Result<CartItem>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
+            }
+
+            var userId = _currentUserService.UserId.Value;
+            var profile = await _uow.ProfileRepository.GetByIdAsync(userId, ct);
+
+            if (profile is null)
+            {
+                return Result<CartItem>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
+            }
+
             var cart = await _uow.CartRepository.GetByIdAsync(dto.CartId, ct);
 
             if (cart is null)
             {
-                return Result<CartItem>.Fail(MessageConstant.CART_NOT_INIT);
+                cart = Cart.InitCart(profile.Id);
             }
 
             var batch = await _uow.ProductBatchRepository.GetByIdAsync(dto.BatchId);
