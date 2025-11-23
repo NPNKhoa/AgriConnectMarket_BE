@@ -8,7 +8,7 @@ namespace AgriConnectMarket.Domain.Entities
         public string CategoryName { get; set; }
         public string CategoryDesc { get; set; }
         public string IllustrativeImageUrl { get; set; }
-        public bool IsDelete { get; set; } = true;
+        public bool IsDelete { get; set; } = false;
 
         public IEnumerable<Product> Products { get; set; }
 
@@ -22,6 +22,7 @@ namespace AgriConnectMarket.Domain.Entities
             CategoryName = name;
             CategoryDesc = desc;
             IllustrativeImageUrl = imageUrl;
+            IsDelete = false;
         }
     }
 }

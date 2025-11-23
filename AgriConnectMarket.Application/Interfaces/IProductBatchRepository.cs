@@ -4,6 +4,8 @@ namespace AgriConnectMarket.Application.Interfaces
 {
     public interface IProductBatchRepository : IRepository<ProductBatch>
     {
+        public Task<ProductBatch> GetByIdAsync(Guid batchId, bool includeSeason = false, bool includeReview = false, CancellationToken ct = default);
+        public Task<ProductBatch> GetByIdAsync(Guid batchId, bool includeAllRelated = false, CancellationToken ct = default);
         public Task<IEnumerable<ProductBatch>> GetBySeasonAsync(Guid seasonId, bool includeSeason = false, CancellationToken ct = default);
         public Task<IEnumerable<ProductBatch>> GetByFarmAsync(Guid farmId, bool includeSeason = false, CancellationToken ct = default);
     }
