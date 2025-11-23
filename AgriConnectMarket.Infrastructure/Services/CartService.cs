@@ -94,7 +94,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<CartItem>.Fail(MessageConstant.CART_NOT_INIT);
             }
 
-            var batch = await _uow.ProductBatchRepository.GetByIdAsync(dto.BatchId);
+            var batch = await _uow.ProductBatchRepository.GetByIdAsync(dto.BatchId, ct);
 
             if (batch is null)
             {

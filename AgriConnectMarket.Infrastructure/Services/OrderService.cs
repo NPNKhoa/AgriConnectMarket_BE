@@ -87,7 +87,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             foreach (var item in dto.OrderItems)
             {
-                var batch = await _uow.ProductBatchRepository.GetByIdAsync(item.BatchId);
+                var batch = await _uow.ProductBatchRepository.GetByIdAsync(item.BatchId, ct);
 
                 if (batch is null)
                 {
