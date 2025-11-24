@@ -68,6 +68,7 @@ namespace AgriConnectMarket.WebApi.Controllers
             {
                 FarmName = request.FarmName,
                 FarmDesc = request.FarmDesc,
+                BatchCodePrefix = request.BatchCodePrefix,
                 BannerUrl = bannerUrl ?? "",
                 Phone = request.Phone,
                 Area = request.Area,

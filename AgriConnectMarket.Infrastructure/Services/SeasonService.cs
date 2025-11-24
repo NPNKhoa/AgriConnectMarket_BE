@@ -36,6 +36,18 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<Season>.Success(season);
         }
 
+        public async Task<Result<ICollection<Season>>> GetSeasonsByFarmIdAsync(Guid farmId, CancellationToken ct = default)
+        {
+            var seasons = await _uow.SeasonRepository.GetByFarmIdAsync(farmId, ct);
+
+            if (!seasons.Any())
+            {
+                return Result<ICollection<Season>>.Fail(MessageConstant.SEASON_NOT_FOUND);
+            }
+
+            return Result<ICollection<Season>>.Success(seasons.ToList());
+        }
+
         public async Task<Result<CreateSeasonResponseDto>> CreateSeason(CreateSeasonDto dto, CancellationToken ct = default)
         {
             var entity = new Season(dto.SeasonName, dto.SeasonDesc, dto.StartDate, dto.EndDate, dto.FarmId, dto.ProductId);

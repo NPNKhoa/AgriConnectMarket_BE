@@ -131,6 +131,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             existingFarm.FarmName = dto.FarmName;
             existingFarm.FarmDesc = dto.FarmDesc;
+            existingFarm.BatchCodePrefix = dto.BatchCodePrefix;
             existingFarm.Phone = dto.Phone;
             existingFarm.Area = dto.Area;
             existingFarm.BannerUrl = dto.BannerUrl;

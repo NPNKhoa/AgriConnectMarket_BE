@@ -33,6 +33,17 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_RETRIVE_SUCCESS_MESSAGE));
         }
 
+        [HttpGet("farm/{farmId}")]
+        public async Task<IActionResult> GetSeasonsByFarm([FromRoute] Guid farmId, CancellationToken ct)
+        {
+            var result = await _seasonService.GetSeasonsByFarmIdAsync(farmId, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_RETRIVE_SUCCESS_MESSAGE));
+        }
+
         [HttpPost("")]
         public async Task<IActionResult> CreateSeason([FromBody] CreateSeasonDto dto, CancellationToken ct)
         {
