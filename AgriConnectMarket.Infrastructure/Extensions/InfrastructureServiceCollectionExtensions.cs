@@ -39,7 +39,8 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderItemRepository, OrderItemRepository>();
             services.AddScoped<IPreOrderRepository, PreOrderRepository>();
-
+            services.AddScoped<IEventTypeRepository, EventTypeRepository>();
+            services.AddScoped<ICareEventRepository, CareEventRepository>();
 
             services.AddScoped<AuthService>();
             services.AddScoped<ProfileService>();
@@ -53,12 +54,15 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddScoped<FavoriteFarmRepository>();
             services.AddScoped<CartService>();
             services.AddScoped<OrderService>();
+            services.AddScoped<EventTypeService>();
+            services.AddScoped<CareEventService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IDateTimeProvider, SystemDateTimeProvider>();
             services.AddScoped<IBatchCodeGenerator, SqlBatchCodeGenerator>();
             services.AddScoped<IOrderCodeGenerator, OrderCodeGenerator>();
+            services.AddScoped<IHashingStrategy, Sha256Hashing>();
 
             return services;
         }
