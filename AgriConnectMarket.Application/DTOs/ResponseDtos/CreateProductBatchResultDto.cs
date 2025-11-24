@@ -11,6 +11,7 @@ namespace AgriConnectMarket.Application.DTOs.ResponseDtos
         public decimal AvailableQuantity { get; set; }
         public string Units { get; set; }
         public decimal Price { get; set; }
+        public IReadOnlyList<string> ImagesUrl { get; set; }
         public DateTime PlantingDate { get; set; }
         public DateTime HarvestDate { get; set; }
 

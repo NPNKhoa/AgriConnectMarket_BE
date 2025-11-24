@@ -23,7 +23,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<ProductBatch>> GetBatchByIdAsync(Guid batchId, CancellationToken ct = default)
         {
-            var batch = await _uow.ProductBatchRepository.GetByIdAsync(batchId, ct);
+            var batch = await _uow.ProductBatchRepository.GetByIdAsync(batchId, true, ct);
 
             if (batch is null)
             {

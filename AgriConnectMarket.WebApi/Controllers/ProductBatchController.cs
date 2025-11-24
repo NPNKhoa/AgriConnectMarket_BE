@@ -1,13 +1,15 @@
 ﻿using AgriConnectMarket.Application.DTOs.RequestDtos;
+using AgriConnectMarket.Infrastructure.CloudinarySettings;
 using AgriConnectMarket.Infrastructure.Services;
 using AgriConnectMarket.SharedKernel.Responses;
+using AgriConnectMarket.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AgriConnectMarket.WebApi.Controllers
 {
     [Route("api/product-batches")]
     [ApiController]
-    public class ProductBatchController(ProductBatchService _batchService) : ControllerBase
+    public class ProductBatchController(ProductBatchService _batchService, ICloudinaryAdapter _cloudinaryAdapter) : ControllerBase
     {
         [HttpGet("season/${seasonId}")]
         public async Task<IActionResult> GetBatchesBySeason([FromRoute] Guid seasonId, CancellationToken ct)
@@ -62,8 +64,37 @@ namespace AgriConnectMarket.WebApi.Controllers
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> CreateBatch([FromBody] CreateProductBatchDto dto, CancellationToken ct)
+        public async Task<IActionResult> CreateBatch([FromForm] CreateProductBatchRequest request, CancellationToken ct)
         {
+            ICollection<string> urls = [];
+
+            if (request.Images.Any())
+            {
+                foreach (var item in request.Images)
+                {
+                    var uploadResult = await _cloudinaryAdapter.UploadAsync(item, ct);
+
+                    if (!uploadResult.Success)
+                    {
+                        return BadRequest(ApiResponse.FailResponse(uploadResult.Error!));
+                    }
+
+                    urls.Add(uploadResult.Url ?? string.Empty);
+                }
+            }
+
+            var dto = new CreateProductBatchDto()
+            {
+                PlantingDate = request.PlantingDate,
+                AvailableQuantity = request.AvailableQuantity,
+                Price = request.Price,
+                SeasonId = request.SeasonId,
+                TotalYield = request.TotalYield,
+                Units = request.Units,
+                IsActive = request.IsActive,
+                ImageUrl = urls
+            };
+
             var result = await _batchService.CreateBatchAsync(dto, ct);
 
             if (!result.IsSuccess)
@@ -75,7 +106,7 @@ namespace AgriConnectMarket.WebApi.Controllers
         }
 
         [HttpPatch("${batchId}")]
-        public async Task<IActionResult> CreateBatch([FromRoute] Guid batchId, [FromBody] UpdateInventoryDto dto, CancellationToken ct)
+        public async Task<IActionResult> UpdateInventoryBatch([FromRoute] Guid batchId, [FromBody] UpdateInventoryDto dto, CancellationToken ct)
         {
             var result = await _batchService.UpdateInventoryAsync(batchId, dto, ct);
 
