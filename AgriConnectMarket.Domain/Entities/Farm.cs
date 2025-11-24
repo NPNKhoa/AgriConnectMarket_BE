@@ -37,15 +37,19 @@ namespace AgriConnectMarket.Domain.Entities
         public ICollection<FavoriteFarm> FavoriteFarms { get; set; }
 
         public Farm() { }
-        public Farm(string farmName, string? FarmDesc, string? bannerUrl, string phone, string area, Guid farmerId)
+
+        public Farm(string farmName, string? farmDesc, string batchCodePrefix, string? bannerUrl, string phone, string area, Guid farmerId)
         {
             Guard.AgainstNullOrWhiteSpace(farmName, nameof(farmName));
+            Guard.AgainstNullOrWhiteSpace(batchCodePrefix, nameof(batchCodePrefix));
             Guard.AgainstNullOrWhiteSpace(bannerUrl, nameof(bannerUrl));
             Guard.AgainstNullOrWhiteSpace(phone, nameof(phone));
             Guard.AgainstNullOrEmpty(area, nameof(area));
             Guard.AgainstNull(farmerId, nameof(farmerId));
 
             FarmName = farmName;
+            FarmDesc = farmDesc;
+            BatchCodePrefix = batchCodePrefix;
             BannerUrl = Normalizer.NormalizeUrl(bannerUrl ?? string.Empty);
             Phone = Normalizer.NormalizePhone(phone);
             Area = area;
