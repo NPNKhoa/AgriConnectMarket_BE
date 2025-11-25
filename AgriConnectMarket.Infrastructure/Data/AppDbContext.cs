@@ -238,7 +238,7 @@ namespace AgriConnectMarket.Infrastructure.Data
             {
                 i.ToTable("PreOrders");
 
-                i.HasKey(i => i.OrderId).HasName("OrderId");
+                i.HasKey(i => i.OrderId).HasName("PreOrderId");
 
                 i.HasOne(i => i.Order)
                     .WithOne(o => o.PreOrder)

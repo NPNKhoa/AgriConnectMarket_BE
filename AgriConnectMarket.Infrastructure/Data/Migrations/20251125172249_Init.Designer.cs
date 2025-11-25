@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AgriConnectMarket.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251119163438_UpdateThePhonePropertyInTheProfile")]
-    partial class UpdateThePhonePropertyInTheProfile
+    [Migration("20251125172249_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -119,6 +119,112 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                     b.HasIndex("ProfileId");
 
                     b.ToTable("Addresses", (string)null);
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.CareEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BatchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EventTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Hash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OccurredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PrevHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id")
+                        .HasName("EventId");
+
+                    b.HasIndex("BatchId");
+
+                    b.HasIndex("EventTypeId");
+
+                    b.ToTable("CareEvents", (string)null);
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.CareEventType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EventTypeDesc")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EventTypeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id")
+                        .HasName("EventTypeId");
+
+                    b.ToTable("CareEventTypes", (string)null);
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Cart", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id")
+                        .HasName("CartId");
+
+                    b.HasIndex("CustomerId")
+                        .IsUnique();
+
+                    b.ToTable("Carts", (string)null);
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.CartItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BatchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CartId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("ItemPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("ItemId");
+
+                    b.HasIndex("BatchId");
+
+                    b.HasIndex("CartId");
+
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Category", b =>
@@ -237,6 +343,126 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                     b.HasIndex("FarmId");
 
                     b.ToTable("FavoriteFarms", (string)null);
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeliveredDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrderType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("PaidDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("ShippingFee")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id")
+                        .HasName("OrderId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Orders", (string)null);
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.OrderItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BatchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("SubTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id")
+                        .HasName("OrderItemId");
+
+                    b.HasIndex("BatchId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems", (string)null);
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.PreOrder", b =>
+                {
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ExpectedReleaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("PartiallyPaidAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("OrderId")
+                        .HasName("PreOrderId");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("PreOrders", (string)null);
                 });
 
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Product", b =>
@@ -392,7 +618,7 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                     b.Property<Guid>("FarmId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ProductId")
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("SeasonDesc")
@@ -436,7 +662,7 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
 
                     b.HasKey("Prefix");
 
-                    b.ToTable("OrderCodeSequences", (string)null);
+                    b.ToTable("BatchCodeSequences", (string)null);
                 });
 
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Address", b =>
@@ -446,6 +672,55 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                         .HasForeignKey("ProfileId");
 
                     b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.CareEvent", b =>
+                {
+                    b.HasOne("AgriConnectMarket.Domain.Entities.ProductBatch", "Batch")
+                        .WithMany()
+                        .HasForeignKey("BatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AgriConnectMarket.Domain.Entities.CareEventType", "EventType")
+                        .WithMany("CareEvents")
+                        .HasForeignKey("EventTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Batch");
+
+                    b.Navigation("EventType");
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Cart", b =>
+                {
+                    b.HasOne("AgriConnectMarket.Domain.Entities.Profile", "Customer")
+                        .WithOne("Cart")
+                        .HasForeignKey("AgriConnectMarket.Domain.Entities.Cart", "CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.CartItem", b =>
+                {
+                    b.HasOne("AgriConnectMarket.Domain.Entities.ProductBatch", "Batch")
+                        .WithMany()
+                        .HasForeignKey("BatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AgriConnectMarket.Domain.Entities.Cart", "Cart")
+                        .WithMany("CartItems")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Batch");
+
+                    b.Navigation("Cart");
                 });
 
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Farm", b =>
@@ -486,6 +761,55 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                     b.Navigation("Farm");
                 });
 
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Order", b =>
+                {
+                    b.HasOne("AgriConnectMarket.Domain.Entities.Profile", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.OrderItem", b =>
+                {
+                    b.HasOne("AgriConnectMarket.Domain.Entities.ProductBatch", "Batch")
+                        .WithMany()
+                        .HasForeignKey("BatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AgriConnectMarket.Domain.Entities.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Batch");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.PreOrder", b =>
+                {
+                    b.HasOne("AgriConnectMarket.Domain.Entities.Order", "Order")
+                        .WithOne("PreOrder")
+                        .HasForeignKey("AgriConnectMarket.Domain.Entities.PreOrder", "OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AgriConnectMarket.Domain.Entities.Product", "Product")
+                        .WithOne("PreOrder")
+                        .HasForeignKey("AgriConnectMarket.Domain.Entities.PreOrder", "ProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Product", b =>
                 {
                     b.HasOne("AgriConnectMarket.Domain.Entities.Category", "Category")
@@ -513,7 +837,7 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)")
-                                .HasColumnName("BacthCode");
+                                .HasColumnName("BatchCode");
 
                             b1.HasKey("ProductBatchId");
 
@@ -548,11 +872,15 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AgriConnectMarket.Domain.Entities.Product", null)
+                    b.HasOne("AgriConnectMarket.Domain.Entities.Product", "Product")
                         .WithMany("Seasons")
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Farm");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Account", b =>
@@ -569,6 +897,16 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                     b.Navigation("Farm");
                 });
 
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.CareEventType", b =>
+                {
+                    b.Navigation("CareEvents");
+                });
+
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Cart", b =>
+                {
+                    b.Navigation("CartItems");
+                });
+
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Category", b =>
                 {
                     b.Navigation("Products");
@@ -581,8 +919,19 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                     b.Navigation("Seasons");
                 });
 
+            modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Order", b =>
+                {
+                    b.Navigation("OrderItems");
+
+                    b.Navigation("PreOrder")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Product", b =>
                 {
+                    b.Navigation("PreOrder")
+                        .IsRequired();
+
                     b.Navigation("Seasons");
                 });
 
@@ -590,7 +939,12 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                 {
                     b.Navigation("Addresses");
 
+                    b.Navigation("Cart")
+                        .IsRequired();
+
                     b.Navigation("FavoriteFarms");
+
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("AgriConnectMarket.Domain.Entities.Season", b =>

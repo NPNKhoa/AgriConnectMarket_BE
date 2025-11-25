@@ -9,6 +9,18 @@ namespace AgriConnectMarket.Infrastructure.Services
 {
     public class ProductBatchService(IUnitOfWork _uow, IBatchCodeGenerator _codeGenerator)
     {
+        public async Task<Result<IEnumerable<ProductBatch>>> GetAllBatchesAsync(CancellationToken ct = default)
+        {
+            var batches = await _uow.ProductBatchRepository.ListAllAsync(ct);
+
+            if (!batches.Any())
+            {
+                return Result<IEnumerable<ProductBatch>>.Fail(MessageConstant.BATCH_NOT_FOUND);
+            }
+
+            return Result<IEnumerable<ProductBatch>>.Success(batches);
+        }
+
         public async Task<Result<IEnumerable<ProductBatch>>> GetBatchesBySeasonAsync(Guid seasonId, CancellationToken ct = default)
         {
             var batches = await _uow.ProductBatchRepository.GetBySeasonAsync(seasonId, true, ct);
@@ -36,6 +48,18 @@ namespace AgriConnectMarket.Infrastructure.Services
         public async Task<Result<IEnumerable<ProductBatch>>> GetBatchByFarmIdAsync(Guid farmId, CancellationToken ct = default)
         {
             var batch = await _uow.ProductBatchRepository.GetByFarmAsync(farmId);
+
+            if (batch is null)
+            {
+                return Result<IEnumerable<ProductBatch>>.Fail(MessageConstant.BATCH_NOT_FOUND);
+            }
+
+            return Result<IEnumerable<ProductBatch>>.Success(batch);
+        }
+
+        public async Task<Result<IEnumerable<ProductBatch>>> GetBatchesByFarmerAsync(Guid accountId, CancellationToken ct = default)
+        {
+            var batch = await _uow.ProductBatchRepository.GetByFarmerAsync(accountId);
 
             if (batch is null)
             {

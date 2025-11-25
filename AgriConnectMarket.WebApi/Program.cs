@@ -3,8 +3,14 @@ using AgriConnectMarket.Infrastructure.Extensions;
 using AgriConnectMarket.Infrastructure.Middlewares;
 using AgriConnectMarket.WebApi.Middlewares;
 using AgriConnectMarket.WebApi.Services;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Listen(IPAddress.Any, 5170);
+});
 
 builder.Services.AddConfiguredControllers();
 builder.Services.AddEndpointsApiExplorer();
