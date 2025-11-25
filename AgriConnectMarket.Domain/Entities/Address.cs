@@ -16,6 +16,7 @@ namespace AgriConnectMarket.Domain.Entities
         public Guid? ProfileId { get; set; }
         public Profile? Profile { get; set; }
         public Farm? Farm { get; set; }
+        public IReadOnlyCollection<Address> Addresses { get; set; }
 
         // Auditable properties
         public DateTime CreatedAt { get; set; }

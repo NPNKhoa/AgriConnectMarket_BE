@@ -8,6 +8,7 @@ namespace AgriConnectMarket.Domain.Entities
     public class Order : BaseEntity<Guid>, IAuditableEntity
     {
         public Guid CustomerId { get; set; }
+        public Guid AddressId { get; set; }
         public string OrderCode { get; set; }
         public decimal TotalPrice { get; set; }
         public DateTime OrderDate { get; set; }
@@ -25,6 +26,7 @@ namespace AgriConnectMarket.Domain.Entities
 
         public Profile Customer { get; set; }
         public PreOrder PreOrder { get; set; }
+        public Address Address { get; set; }
 
         private readonly List<OrderItem> _orderItems = new();
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems.AsReadOnly();
@@ -35,9 +37,10 @@ namespace AgriConnectMarket.Domain.Entities
 
         }
 
-        private Order(Guid customerId, string orderCode, DateTime orderDate, decimal shippingFee = 0, string? orderType = "")
+        private Order(Guid customerId, Guid addressId, string orderCode, DateTime orderDate, decimal shippingFee = 0, string? orderType = "")
         {
             CustomerId = customerId;
+            AddressId = addressId;
             OrderCode = orderCode;
             TotalPrice = 0;
             OrderDate = orderDate;
@@ -48,8 +51,8 @@ namespace AgriConnectMarket.Domain.Entities
             PaymentStatus = PaymentStatusConst.PENDING;
         }
 
-        public static Order Create(Guid customerId, string orderCode, DateTime orderDate, decimal shippingFee = 0, string? orderType = "")
-            => new Order(customerId, orderCode, orderDate, shippingFee, orderType);
+        public static Order Create(Guid customerId, Guid addressId, string orderCode, DateTime orderDate, decimal shippingFee = 0, string? orderType = "")
+            => new Order(customerId, addressId, orderCode, orderDate, shippingFee, orderType);
 
         public void AddItem(ProductBatch batch, decimal quantity)
         {

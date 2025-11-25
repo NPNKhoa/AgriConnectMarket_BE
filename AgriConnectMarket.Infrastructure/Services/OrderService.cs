@@ -63,7 +63,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<Order>> GetOrderDetailAsync(Guid orderId, CancellationToken ct = default)
         {
-            var order = await _uow.OrderRepository.GetByIdAsync(orderId, ct);
+            var order = await _uow.OrderRepository.GetByIdAsync(orderId, true, true, true, ct);
 
             if (order is null)
             {
@@ -75,15 +75,22 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<Order>> CreateOrder(CreateOrderDto dto, CancellationToken ct = default)
         {
-            var customer = await _uow.ProfileRepository.GetByIdAsync(dto.CustomerId);
+            var customer = await _uow.ProfileRepository.GetByIdAsync(dto.CustomerId, ct);
 
             if (customer is null)
             {
                 return Result<Order>.Fail(MessageConstant.PROFILE_NOT_FOUND);
             }
 
+            var address = await _uow.AddressRepository.GetByIdAsync(dto.AddressId, ct);
+
+            if (address is null)
+            {
+                return Result<Order>.Fail(MessageConstant.ADDRESS_NOT_FOUND);
+            }
+
             string orderCode = _codeGenerator.GenerateOrderCode();
-            var order = Order.Create(dto.CustomerId, orderCode, _dateTimeProvider.UtcNow, dto.ShippingFee, OrderTypeConst.ORDER);
+            var order = Order.Create(dto.CustomerId, dto.AddressId, orderCode, _dateTimeProvider.UtcNow, dto.ShippingFee, OrderTypeConst.ORDER);
 
             foreach (var item in dto.OrderItems)
             {
@@ -97,8 +104,8 @@ namespace AgriConnectMarket.Infrastructure.Services
                 order.AddItem(batch, item.Quantity);
             }
 
-            await _uow.OrderRepository.AddAsync(order);
-            await _uow.SaveChangesAsync();
+            await _uow.OrderRepository.AddAsync(order, ct);
+            await _uow.SaveChangesAsync(ct);
 
             return Result<Order>.Success(order);
         }

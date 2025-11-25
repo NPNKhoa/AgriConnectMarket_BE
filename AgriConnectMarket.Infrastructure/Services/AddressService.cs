@@ -9,6 +9,18 @@ namespace AgriConnectMarket.Infrastructure.Services
 {
     public class AddressService(IUnitOfWork _uow, ICurrentUserService _currentUserService)
     {
+        public async Task<Result<IReadOnlyList<Address>>> GetAllAsync(CancellationToken ct = default)
+        {
+            var addresses = await _uow.AddressRepository.ListAllAsync(ct);
+
+            if (!addresses.Any())
+            {
+                return Result<IReadOnlyList<Address>>.Fail(MessageConstant.ADDRESS_NOT_FOUND);
+            }
+
+            return Result<IReadOnlyList<Address>>.Success(addresses);
+        }
+
         public async Task<Result<CreateAddressResultDto>> CreateAddessAsync(CreateAddressDto dto, CancellationToken ct = default)
         {
             var user = await _uow.ProfileRepository.GetByIdAsync(dto.ProfileId, ct);

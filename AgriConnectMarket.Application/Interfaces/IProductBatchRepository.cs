@@ -8,5 +8,6 @@ namespace AgriConnectMarket.Application.Interfaces
         public Task<ProductBatch> GetByIdAsync(Guid batchId, bool includeAllRelated = false, CancellationToken ct = default);
         public Task<IEnumerable<ProductBatch>> GetBySeasonAsync(Guid seasonId, bool includeSeason = false, CancellationToken ct = default);
         public Task<IEnumerable<ProductBatch>> GetByFarmAsync(Guid farmId, bool includeSeason = false, CancellationToken ct = default);
+        public Task<IEnumerable<ProductBatch>> GetByFarmerAsync(Guid farmerId, bool includeAllRelated = false, CancellationToken ct = default);
     }
 }

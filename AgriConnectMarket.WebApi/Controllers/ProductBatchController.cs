@@ -11,7 +11,33 @@ namespace AgriConnectMarket.WebApi.Controllers
     [ApiController]
     public class ProductBatchController(ProductBatchService _batchService, ICloudinaryAdapter _cloudinaryAdapter) : ControllerBase
     {
-        [HttpGet("season/${seasonId}")]
+        [HttpGet("")]
+        public async Task<IActionResult> GetAllBatches(CancellationToken ct)
+        {
+            var result = await _batchService.GetAllBatchesAsync(ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
+        [HttpGet("{batchId}")]
+        public async Task<IActionResult> GetBatchById([FromRoute] Guid batchId, CancellationToken ct)
+        {
+            var result = await _batchService.GetBatchByIdAsync(batchId, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
+        [HttpGet("season/{seasonId}")]
         public async Task<IActionResult> GetBatchesBySeason([FromRoute] Guid seasonId, CancellationToken ct)
         {
             var result = await _batchService.GetBatchesBySeasonAsync(seasonId, ct);
@@ -24,7 +50,7 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
-        [HttpGet("farm/${farmId}")]
+        [HttpGet("farm/{farmId}")]
         public async Task<IActionResult> GetBatchesByFarm([FromRoute] Guid farmId, CancellationToken ct)
         {
             var result = await _batchService.GetBatchByFarmIdAsync(farmId, ct);
@@ -37,7 +63,20 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
-        [HttpGet("${batchId}/care-events")]
+        [HttpGet("farmer/{accountId}")]
+        public async Task<IActionResult> GetBatchesByFarmer([FromRoute] Guid accountId, CancellationToken ct)
+        {
+            var result = await _batchService.GetBatchesByFarmerAsync(accountId, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
+        [HttpGet("{batchId}/care-events")]
         public async Task<IActionResult> GetCareEvents([FromRoute] Guid batchId, CancellationToken ct)
         {
             var result = await _batchService.GetBatchByFarmIdAsync(batchId, ct);
@@ -50,7 +89,7 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
-        [HttpGet("${batchId}/care-events/verify")]
+        [HttpGet("{batchId}/care-events/verify")]
         public async Task<IActionResult> VerifyChain([FromRoute] Guid batchId, CancellationToken ct)
         {
             var result = await _batchService.GetBatchByFarmIdAsync(batchId, ct);
@@ -105,7 +144,7 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
-        [HttpPatch("${batchId}")]
+        [HttpPatch("{batchId}")]
         public async Task<IActionResult> UpdateInventoryBatch([FromRoute] Guid batchId, [FromBody] UpdateInventoryDto dto, CancellationToken ct)
         {
             var result = await _batchService.UpdateInventoryAsync(batchId, dto, ct);

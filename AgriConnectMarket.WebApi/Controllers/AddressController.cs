@@ -2,6 +2,7 @@
 using AgriConnectMarket.Infrastructure.Services;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AgriConnectMarket.WebApi.Controllers
@@ -10,6 +11,20 @@ namespace AgriConnectMarket.WebApi.Controllers
     [ApiController]
     public class AddressController(AddressService _addressService) : ControllerBase
     {
+        [HttpGet("")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> GetALlAddresses(CancellationToken ct)
+        {
+            var result = await _addressService.GetAllAsync(ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_RETRIVE_SUCCESS_MESSAGE));
+        }
+
         [HttpGet("me")]
         public async Task<IActionResult> GetMyAddresses(CancellationToken ct)
         {

@@ -62,7 +62,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             var userId = (Guid)_currentUser.UserId;
 
-            var user = await _uow.ProfileRepository.GetByIdAsync(userId);
+            var user = await _uow.ProfileRepository.GetByIdAsync(userId, ct);
 
             if (user is null)
             {

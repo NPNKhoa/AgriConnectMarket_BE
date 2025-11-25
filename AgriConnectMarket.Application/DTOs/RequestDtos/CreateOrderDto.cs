@@ -3,6 +3,7 @@
     public class CreateOrderDto
     {
         public Guid CustomerId { get; set; }
+        public Guid AddressId { get; set; }
         public string OrderCode { get; set; }
         public DateTime OrderDate { get; set; }
         public string OrderType { get; set; }

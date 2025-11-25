@@ -454,7 +454,7 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("OrderId")
-                        .HasName("OrderId");
+                        .HasName("PreOrderId");
 
                     b.HasIndex("ProductId")
                         .IsUnique();

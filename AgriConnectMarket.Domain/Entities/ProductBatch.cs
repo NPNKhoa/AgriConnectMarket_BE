@@ -55,7 +55,6 @@ namespace AgriConnectMarket.Domain.Entities
         public void SetBatchCode(BatchCode code)
         {
             Guard.AgainstNull(code, nameof(code));
-            Guard.AgainstExist(code, nameof(code));
 
             BatchCode = code;
         }
