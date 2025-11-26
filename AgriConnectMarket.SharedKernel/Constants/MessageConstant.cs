@@ -38,5 +38,6 @@
         public const string ORDER_NOT_FOUND = "Can not found order(s)";
         public const string EVENT_TYPE_NOT_FOUND = "Can not found event type(s)";
         public const string CARE_EVENT_NOTE_FOUND = "Can not found event(s)";
+        public const string INVALID_CHAIN = "This chain is not verified";
     }
 }

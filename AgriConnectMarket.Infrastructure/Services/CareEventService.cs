@@ -60,6 +60,37 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<IReadOnlyList<CareEventResponseDto>>.Fail(MessageConstant.CARE_EVENT_NOTE_FOUND);
             }
 
+            events = events.OrderBy(e => e.OccurredAt).ToList();
+
+            string prevHash = string.Empty;
+            bool validChain = true;
+
+            foreach (var e in events)
+            {
+                var canonical = _hasher.BuildCareEventCanonical(
+                    batchId.ToString(),
+                    e.EventType.EventTypeName,
+                    e.OccurredAt.ToString("o"),
+                    e.Payload,
+                    prevHash
+                );
+
+                var expected = _hasher.ComputeHash(canonical);
+
+                if (expected != e.Hash || e.PrevHash != prevHash)
+                {
+                    validChain = false;
+                    break;
+                }
+
+                prevHash = e.Hash;
+            }
+
+            if (!validChain)
+            {
+                return Result<IReadOnlyList<CareEventResponseDto>>.Fail(MessageConstant.INVALID_CHAIN);
+            }
+
             var dtos = events
                 .OrderBy(e => e.OccurredAt)
                 .Select(e => new CareEventResponseDto
