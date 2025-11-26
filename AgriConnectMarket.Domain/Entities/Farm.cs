@@ -49,7 +49,7 @@ namespace AgriConnectMarket.Domain.Entities
 
             FarmName = farmName;
             FarmDesc = farmDesc;
-            BatchCodePrefix = batchCodePrefix;
+            BatchCodePrefix = Normalizer.NormalizeStringToUpper(batchCodePrefix);
             BannerUrl = Normalizer.NormalizeUrl(bannerUrl ?? string.Empty);
             Phone = Normalizer.NormalizePhone(phone);
             Area = area;

@@ -7,7 +7,7 @@ namespace AgriConnectMarket.Application.Specifications.FarmSpecs
     {
         public FilterMallFarmSpecification()
         {
-            ApplyCriteria(f => f.CertificateUrl != null);
+            ApplyCriteria(f => f.CertificateUrl != null && !f.IsDelete);
         }
     }
 }

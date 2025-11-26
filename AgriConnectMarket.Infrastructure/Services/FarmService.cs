@@ -6,6 +6,7 @@ using AgriConnectMarket.Application.Specifications.FarmSpecs;
 using AgriConnectMarket.Domain.Entities;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Guards;
+using AgriConnectMarket.SharedKernel.Normalization;
 using AgriConnectMarket.SharedKernel.Result;
 using AgriConnectMarket.SharedKernel.Specifications;
 
@@ -45,7 +46,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             var farm = await _uow.FarmRepository.GetByIdAsync(farmId, ct);
 
-            if (farm == null)
+            if (farm is null || farm.IsDelete)
             {
                 return Result<Farm>.Fail(MessageConstant.FARM_NOT_FOUND);
             }
@@ -81,6 +82,13 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<CreateFarmResponseDto>> CreateFarmAsync(CreateFarmDto dto, CancellationToken ct = default)
         {
+            bool isPrefixConflicting = await isBatchCodePrefixConflicting(dto.BatchCodePrefix);
+
+            if (isPrefixConflicting)
+            {
+                return Result<CreateFarmResponseDto>.Fail(MessageConstant.BATCH_CODE_CONFLICT);
+            }
+
             var existingFarmer = await _uow.AuthenRepository.GetByIdAsync(dto.FarmerId);
 
             if (existingFarmer is null)
@@ -239,6 +247,19 @@ namespace AgriConnectMarket.Infrastructure.Services
             await _uow.SaveChangesAsync();
 
             return Result<Farm>.Success(farm);
+        }
+
+        // HELPER
+        private async Task<bool> isBatchCodePrefixConflicting(string bathCodePrefix)
+        {
+            if (string.IsNullOrEmpty(bathCodePrefix))
+            {
+                return true;
+            }
+
+            var farms = await _uow.FarmRepository.ListAllAsync();
+
+            return farms.Any(f => f.BatchCodePrefix is null ? false : f.BatchCodePrefix.Equals(Normalizer.NormalizeStringToUpper(bathCodePrefix)));
         }
     }
 }
