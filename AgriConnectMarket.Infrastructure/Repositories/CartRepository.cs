@@ -26,11 +26,15 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
         public async Task<Cart> GetByIdAsync(Guid cartId, bool includeItems = false, bool includeProfile = false, CancellationToken ct = default)
         {
-            var query = _dbContext.Set<Cart>().Where(c => c.Id == cartId);
+            var query = _dbContext.Set<Cart>().AsNoTracking().Where(c => c.Id == cartId);
 
             if (includeItems)
             {
-                query = query.Include(c => c.CartItems);
+                query = query.Include(c => c.CartItems)
+                                .ThenInclude(i => i.Batch)
+                                    .ThenInclude(b => b.Season)
+                                        .ThenInclude(s => s.Farm)
+                                            .ThenInclude(f => f.Address);
             }
 
             if (includeProfile)
