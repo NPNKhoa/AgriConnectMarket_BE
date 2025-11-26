@@ -24,6 +24,7 @@
         public const string EXISTING_CATEGORY = "This category already exist!";
         public const string CATEGORY_NOT_FOUND = "Can not found category(s)";
         public const string PRODUCT_NOT_FOUND = "Can not found product(s)";
+        public const string PRODUCT_CONFLICT = "This product already exist, please choose another one!";
         public const string FARM_MISSING_INFO_FOR_SELL = "This farm is missing requirement informations for selling. " +
             "Please ask the farmer provide them or they will not be able to sell their products";
         public const string FARM_SELL_ALLOWING_SUCCESS = "This farm is allowed for selling products successfully!";

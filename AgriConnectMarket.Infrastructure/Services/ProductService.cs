@@ -6,6 +6,7 @@ using AgriConnectMarket.Application.Specifications.ProductsSpecs;
 using AgriConnectMarket.Domain.Entities;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Guards;
+using AgriConnectMarket.SharedKernel.Normalization;
 using AgriConnectMarket.SharedKernel.Result;
 using AgriConnectMarket.SharedKernel.Specifications;
 
@@ -80,6 +81,13 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<CreateProductResponseDto>.Fail(MessageConstant.CATEGORY_NOT_FOUND);
             }
 
+            bool isProductConflict = await isProductConflicting(dto.ProductName);
+
+            if (isProductConflict)
+            {
+                return Result<CreateProductResponseDto>.Fail(MessageConstant.PRODUCT_CONFLICT);
+            }
+
             var product = new Product(dto.ProductName, dto.ProductAttribute, dto.CategoryId, dto.ProductDesc);
 
             await _uow.ProductRepository.AddAsync(product, ct);
@@ -147,6 +155,19 @@ namespace AgriConnectMarket.Infrastructure.Services
             await _uow.ProductRepository.DeleteAsync(product);
 
             return Result<Guid>.Success(productId);
+        }
+
+        // HELPER
+        private async Task<bool> isProductConflicting(string productName)
+        {
+            if (string.IsNullOrEmpty(productName))
+            {
+                return true;
+            }
+
+            var farms = await _uow.ProductRepository.ListAllAsync();
+
+            return farms.Any(f => f.ProductName is null ? false : f.ProductName.Equals(Normalizer.NormalizeStringToUpper(productName)));
         }
     }
 }
