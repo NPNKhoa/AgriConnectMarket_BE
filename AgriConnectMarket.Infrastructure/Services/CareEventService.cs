@@ -32,10 +32,12 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             var lastBlock = await _uow.CareEventRepository.GetLastByBatchIdAsync(dto.BatchId, ct);
 
-            var canonical = _hasher.BuildCareEventCanonical(dto.BatchId.ToString(), eventType.EventTypeName, dto.Payload, occurredAt.ToString("o"), lastBlock.Hash);
+            string FIRST_HASH = "0x" + new string('0', 64);
+
+            var canonical = _hasher.BuildCareEventCanonical(dto.BatchId.ToString(), eventType.EventTypeName, dto.Payload, occurredAt.ToString("o"), lastBlock is not null ? lastBlock.PrevHash : FIRST_HASH);
             var hash = _hasher.ComputeHash(canonical);
 
-            var careEvent = CareEvent.Create(dto.BatchId, dto.EventTypeId, occurredAt, payloadJson, hash, lastBlock.PrevHash);
+            var careEvent = CareEvent.Create(dto.BatchId, dto.EventTypeId, occurredAt, payloadJson, hash, lastBlock is not null ? lastBlock.PrevHash : FIRST_HASH);
 
             await _uow.CareEventRepository.AddAsync(careEvent, ct);
             await _uow.SaveChangesAsync(ct);
@@ -60,9 +62,10 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<IReadOnlyList<CareEventResponseDto>>.Fail(MessageConstant.CARE_EVENT_NOTE_FOUND);
             }
 
-            events = events.OrderBy(e => e.OccurredAt).ToList();
+            //events = events.OrderBy(e => e.OccurredAt).ToList();
+            string FIRST_HASH = "0x" + new string('0', 64);
 
-            string prevHash = string.Empty;
+            string prevHash = FIRST_HASH;
             bool validChain = true;
 
             foreach (var e in events)
