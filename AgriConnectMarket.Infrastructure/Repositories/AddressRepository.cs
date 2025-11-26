@@ -9,7 +9,7 @@ namespace AgriConnectMarket.Infrastructure.Repositories
     {
         public async Task<Address?> GetAddressByProfileIdAsync(Guid profileId, bool includeProfile = false)
         {
-            var query = _dbContext.Set<Address>().Where(a => a.ProfileId == profileId);
+            var query = _dbContext.Set<Address>().Where(a => a.ProfileId == profileId && !a.IsDelete);
 
             if (includeProfile)
             {
@@ -21,7 +21,7 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
         public async Task<IEnumerable<Address>?> GetAddressesByProfileIdAsync(Guid profileId, bool includeProfile = false)
         {
-            var query = _dbContext.Set<Address>().Where(a => a.ProfileId == profileId);
+            var query = _dbContext.Set<Address>().Where(a => a.ProfileId == profileId && !a.IsDelete);
 
             if (includeProfile)
             {
