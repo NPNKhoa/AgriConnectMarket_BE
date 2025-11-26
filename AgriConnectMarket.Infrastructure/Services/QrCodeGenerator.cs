@@ -15,7 +15,7 @@ namespace AgriConnectMarket.Infrastructure.Services
         private readonly IUnitOfWork _uow;
 
         public QrCodeGenerator(
-            CloudinaryAdapter cloudinary,
+            ICloudinaryAdapter cloudinary,
             IOptions<CloudinaryOptions> cloudOpts,
             IUnitOfWork uow)
         {
