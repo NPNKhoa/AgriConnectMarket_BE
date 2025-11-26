@@ -7,6 +7,7 @@ namespace AgriConnectMarket.Application.Specifications.FarmSpecs
     {
         public NameOrderedFarmsSpecification()
         {
+            ApplyCriteria(f => !f.IsDelete);
             ApplyOrderBy(f => f.FarmName);
         }
     }

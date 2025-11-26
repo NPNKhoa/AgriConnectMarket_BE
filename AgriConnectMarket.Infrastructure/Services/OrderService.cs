@@ -171,7 +171,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             }
 
             string orderCode = _codeGenerator.GenerateOrderCode("PRE");
-            var order = Order.Create(dto.CustomerId, orderCode, _dateTimeProvider.UtcNow, 0, OrderTypeConst.PREORDER);
+            var order = Order.Create(dto.CustomerId, dto.AddressId, orderCode, _dateTimeProvider.UtcNow, 0, OrderTypeConst.PREORDER);
 
             var preOrder = PreOrder.Create(order, dto.ProductId, dto.Quantity, dto.ExpectedReleaseDate, dto.Note!);
 

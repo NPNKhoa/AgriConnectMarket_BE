@@ -54,7 +54,7 @@ namespace AgriConnectMarket.Infrastructure.Services
         {
             var existingAddress = await _uow.AddressRepository.GetByIdAsync(addressId);
 
-            if (existingAddress is null)
+            if (existingAddress is null || existingAddress.IsDelete)
             {
                 return Result<UpdateAddressResultDto>.Fail(MessageConstant.ACCOUNT_NOT_FOUND);
             }
@@ -84,12 +84,14 @@ namespace AgriConnectMarket.Infrastructure.Services
         {
             var existingAddress = await _uow.AddressRepository.GetByIdAsync(addressId);
 
-            if (existingAddress is null)
+            if (existingAddress is null || existingAddress.IsDelete)
             {
-                return Result<Guid>.Fail(MessageConstant.ACCOUNT_NOT_FOUND);
+                return Result<Guid>.Fail(MessageConstant.ADDRESS_NOT_FOUND);
             }
 
-            await _uow.AddressRepository.DeleteAsync(existingAddress, ct);
+            existingAddress.IsDelete = true;
+            await _uow.AddressRepository.UpdateAsync(existingAddress, ct);
+            await _uow.SaveChangesAsync();
 
             return Result<Guid>.Success(addressId);
         }

@@ -11,6 +11,7 @@ namespace AgriConnectMarket.Domain.Entities
         public string Ward { get; set; }
         public string? Detail { get; set; }
         public bool IsDefault { get; set; }
+        public bool IsDelete { get; set; }
 
         // Aggregatred properties
         public Guid? ProfileId { get; set; }
@@ -38,6 +39,7 @@ namespace AgriConnectMarket.Domain.Entities
             this.Ward = ward;
             this.Detail = detail;
             this.IsDefault = isDefault;
+            this.IsDelete = false;
 
             if (profileId is not null)
             {

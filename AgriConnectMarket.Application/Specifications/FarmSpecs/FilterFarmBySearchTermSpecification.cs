@@ -7,7 +7,7 @@ namespace AgriConnectMarket.Application.Specifications.FarmSpecs
     {
         public FilterFarmBySearchTermSpecification(string searchTerm)
         {
-            ApplyCriteria(f => f.FarmName == searchTerm || f.Area == searchTerm);
+            ApplyCriteria(f => !f.IsDelete && (f.FarmName == searchTerm || f.Area == searchTerm));
         }
     }
 }

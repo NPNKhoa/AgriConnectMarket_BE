@@ -31,7 +31,7 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
         public async Task<Farm> GetByIdAsync(Guid farmId, bool includeAddress = false, bool includeFarmer = false, bool includeSeason = false)
         {
-            var query = _dbContext.Set<Farm>().Where(f => f.Id == farmId);
+            var query = _dbContext.Set<Farm>().Where(f => f.Id == farmId && !f.IsDelete);
 
             if (includeAddress)
             {

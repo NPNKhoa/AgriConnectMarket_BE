@@ -2,6 +2,7 @@
 using AgriConnectMarket.Infrastructure.Data;
 using AgriConnectMarket.Infrastructure.Repositories;
 using AgriConnectMarket.Infrastructure.Services;
+using AgriConnectMarket.Infrastructure.Settings;
 using AgriConnectMarket.SharedKernel.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +23,8 @@ namespace AgriConnectMarket.Infrastructure.Extensions
 
             services.AddCloudinaryService(configuration);
             services.AddJwtAuthentication(configuration);
+
+            services.Configure<QrSettings>(configuration.GetSection("QrSettings"));
 
             services.AddRepositories();
 
@@ -63,6 +66,7 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddScoped<IBatchCodeGenerator, SqlBatchCodeGenerator>();
             services.AddScoped<IOrderCodeGenerator, OrderCodeGenerator>();
             services.AddScoped<IHashingStrategy, Sha256Hashing>();
+            services.AddScoped<IQrCodeGenerator, QrCodeGenerator>();
 
             return services;
         }

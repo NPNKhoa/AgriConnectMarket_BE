@@ -3,6 +3,7 @@
     public class CreatePreOrderDto
     {
         public Guid CustomerId { get; set; }
+        public Guid AddressId { get; set; }
         public Guid ProductId { get; set; }
         public string OrderCode { get; set; }
         public DateTime OrderDate { get; set; }

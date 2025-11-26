@@ -74,6 +74,35 @@ namespace AgriConnectMarket.Infrastructure.CloudinarySettings
             }
         }
 
+        public async Task<UploadResultDto> UploadAsync(ImageUploadParams uploadParams, CancellationToken ct = default)
+        {
+            var publicId = $"{_settings.Folder?.TrimEnd('/')}/{Guid.NewGuid():N}";
+
+            try
+            {
+                // Note: CloudinaryDotNet API is synchronous; wrap in Task.Run for non-blocking IO if needed
+                var uploadResult = await Task.Run(() => _client.Upload(uploadParams), ct);
+
+                if (uploadResult.StatusCode == System.Net.HttpStatusCode.OK || uploadResult.StatusCode == System.Net.HttpStatusCode.Created)
+                {
+                    return new UploadResultDto
+                    {
+                        Success = true,
+                        PublicId = uploadResult.PublicId,
+                        Url = uploadResult.Url?.ToString(),
+                        SecureUrl = uploadResult.SecureUrl?.ToString()
+                    };
+                }
+
+                return new UploadResultDto { Success = false, Error = uploadResult.Error?.Message ?? "Upload failed" };
+            }
+            catch (Exception ex)
+            {
+                // log and return friendly message
+                return new UploadResultDto { Success = false, Error = ex.Message };
+            }
+        }
+
         public async Task<UploadResultDto> UploadBase64Async(string base64, string fileName, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(base64))
