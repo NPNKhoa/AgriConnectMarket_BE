@@ -14,7 +14,7 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
         public async Task<IReadOnlyList<CareEvent>> GetAllByBatchAsync(Guid batchId, CancellationToken ct)
         {
-            return await _dbContext.Set<CareEvent>().Where(c => c.BatchId == batchId).Include(c => c.EventType).ToListAsync();
+            return await _dbContext.Set<CareEvent>().Where(c => c.BatchId == batchId).Include(c => c.EventType).OrderBy(e => e.OccurredAt).ToListAsync();
         }
 
         public Task<IReadOnlyList<CareEvent>> GetPreviousEventAsync(Guid batchId, CancellationToken ct)
