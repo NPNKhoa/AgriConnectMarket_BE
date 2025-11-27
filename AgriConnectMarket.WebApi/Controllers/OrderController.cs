@@ -23,6 +23,19 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result));
         }
 
+        [HttpPost("pre-order")]
+        public async Task<IActionResult> CreatePreOrder([FromBody] CreatePreOrderDto dto, CancellationToken ct)
+        {
+            var result = await _orderService.CreatePreOrder(dto, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result));
+        }
+
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("")]
         public async Task<IActionResult> GetAllOrders(CancellationToken ct)
@@ -65,6 +78,19 @@ namespace AgriConnectMarket.WebApi.Controllers
 
         [HttpGet("me")]
         public async Task<IActionResult> GetMyOrders(CancellationToken ct)
+        {
+            var result = await _orderService.GetMyOrdersAsync(ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result));
+        }
+
+        [HttpGet("pre-orders/me")]
+        public async Task<IActionResult> GetMyPreOrders(CancellationToken ct)
         {
             var result = await _orderService.GetMyOrdersAsync(ct);
 

@@ -9,12 +9,12 @@ namespace AgriConnectMarket.Infrastructure.Repositories
     {
         public async Task<CareEvent> GetLastByBatchIdAsync(Guid batchId, CancellationToken ct = default)
         {
-            return await _dbContext.Set<CareEvent>().Where(c => c.BatchId == batchId).LastOrDefaultAsync();
+            return await _dbContext.Set<CareEvent>().Where(c => c.BatchId == batchId).OrderByDescending(c => c.OccurredAt).FirstOrDefaultAsync();
         }
 
         public async Task<IReadOnlyList<CareEvent>> GetAllByBatchAsync(Guid batchId, CancellationToken ct)
         {
-            return await _dbContext.Set<CareEvent>().Where(c => c.BatchId == batchId).ToListAsync();
+            return await _dbContext.Set<CareEvent>().Where(c => c.BatchId == batchId).Include(c => c.EventType).OrderBy(e => e.OccurredAt).ToListAsync();
         }
 
         public Task<IReadOnlyList<CareEvent>> GetPreviousEventAsync(Guid batchId, CancellationToken ct)

@@ -47,6 +47,31 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<IEnumerable<Order>>.Success(orders);
         }
 
+        public async Task<Result<IEnumerable<Order>>> GetMyPreOrdersAsync(CancellationToken ct = default)
+        {
+            if (_currentUserService.UserId is null)
+            {
+                return Result<IEnumerable<Order>>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
+            }
+
+            var userId = _currentUserService.UserId.Value;
+            var profile = await _uow.ProfileRepository.GetByIdAsync(userId, ct);
+
+            if (profile is null)
+            {
+                return Result<IEnumerable<Order>>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
+            }
+
+            var orders = await _uow.OrderRepository.GetOrderByProfileIdAsync(profile.Id, true, true, false, ct);
+
+            if (!orders.Any())
+            {
+                return Result<IEnumerable<Order>>.Fail(MessageConstant.ORDER_NOT_FOUND);
+            }
+
+            return Result<IEnumerable<Order>>.Success(orders);
+        }
+
         public async Task<Result<IEnumerable<Order>>> GetFarmOrderAsync(Guid farmId, CancellationToken ct = default)
         {
             var farm = await _uow.FarmRepository.GetByIdAsync(farmId, ct);
@@ -90,7 +115,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             }
 
             string orderCode = _codeGenerator.GenerateOrderCode();
-            var order = Order.Create(dto.CustomerId, dto.AddressId, orderCode, _dateTimeProvider.UtcNow, dto.ShippingFee, OrderTypeConst.ORDER);
+            var order = Order.Create(dto.CustomerId, dto.AddressId, orderCode, _dateTimeProvider.UtcNow, OrderTypeConst.ORDER, dto.ShippingFee);
 
             foreach (var item in dto.OrderItems)
             {
@@ -171,7 +196,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             }
 
             string orderCode = _codeGenerator.GenerateOrderCode("PRE");
-            var order = Order.Create(dto.CustomerId, dto.AddressId, orderCode, _dateTimeProvider.UtcNow, 0, OrderTypeConst.PREORDER);
+            var order = Order.Create(dto.CustomerId, dto.AddressId, orderCode, _dateTimeProvider.UtcNow, OrderTypeConst.PREORDER);
 
             var preOrder = PreOrder.Create(order, dto.ProductId, dto.Quantity, dto.ExpectedReleaseDate, dto.Note!);
 

@@ -51,7 +51,7 @@ namespace AgriConnectMarket.Domain.Entities
             PaymentStatus = PaymentStatusConst.PENDING;
         }
 
-        public static Order Create(Guid customerId, Guid addressId, string orderCode, DateTime orderDate, decimal shippingFee = 0, string? orderType = "")
+        public static Order Create(Guid customerId, Guid addressId, string orderCode, DateTime orderDate, string orderType = "", decimal shippingFee = 0)
             => new Order(customerId, addressId, orderCode, orderDate, shippingFee, orderType);
 
         public void AddItem(ProductBatch batch, decimal quantity)

@@ -9,8 +9,22 @@ namespace AgriConnectMarket.WebApi.Controllers
 {
     [Route("api/product-batches")]
     [ApiController]
-    public class ProductBatchController(ProductBatchService _batchService, ICloudinaryAdapter _cloudinaryAdapter) : ControllerBase
+    public class ProductBatchController : ControllerBase
     {
+        private readonly ProductBatchService _batchService;
+        private readonly CareEventService _eventService;
+        private readonly ICloudinaryAdapter _cloudinaryAdapter;
+
+        public ProductBatchController(
+            ProductBatchService batchService,
+            CareEventService eventService,
+            ICloudinaryAdapter cloudinaryAdapter)
+        {
+            _batchService = batchService;
+            _eventService = eventService;
+            _cloudinaryAdapter = cloudinaryAdapter;
+        }
+
         [HttpGet("")]
         public async Task<IActionResult> GetAllBatches(CancellationToken ct)
         {
@@ -92,7 +106,7 @@ namespace AgriConnectMarket.WebApi.Controllers
         [HttpGet("{batchId}/care-events/verify")]
         public async Task<IActionResult> VerifyChain([FromRoute] Guid batchId, CancellationToken ct)
         {
-            var result = await _batchService.GetBatchByFarmIdAsync(batchId, ct);
+            var result = await _eventService.GetCareEventsByBatchAsync(batchId, ct);
 
             if (!result.IsSuccess)
             {
