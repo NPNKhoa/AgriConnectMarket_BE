@@ -20,7 +20,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(ApiResponse.SuccessResponse(result));
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
         [HttpPost("pre-order")]
@@ -33,7 +33,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(ApiResponse.SuccessResponse(result));
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
         [Authorize(Policy = "AdminOnly")]
@@ -47,7 +47,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(ApiResponse.SuccessResponse(result));
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
         [HttpGet("{orderId}")]
@@ -73,7 +73,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(ApiResponse.SuccessResponse(result));
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
         [HttpGet("me")]
@@ -86,7 +86,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(ApiResponse.SuccessResponse(result));
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
         [HttpGet("pre-orders/me")]
@@ -99,7 +99,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(ApiResponse.SuccessResponse(result));
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
         [HttpPatch("{orderId}/order-status")]
@@ -112,7 +112,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(ApiResponse.SuccessResponse(result));
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
         [HttpPatch("{orderId}/cancel")]
@@ -125,7 +125,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(ApiResponse.SuccessResponse(result));
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
     }
 }
