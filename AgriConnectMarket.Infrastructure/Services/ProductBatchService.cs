@@ -71,7 +71,6 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<CreateProductBatchResultDto>> CreateBatchAsync(CreateProductBatchDto dto, CancellationToken ct = default)
         {
-            var entity = ProductBatch.Create(dto.SeasonId, dto.TotalYield, dto.AvailableQuantity, dto.PlantingDate, dto.Price, dto.Units);
             var season = await _uow.SeasonRepository.GetByIdAsync(dto.SeasonId, ct);
 
             if (season is null)
@@ -92,9 +91,16 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<CreateProductBatchResultDto>.Fail(MessageConstant.FARM_MISSING_PREFIX);
             }
 
+
+            var entity = ProductBatch.Create(dto.SeasonId, dto.TotalYield, dto.AvailableQuantity, dto.PlantingDate, dto.Price, dto.Units);
+
             var codeString = await _codeGenerator.GenerateNextCodeAsync(farm.BatchCodePrefix, ct);
 
             entity.SetBatchCode(codeString);
+            foreach (var item in dto.ImageUrl)
+            {
+                entity.AddImage(new ProductBatchImage(entity.Id, item));
+            }
 
             await _uow.ProductBatchRepository.AddAsync(entity, ct);
             await _uow.SaveChangesAsync(ct);

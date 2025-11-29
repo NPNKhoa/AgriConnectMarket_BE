@@ -1,4 +1,5 @@
 ﻿using AgriConnectMarket.Application.DTOs.RequestDtos;
+using AgriConnectMarket.Application.DTOs.ResponseDtos;
 using AgriConnectMarket.Application.Interfaces;
 using AgriConnectMarket.Domain.Entities;
 using AgriConnectMarket.SharedKernel.Constants;
@@ -8,11 +9,11 @@ namespace AgriConnectMarket.Infrastructure.Services
 {
     public class CartService(IUnitOfWork _uow, ICurrentUserService _currentUserService)
     {
-        public async Task<Result<Cart>> GetCartByUser(CancellationToken ct = default)
+        public async Task<Result<CartResponseDto>> GetCartByUser(CancellationToken ct = default)
         {
             if (_currentUserService.UserId is null)
             {
-                return Result<Cart>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
+                return Result<CartResponseDto>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
             }
 
             var userId = _currentUserService.UserId.Value;
@@ -20,10 +21,10 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             if (profile is null)
             {
-                return Result<Cart>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
+                return Result<CartResponseDto>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
             }
 
-            var cart = await _uow.CartRepository.GetByProfileIdAsync(profile.Id, true, false, ct);
+            var cart = await _uow.CartRepository.GetByProfileIdAsync(profile.Id, true, true, ct);
 
             if (cart is null)
             {
@@ -33,7 +34,52 @@ namespace AgriConnectMarket.Infrastructure.Services
                 await _uow.SaveChangesAsync();
             }
 
-            return Result<Cart>.Success(cart);
+            var grouped = cart.CartItems?
+                .GroupBy(i => i.Batch.Season.Farm.Id)
+                .Select(g =>
+                {
+                    var firstItem = g.First();
+                    var farm = firstItem.Batch.Season.Farm;
+
+                    return new ItemGroupedByFarmDto
+                    {
+                        FarmId = farm.Id,
+                        FarmName = farm.FarmName,
+                        Items = g.Select(i =>
+                        {
+                            var batch = i.Batch;
+                            var season = batch.Season;
+                            var product = season.Product;
+
+                            return new CartItemDto
+                            {
+                                ItemId = i.Id,
+                                ProductName = product.ProductName,
+                                CategoryName = product.Category.CategoryName,
+                                SeasonName = season.SeasonName,
+                                SeasonStatus = season.Status,
+                                BatchCode = batch.BatchCode.Value,
+                                BatchImageUrls = batch.ImageUrls.Select(item => item.ImageUrl).ToList(),
+                                BatchPrice = batch.Price,
+                                Units = batch.Units,
+                                Quantity = i.Quantity,
+                                ItemPrice = i.ItemPrice
+                            };
+                        }).ToList()
+                    };
+                }).ToList() ?? new List<ItemGroupedByFarmDto>();
+
+            var cartResponse = new CartResponseDto()
+            {
+                CartId = cart.Id,
+                Email = cart.Customer.Email,
+                Fullname = cart.Customer.Fullname,
+                Phone = cart.Customer.Phone!,
+                TotalPrice = cart.TotalPrice,
+                CartItems = grouped
+            };
+
+            return Result<CartResponseDto>.Success(cartResponse);
         }
 
         public async Task<Result<CartItem>> AddToCartAsync(CreateCartItemDto dto, CancellationToken ct = default)

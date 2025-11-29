@@ -21,7 +21,8 @@ namespace AgriConnectMarket.Infrastructure.Repositories
                                     .Include(c => c.CartItems)!
                                         .ThenInclude(i => i.Batch)
                                             .ThenInclude(b => b.Season)
-                                                .ThenInclude(s => s.Product);
+                                                .ThenInclude(s => s.Product)
+                                                    .ThenInclude(p => p.Category);
             }
 
             if (includeProfile)
