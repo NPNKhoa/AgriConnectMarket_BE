@@ -13,7 +13,16 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
             if (includeItems)
             {
-                query = query.Include(c => c.CartItems);
+                query = query.Include(c => c.CartItems)!
+                                .ThenInclude(i => i.Batch)
+                                    .ThenInclude(b => b.Season)
+                                        .ThenInclude(s => s.Farm)
+                                            .ThenInclude(f => f.Address)
+                                    .Include(c => c.CartItems)!
+                                        .ThenInclude(i => i.Batch)
+                                            .ThenInclude(b => b.Season)
+                                                .ThenInclude(s => s.Product)
+                                                    .ThenInclude(p => p.Category);
             }
 
             if (includeProfile)

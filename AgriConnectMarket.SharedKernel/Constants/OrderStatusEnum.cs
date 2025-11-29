@@ -2,7 +2,7 @@
 {
     public static class OrderStatusEnum
     {
-        public const string PENDING = "Pedning";
+        public const string PENDING = "Pending";
         public const string PROCESSING = "Processing";
         public const string SHIPPING = "Shipping";
         public const string DELIVERED = "Delivered";

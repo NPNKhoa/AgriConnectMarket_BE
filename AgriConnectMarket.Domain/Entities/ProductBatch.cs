@@ -18,6 +18,12 @@ namespace AgriConnectMarket.Domain.Entities
         // Navigation
         public Guid SeasonId { get; set; }
         public Season Season { get; set; }
+
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; }
+
+        private readonly List<ProductBatchImage> _imageUrls = new();
+        public virtual IReadOnlyCollection<ProductBatchImage> ImageUrls => _imageUrls.AsReadOnly();
         // order item, cart item, review...
 
         // Audit
@@ -68,6 +74,11 @@ namespace AgriConnectMarket.Domain.Entities
             Guard.AgainstOutOfRange<decimal>(availableQuantity, 0, TotalYield, nameof(AvailableQuantity));
 
             AvailableQuantity = availableQuantity;
+        }
+
+        public void AddImage(ProductBatchImage image)
+        {
+            _imageUrls.Add(image);
         }
     }
 }

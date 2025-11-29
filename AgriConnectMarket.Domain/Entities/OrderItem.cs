@@ -10,8 +10,8 @@ namespace AgriConnectMarket.Domain.Entities
         public decimal UnitPrice { get; set; }
         public decimal SubTotal { get; private set; }
 
-        public Order Order { get; set; }
-        public ProductBatch Batch { get; set; }
+        public virtual Order Order { get; set; }
+        public virtual ProductBatch Batch { get; set; }
 
         public OrderItem()
         {
