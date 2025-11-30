@@ -198,7 +198,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             string orderCode = _codeGenerator.GenerateOrderCode("PRE");
             var order = Order.Create(dto.CustomerId, dto.AddressId, orderCode, _dateTimeProvider.UtcNow, OrderTypeConst.PREORDER);
 
-            var preOrder = PreOrder.Create(order, dto.ProductId, dto.Quantity, dto.ExpectedReleaseDate, dto.Note!);
+            var preOrder = PreOrder.Create(order, dto.ProductId, dto.Quantity, dto.Note!);
 
             await _uow.PreOrderRepository.AddAsync(preOrder);
             await _uow.SaveChangesAsync();
@@ -209,7 +209,6 @@ namespace AgriConnectMarket.Infrastructure.Services
                 OrderType = order.OrderType,
                 OrderStatus = order.OrderStatus,
                 OrderDate = order.OrderDate,
-                ExpectedReleaseDate = preOrder.ExpectedReleaseDate,
                 PaymentStatus = order.PaymentStatus,
                 PartiallyPaidAmount = preOrder.PartiallyPaidAmount,
                 PaidDate = order.PaidDate,
