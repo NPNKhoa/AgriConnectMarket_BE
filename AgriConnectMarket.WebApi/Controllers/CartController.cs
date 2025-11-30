@@ -19,7 +19,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(ApiResponse.SuccessResponse(result));
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
         [HttpPost("")]
@@ -32,7 +32,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(ApiResponse.SuccessResponse(result));
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
         [HttpPatch("{cartId}")]
@@ -45,7 +45,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(ApiResponse.SuccessResponse(result));
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
         [HttpDelete("cart-items/{itemId}")]
@@ -58,7 +58,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(ApiResponse.SuccessResponse(result));
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
     }
 }
