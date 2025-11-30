@@ -246,9 +246,9 @@ namespace AgriConnectMarket.Infrastructure.Data
                     .IsRequired()
                     .OnDelete(DeleteBehavior.Cascade);
 
-                i.HasOne(p => p.Product)
-                    .WithOne(p => p.PreOrder)
-                    .HasForeignKey<PreOrder>(po => po.ProductId)
+                i.HasOne(p => p.Batch)
+                    .WithMany(p => p.PreOrders)
+                    .HasForeignKey(po => po.BatchId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.NoAction);
             });

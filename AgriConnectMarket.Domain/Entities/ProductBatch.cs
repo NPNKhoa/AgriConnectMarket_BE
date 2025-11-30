@@ -19,6 +19,7 @@ namespace AgriConnectMarket.Domain.Entities
         public Guid SeasonId { get; set; }
         public Season Season { get; set; }
 
+        public virtual ICollection<PreOrder> PreOrders { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual ICollection<CartItem> CartItems { get; set; }
 
