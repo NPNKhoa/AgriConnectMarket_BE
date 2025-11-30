@@ -58,6 +58,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                                 CategoryName = product.Category.CategoryName,
                                 SeasonName = season.SeasonName,
                                 SeasonStatus = season.Status,
+                                BatchId = batch.Id,
                                 BatchCode = batch.BatchCode.Value,
                                 BatchImageUrls = batch.ImageUrls.Select(item => item.ImageUrl).ToList(),
                                 BatchPrice = batch.Price,

@@ -3,6 +3,7 @@
     public class CartItemDto
     {
         public Guid ItemId { get; set; }
+        public Guid BatchId { get; set; }
         public string BatchCode { get; set; }
         public IReadOnlyCollection<string> BatchImageUrls { get; set; }
         public string ProductName { get; set; }
