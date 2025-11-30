@@ -31,9 +31,14 @@ namespace AgriConnectMarket.Infrastructure.Repositories
             return await query.ToListAsync(ct);
         }
 
-        public async Task<ProductBatch> GetByIdAsync(Guid batchId, bool includeAllRelated = false, CancellationToken ct = default)
+        public async Task<ProductBatch> GetByIdAsync(Guid batchId, bool includeAllRelated = false, bool withoutTracking = false, CancellationToken ct = default)
         {
             var query = _dbContext.Set<ProductBatch>().Where(b => b.Id == batchId);
+
+            if (withoutTracking)
+            {
+                query = query.AsNoTracking();
+            }
 
             if (includeAllRelated)
             {
@@ -61,9 +66,14 @@ namespace AgriConnectMarket.Infrastructure.Repositories
             return await query.ToListAsync(ct);
         }
 
-        public async Task<ProductBatch> GetByIdAsync(Guid batchId, bool includeSeason = false, bool includeReview = false, CancellationToken ct = default)
+        public async Task<ProductBatch> GetByIdAsync(Guid batchId, bool includeSeason = false, bool includeReview = false, bool withoutTracking = false, CancellationToken ct = default)
         {
             var query = _dbContext.Set<ProductBatch>().Where(pb => pb.Id.Equals(batchId));
+
+            if (withoutTracking)
+            {
+                query = query.AsNoTracking();
+            }
 
             if (includeSeason)
             {

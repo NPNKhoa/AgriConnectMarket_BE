@@ -102,7 +102,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 await _uow.SaveChangesAsync();
             }
 
-            var batch = await _uow.ProductBatchRepository.GetByIdAsync(dto.BatchId, ct);
+            var batch = await _uow.ProductBatchRepository.GetByIdAsync(dto.BatchId, false, true, ct);
 
             if (batch is null)
                 return Result<CartItem>.Fail(MessageConstant.BATCH_NOT_FOUND);

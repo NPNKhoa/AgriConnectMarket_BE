@@ -12,6 +12,16 @@ builder.WebHost.ConfigureKestrel(options =>
     options.Listen(IPAddress.Any, 5170);
 });
 
+builder.Services.AddCors(option =>
+{
+    option.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin();
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+    });
+});
+
 builder.Services.AddConfiguredControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -28,6 +38,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
