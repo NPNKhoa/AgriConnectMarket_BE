@@ -28,23 +28,6 @@ namespace AgriConnectMarket.Infrastructure.Extensions
 
             services.AddRepositories();
 
-            services.AddScoped<IAuthenRepository, AuthenRepository>();
-            services.AddScoped<IProfileRepository, ProfileRepository>();
-            services.AddScoped<IFarmRepository, FarmRepository>();
-            services.AddScoped<ISeasonRepository, SeasonRepository>();
-            services.AddScoped<IAddressRepository, AddressRepository>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IProductBatchRepository, ProductBatchRepository>();
-            services.AddScoped<IFavoriteFarmRepository, FavoriteFarmRepository>();
-            services.AddScoped<ICartRepository, CartRepository>();
-            services.AddScoped<ICartItemRepository, CartItemRepository>();
-            services.AddScoped<IOrderRepository, OrderRepository>();
-            services.AddScoped<IOrderItemRepository, OrderItemRepository>();
-            services.AddScoped<IPreOrderRepository, PreOrderRepository>();
-            services.AddScoped<IEventTypeRepository, EventTypeRepository>();
-            services.AddScoped<ICareEventRepository, CareEventRepository>();
-
             services.AddScoped<AuthService>();
             services.AddScoped<ProfileService>();
             services.AddScoped<FarmService>();

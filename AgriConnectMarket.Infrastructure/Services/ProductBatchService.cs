@@ -1,9 +1,12 @@
-﻿using AgriConnectMarket.Application.DTOs.RequestDtos;
+﻿using AgriConnectMarket.Application.DTOs.QueryDtos;
+using AgriConnectMarket.Application.DTOs.RequestDtos;
 using AgriConnectMarket.Application.DTOs.ResponseDtos;
 using AgriConnectMarket.Application.Interfaces;
+using AgriConnectMarket.Application.Specifications.ProductBatchSpecs;
 using AgriConnectMarket.Domain.Entities;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Result;
+using AgriConnectMarket.SharedKernel.Specifications;
 
 namespace AgriConnectMarket.Infrastructure.Services
 {
@@ -11,6 +14,42 @@ namespace AgriConnectMarket.Infrastructure.Services
     {
         public async Task<Result<IEnumerable<ProductBatch>>> GetAllBatchesAsync(CancellationToken ct = default)
         {
+            var batches = await _uow.ProductBatchRepository.ListAllAsync(ct);
+
+            if (!batches.Any())
+            {
+                return Result<IEnumerable<ProductBatch>>.Fail(MessageConstant.BATCH_NOT_FOUND);
+            }
+
+            return Result<IEnumerable<ProductBatch>>.Success(batches);
+        }
+
+        public async Task<Result<IEnumerable<ProductBatch>>> GetSellingBatches(ProductBatchQuery query, CancellationToken ct = default)
+        {
+            ISpecification<ProductBatch> specs;
+
+            if (query.searchTerm is not null)
+            {
+                specs = new FilterProductBatchBySearchTermSpecification(query.searchTerm);
+            }
+
+            if (query.categoryId is not null)
+            {
+                specs = new FilterProductBatchByCategoryIdSpecification((Guid)query.categoryId);
+            }
+
+            if (query.isDesc is not null)
+            {
+                specs = new SortingProductBatchSpecification((bool)query.isDesc);
+            }
+
+            int pageNumber = query.pageNumber is not null ? (int)query.pageNumber : 1;
+            int pageSize = query.pageSize is not null ? (int)query.pageSize : 10;
+
+            int skip = (pageNumber - 1) * pageSize;
+
+            specs = new FilterProductBatchByPaginationSpecification(skip, pageSize);
+
             var batches = await _uow.ProductBatchRepository.ListAllAsync(ct);
 
             if (!batches.Any())
