@@ -1,7 +1,9 @@
 ﻿using AgriConnectMarket.Application.DTOs.RequestDtos;
+using AgriConnectMarket.Infrastructure.CloudinarySettings;
 using AgriConnectMarket.Infrastructure.Services;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Responses;
+using AgriConnectMarket.WebApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +11,10 @@ namespace AgriConnectMarket.WebApi.Controllers
 {
     [Route("api/profiles")]
     [ApiController]
-    public class ProfileController(ProfileService _profileService) : ControllerBase
+    public class ProfileController(ProfileService _profileService, ICloudinaryAdapter _cloudinary) : ControllerBase
     {
         [HttpPut("{profileId}")]
-        public async Task<IActionResult> UpdateProfile([FromRoute] Guid profileId, UpdateProfileDto dto)
+        public async Task<IActionResult> UpdateProfile([FromRoute] Guid profileId, [FromBody] UpdateProfileDto dto)
         {
             var result = await _profileService.UpdateProfile(profileId, dto);
 
@@ -23,6 +25,38 @@ namespace AgriConnectMarket.WebApi.Controllers
             }
 
             return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_UPDATE_SUCCESS_MESSAGE));
+        }
+
+        [HttpPatch("{profileId}")]
+        public async Task<IActionResult> UpdateProfileAvatar([FromRoute] Guid profileId, [FromForm] AvatarUpdateRequest request)
+        {
+            var avartarUrl = string.Empty;
+
+            if (request.avatar is not null)
+            {
+                var result = await _cloudinary.UploadAsync(request.avatar);
+
+                if (!result.Success)
+                {
+                    return BadRequest(ApiResponse.FailResponse(result.Error is not null ? result.Error.ToString() : MessageConstant.UNKNOWN_ERROR));
+                }
+
+                avartarUrl = result.Url;
+            }
+
+            var dto = new UpdateProfileDto()
+            {
+                AvatarUrl = avartarUrl
+            };
+
+            var res = await _profileService.UpdateAvatarAsync(profileId, dto);
+
+            if (!res.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(res.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(res.Value, MessageConstant.COMMON_UPDATE_SUCCESS_MESSAGE));
         }
 
         [HttpGet("")]

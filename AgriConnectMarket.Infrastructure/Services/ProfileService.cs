@@ -27,6 +27,22 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<Profile>.Success(existingProfile);
         }
 
+        public async Task<Result<Profile>> UpdateAvatarAsync(Guid profileId, UpdateProfileDto dto, CancellationToken ct = default)
+        {
+            var existingProfile = await _uow.ProfileRepository.GetByIdAsync(profileId, ct);
+
+            if (existingProfile is null)
+            {
+                return Result<Profile>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
+            }
+
+            existingProfile.AvatarUrl = dto.AvatarUrl;
+
+            await _uow.ProfileRepository.UpdateAsync(existingProfile, ct);
+
+            return Result<Profile>.Success(existingProfile);
+        }
+
         public async Task<Result<IEnumerable<Profile>>> GetFullListAsync(CancellationToken ct = default)
         {
             var profiles = await _uow.ProfileRepository.ListAllAsync(ct);
