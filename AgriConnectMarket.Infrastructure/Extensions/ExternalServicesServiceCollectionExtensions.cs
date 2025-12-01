@@ -1,4 +1,5 @@
 ﻿using AgriConnectMarket.Application.Interfaces;
+using AgriConnectMarket.Application.SettingObject;
 using AgriConnectMarket.Infrastructure.CloudinarySettings;
 using AgriConnectMarket.Infrastructure.CloudinarySettings.DTOs;
 using AgriConnectMarket.Infrastructure.Services;
@@ -22,6 +23,10 @@ namespace AgriConnectMarket.Infrastructure.Extensions
                 client.BaseAddress = new Uri(configuration["GHTK:BaseUrl"]!);
                 client.Timeout = TimeSpan.FromSeconds(20);
             });
+
+            var smtpSettings = configuration.GetSection("SmtpSettings").Get<SmtpSettings>();
+            services.AddSingleton(smtpSettings);
+            services.AddTransient<IEmailService, SmtpEmailService>();
 
             return services;
         }

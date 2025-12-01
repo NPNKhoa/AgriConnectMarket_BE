@@ -1,16 +1,21 @@
 ﻿using AgriConnectMarket.Application.DTOs.RequestDtos;
 using AgriConnectMarket.Application.DTOs.ResponseDtos;
 using AgriConnectMarket.Application.Interfaces;
+using AgriConnectMarket.Application.SettingObjects;
 using AgriConnectMarket.Domain.Entities;
+using AgriConnectMarket.Infrastructure.Settings;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Guards;
+using AgriConnectMarket.SharedKernel.Interfaces;
 using AgriConnectMarket.SharedKernel.Result;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace AgriConnectMarket.Infrastructure.Services
 {
-    public class AuthService(IUnitOfWork _uow, IJwtService _jwtService, ICurrentUserService _currentUserService)
+    public class AuthService(IUnitOfWork _uow, IJwtService _jwtService, ICurrentUserService _currentUserService, IDateTimeProvider _dateTimeProvider,
+        IEmailService _emailService, IEmailTemplateService _templateService, VerifyUrlObject _verifyUrl)
     {
         // Register command
         public async Task<Result<RegisterResultDto>> RegisterAsync(RegisterDto dto, CancellationToken ct = default)
@@ -40,10 +45,69 @@ namespace AgriConnectMarket.Infrastructure.Services
             await _uow.ProfileRepository.AddAsync(profile);
             await _uow.SaveChangesAsync();
 
+            var verifyToken = _jwtService.GenerateAccessToken(user.Id, user.UserName, user.Role);
+
+            var verificationUrl = $"{_verifyUrl.IpBasedUrl}?token={Uri.EscapeUriString(verifyToken)}";
+
+            var emailHtmlContent = _templateService.RenderTemplate("AccountVerificationEmail.html", new Dictionary<string, string>
+            {
+                {"username", user.UserName },
+                {"verificationUrl",verificationUrl }
+            });
+
+            var emailMessage = new EmailMessage()
+            {
+                To = dto.Email,
+                Subject = "Kindly verify your email to access our apps",
+                Body = emailHtmlContent,
+                IsHtml = true
+            };
+
+            await _emailService.SendEmailAsync(emailMessage);
 
             // Map to result DTO
             var result = new RegisterResultDto { UserId = user.Id, Username = user.UserName };
             return Result<RegisterResultDto>.Success(result);
+        }
+
+        public async Task<Result<VerificationResponseDto>> VerifyAsync(string token, CancellationToken ct = default)
+        {
+            var validation = _jwtService.ValidateToken(token.Trim());
+
+            if (validation is null)
+            {
+                return Result<VerificationResponseDto>.Fail(MessageConstant.UNKNOWN_ERROR);
+            }
+
+            var userIdStr = validation.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!Guid.TryParse(userIdStr, out Guid accountId))
+            {
+                return Result<VerificationResponseDto>.Fail(MessageConstant.UNKNOWN_ERROR);
+            }
+
+            var account = await _uow.AuthenRepository.GetByIdAsync(accountId);
+
+            if (account is null)
+            {
+                return Result<VerificationResponseDto>.Fail(MessageConstant.ACCOUNT_NOT_FOUND);
+            }
+
+            DateTime verificationOccured = _dateTimeProvider.UtcNow;
+
+            account.VerifyAccount(verificationOccured);
+
+            await _uow.AuthenRepository.UpdateAsync(account, ct);
+            await _uow.SaveChangesAsync(ct);
+
+            var responseDto = new VerificationResponseDto()
+            {
+                IsSuccess = true,
+                AccountId = accountId,
+                Message = MessageConstant.ACCOUNT_VERIFIED
+            };
+
+            return Result<VerificationResponseDto>.Success(responseDto);
         }
 
         public async Task<Result<LoginResultDto>> LoginAsync(LoginDto dto, CancellationToken ct = default)
@@ -63,6 +127,11 @@ namespace AgriConnectMarket.Infrastructure.Services
             if (!VerifyPassword(dto.Password, existing.Password))
             {
                 return Result<LoginResultDto>.Fail(MessageConstant.WRONG_CREDENTIALS);
+            }
+
+            if (existing.VerifiedAt is null)
+            {
+                return Result<LoginResultDto>.Fail(MessageConstant.ACCOUNT_NOT_VERIFIED);
             }
 
             var user = await _uow.ProfileRepository.GetByAccountIdAsync(existing.Id);

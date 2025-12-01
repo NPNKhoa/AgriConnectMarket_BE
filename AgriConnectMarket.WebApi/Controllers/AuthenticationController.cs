@@ -41,6 +41,39 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value, "User registered successfully."));
         }
 
+        [HttpGet("verify")]
+        public async Task<IActionResult> Verify([FromQuery] string token, [FromQuery] string? platform, CancellationToken ct)
+        {
+            var result = await _authService.VerifyAsync(token, ct);
+
+
+            if (!result.IsSuccess)
+            {
+                string webFailedUrl = $"http://localhost:5173/email-verified?error={result.Error}";
+                return Redirect(webFailedUrl);
+            }
+
+            if (!string.IsNullOrEmpty(platform) && platform.Equals("mobile", StringComparison.OrdinalIgnoreCase))
+            {
+                return Redirect("agriConnectApp://email-verified");
+            }
+
+            var ua = Request.Headers["User-Agent"].ToString();
+            if (ua.Contains("Android") || ua.Contains("iPhone") || ua.Contains("iPad"))
+            {
+                if (!result.IsSuccess)
+                {
+                    string webFailedUrl = $"agriConnectApp://email-verification-fail";
+                    return Redirect(webFailedUrl);
+                }
+
+                return Redirect("agriConnectApp://email-verified");
+            }
+
+            var webSuccessUrl = "http://localhost:5173/email-verified";
+            return Redirect(webSuccessUrl);
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto dto, CancellationToken ct)
         {
