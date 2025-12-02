@@ -16,6 +16,8 @@
         public const string PROFILE_ID_NOT_FOUND = "Can not find any profile with this ID";
         public const string WRONG_CREDENTIALS = "Wrong username or password. Please try again!";
         public const string NOT_AUTHENTICATED_USER = "User not authenticated!";
+        public const string ACCOUNT_NOT_VERIFIED = "Please verify your email before continuing!";
+        public const string ACCOUNT_VERIFIED = "Account verified!";
         public const string FARM_NOT_FOUND = "Can not found farm(s)";
         public const string BAN_FARM_SUCCESS = "Banned!";
         public const string SEASON_NOT_FOUND = "Can not found season(s)";

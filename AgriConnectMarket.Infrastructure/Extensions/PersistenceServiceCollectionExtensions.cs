@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AgriConnectMarket.Application.Interfaces;
+using AgriConnectMarket.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +18,7 @@ namespace AgriConnectMarket.Infrastructure.Extensions
 
             // Optionally register UnitOfWork if you have one:
             // services.AddScoped<IUnitOfWork, EfUnitOfWork<TContext>>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

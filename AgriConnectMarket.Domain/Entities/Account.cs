@@ -10,6 +10,7 @@ namespace AgriConnectMarket.Domain.Entities
         public string UserName { get; set; }
         public string Password { get; set; }
         public string Role { get; set; } = ROLE.BUYER;
+        public DateTime? VerifiedAt { get; set; }
         public bool IsActive { get; set; } = true;
         public bool IsDeLeted { get; set; } = false;
 
@@ -32,11 +33,19 @@ namespace AgriConnectMarket.Domain.Entities
             UserName = username;
             Password = password;
             Role = isFarmer ? ROLE.FARMER : ROLE.BUYER;
+            VerifiedAt = null;
         }
 
         public void ToggleAccountBannedStatus()
         {
             this.IsActive = !this.IsActive;
+        }
+
+        public void VerifyAccount(DateTime verifiedAt)
+        {
+            Guard.AgainstNull(verifiedAt, nameof(verifiedAt));
+
+            VerifiedAt = verifiedAt;
         }
     }
 }
