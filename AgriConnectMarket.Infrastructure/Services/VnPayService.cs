@@ -47,8 +47,9 @@ namespace AgriConnectMarket.Infrastructure.Services
                 { "vnp_Command", "pay" },
                 { "vnp_TmnCode", _settings.TmnCode },
                 { "vnp_Amount", amountInCents.ToString() },
+                { "vnp_BankCode", "NCB" },
                 { "vnp_CurrCode", "VND" },
-                { "vnp_TxnRef", txnRef },
+                { "vnp_TxnRef", "1" },
                 { "vnp_OrderInfo", req.OrderDescription },
                 { "vnp_OrderType", "other" },
                 { "vnp_Locale", _settings.Locale ?? "vn" },
@@ -65,13 +66,15 @@ namespace AgriConnectMarket.Infrastructure.Services
             {
                 OrderId = order.Id,
                 TransactionRef = txnRef,
+                TransactionNo = "123",
                 Amount = req.Amount,
                 Status = "Pending",
+                BankCode = "NCB",
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _uow.TransactionRepository.AddAsync(tx, ct);
-            await _uow.SaveChangesAsync(ct);
+            //await _uow.TransactionRepository.AddAsync(tx, ct);
+            //await _uow.SaveChangesAsync(ct);
 
             var responseDto = new CreatePaymentResponseDto { PaymentUrl = vnpUrl };
 

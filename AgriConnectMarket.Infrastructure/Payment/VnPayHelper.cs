@@ -30,7 +30,10 @@ namespace AgriConnectMarket.Infrastructure.Payment
             }
 
             // 3. Compute HMAC SHA512 of the hash data string
-            var secureHash = HmacSha512(hashSecret, hashBuilder.ToString());
+            var dataBytes = Encoding.UTF8.GetBytes(queryBuilder.ToString());
+            var keyBytes = Encoding.UTF8.GetBytes(hashSecret.ToString());
+            using var hmac = new HMACSHA512(keyBytes);
+            var secureHash = BitConverter.ToString(hmac.ComputeHash(dataBytes)).Replace("-", string.Empty);
 
             // 4. Append vnp_SecureHash to query
             queryBuilder.Append($"&vnp_SecureHash={Uri.EscapeDataString(secureHash)}");

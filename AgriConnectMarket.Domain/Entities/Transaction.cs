@@ -33,6 +33,7 @@ namespace AgriConnectMarket.Domain.Entities
             this.Status = TransactionStatusConst.PENDING;
             this.CreatedAt = createdAt;
             this.Amount = amount;
+            this.BankCode = "NCB";
         }
 
         public static Transaction Create(Guid orderId, string txRef, string txNo, decimal amount, DateTime createdAt)
