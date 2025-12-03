@@ -1,106 +1,130 @@
-﻿//using AgriConnectMarket.Application.DTOs.ResponseDtos;
-//using AgriConnectMarket.Application.Interfaces;
-//using AgriConnectMarket.Infrastructure.Data;
-//using AgriConnectMarket.Infrastructure.Repositories;
-//using AgriConnectMarket.Infrastructure.Settings;
-//using Microsoft.AspNetCore.Http;
-//using Microsoft.Extensions.Options;
+﻿using AgriConnectMarket.Application.DTOs.ResponseDtos;
+using AgriConnectMarket.Application.Interfaces;
+using AgriConnectMarket.Domain.Entities;
+using AgriConnectMarket.Infrastructure.Payment;
+using AgriConnectMarket.Infrastructure.Repositories;
+using AgriConnectMarket.Infrastructure.Settings;
+using AgriConnectMarket.SharedKernel.Constants;
+using AgriConnectMarket.SharedKernel.Interfaces;
+using AgriConnectMarket.SharedKernel.Result;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
-//namespace AgriConnectMarket.Infrastructure.Services
-//{
-//    public class VnPayService
-//    {
-//        private readonly VnPaySettings _settings;
-//        private readonly IUnitOfWork _uow;
+namespace AgriConnectMarket.Infrastructure.Services
+{
+    public class VnPayService
+    {
+        private readonly VnPaySettings _settings;
+        private readonly IUnitOfWork _uow;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
-//        public VnPayService(IOptions<VnPaySettings> options, UnitOfWork uow)
-//        {
-//            _settings = options.Value;
-//            _uow = uow;
-//        }
+        public VnPayService(IOptions<VnPaySettings> options, IUnitOfWork uow, IDateTimeProvider dateTimeProvider)
+        {
+            _settings = options.Value;
+            _uow = uow;
+            _dateTimeProvider = dateTimeProvider;
+        }
 
-//        public async Task<CreatePaymentResponseDto> CreatePaymentUrlAsync(CreatePaymentRequestDto req)
-//        {
-//            var order = await _repo.GetOrderAsync(req.OrderId)
-//                ?? throw new InvalidOperationException("Order not found");
+        public async Task<Result<CreatePaymentResponseDto>> CreatePaymentUrlAsync(CreatePaymentRequestDto req, CancellationToken ct = default)
+        {
+            var order = await _uow.OrderRepository.GetByIdAsync(req.OrderId, ct);
 
-//            // VNPay expects integer amount in smallest unit (VND * 100)
-//            long amountInCents = (long)(req.Amount * 100);
+            if (order is null)
+            {
+                return Result<CreatePaymentResponseDto>.Fail(MessageConstant.ORDER_NOT_FOUND);
+            }
 
-//            // vnp_TxnRef: unique transaction reference in your system (string)
-//            var txnRef = Guid.NewGuid().ToString("N");
+            // VNPay expects integer amount in smallest unit (VND * 100)
+            long amountInCents = (long)(req.Amount * 100);
 
-//            // Build parameters
-//            var vnpParams = new Dictionary<string, string>
-//        {
-//            { "vnp_Version", "2.1.0" },
-//            { "vnp_Command", "pay" },
-//            { "vnp_TmnCode", _settings.TmnCode },
-//            { "vnp_Amount", amountInCents.ToString() },
-//            { "vnp_CurrCode", "VND" },
-//            { "vnp_TxnRef", txnRef },
-//            { "vnp_OrderInfo", req.OrderDescription },
-//            { "vnp_OrderType", "other" },
-//            { "vnp_Locale", _settings.Locale ?? "vn" },
-//            { "vnp_ReturnUrl", _settings.ReturnUrl },
-//            { "vnp_IpAddr", req.ClientIp },
-//            { "vnp_CreateDate", DateTime.UtcNow.ToString("yyyyMMddHHmmss") }
-//            // you can add vnp_ExpireDate etc.
-//        };
+            // vnp_TxnRef: unique transaction reference in your system (string)
+            var txnRef = Guid.NewGuid().ToString("N");
 
-//            // Build URL with secure hash
-//            var vnpUrl = VnPayHelper.BuildVnPayUrl(_settings.Url, _settings.HashSecret, vnpParams);
+            // Build parameters
+            var vnpParams = new Dictionary<string, string>
+            {
+                { "vnp_Version", "2.1.0" },
+                { "vnp_Command", "pay" },
+                { "vnp_TmnCode", _settings.TmnCode },
+                { "vnp_Amount", amountInCents.ToString() },
+                { "vnp_CurrCode", "VND" },
+                { "vnp_TxnRef", txnRef },
+                { "vnp_OrderInfo", req.OrderDescription },
+                { "vnp_OrderType", "other" },
+                { "vnp_Locale", _settings.Locale ?? "vn" },
+                { "vnp_ReturnUrl", _settings.ReturnUrl },
+                { "vnp_IpAddr", req.ClientIp },
+                { "vnp_CreateDate", _dateTimeProvider.UtcNow.ToString("yyyyMMddHHmmss") }
+            };
 
-//            // Save transaction placeholder (so you can match it on return/ipn)
-//            var tx = new PaymentTransaction
-//            {
-//                OrderId = order.Id,
-//                VnPayTxnRef = txnRef,
-//                Amount = req.Amount,
-//                Status = "Pending",
-//                CreatedAt = DateTime.UtcNow
-//            };
-//            await _repo.SavePaymentTransactionAsync(tx);
+            // Build URL with secure hash
+            var vnpUrl = VnPayHelper.BuildVnPayUrl(_settings.Url, _settings.HashSecret, vnpParams);
 
-//            return new CreatePaymentResponseDto { PaymentUrl = vnpUrl };
-//        }
+            // Save transaction placeholder (so you can match it on return/ipn)
+            var tx = new Transaction
+            {
+                OrderId = order.Id,
+                TransactionRef = txnRef,
+                Amount = req.Amount,
+                Status = "Pending",
+                CreatedAt = DateTime.UtcNow
+            };
 
-//        public async Task<bool> HandleReturnAsync(IQueryCollection query)
-//        {
-//            // Client returns here after payment (browser redirect)
-//            var dict = query.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString());
-//            if (!VnPayHelper.ValidateSignature(dict, _settings.HashSecret))
-//                return false;
+            await _uow.TransactionRepository.AddAsync(tx, ct);
+            await _uow.SaveChangesAsync(ct);
 
-//            // read vnp_TxnRef, vnp_ResponseCode, vnp_TransactionNo, etc.
-//            dict.TryGetValue("vnp_TxnRef", out var txnRef);
-//            dict.TryGetValue("vnp_ResponseCode", out var responseCode); // "00" success
+            var responseDto = new CreatePaymentResponseDto { PaymentUrl = vnpUrl };
 
-//            // find tx by txnRef (repo method not shown; add it)
-//            // if success, mark order paid and update tx
-//            // For demo, we'll assume we can find and mark paid
-//            // TODO: implement GetTransactionByTxnRef in repository
+            return Result<CreatePaymentResponseDto>.Success(responseDto);
+        }
 
-//            // Example:
-//            // var tx = await _repo.GetByTxnRefAsync(txnRef);
-//            // if (tx != null && responseCode == "00") { await _repo.MarkOrderPaidAsync(...); update tx status; ... }
+        public async Task<Result<bool>> HandleReturnAsync(IQueryCollection query, CancellationToken ct = default)
+        {
+            // Client returns here after payment (browser redirect)
+            var dict = query.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString());
+            if (!VnPayHelper.ValidateSignature(dict, _settings.HashSecret))
+                return Result<bool>.Fail(MessageConstant.TRANSACTION_FAIL);
 
-//            return responseCode == "00";
-//        }
+            // read vnp_TxnRef, vnp_ResponseCode, vnp_TransactionNo, etc.
+            dict.TryGetValue("vnp_TxnRef", out var txnRef);
+            dict.TryGetValue("vnp_ResponseCode", out var responseCode); // "00" success
+            dict.TryGetValue("vnp_BankCode", out var bankCode);
 
-//        public async Task<bool> HandleIpnAsync(IQueryCollection query)
-//        {
-//            // IPN is server-to-server; VNPay posts query string params
-//            var dict = query.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString());
-//            if (!VnPayHelper.ValidateSignature(dict, _settings.HashSecret))
-//                return false;
+            // find tx by txnRef (repo method not shown; add it)
+            // if success, mark order paid and update tx
+            // For demo, we'll assume we can find and mark paid
+            // TODO: implement GetTransactionByTxnRef in repository
 
-//            dict.TryGetValue("vnp_TxnRef", out var txnRef);
-//            dict.TryGetValue("vnp_ResponseCode", out var responseCode);
+            if (responseCode is null || bankCode is null || responseCode != "00")
+            {
+                return Result<bool>.Fail(MessageConstant.TRANSACTION_FAIL);
+            }
 
-//            // TODO: lookup transaction by txnRef, verify amount matches, update statuses
-//            // If success: mark order paid, update payment transaction record and respond "OK"
-//            return responseCode == "00";
-//        }
-//    }
-//}
+            var tx = await _uow.TransactionRepository.GetTransactionByRef(txnRef!, true, ct);
+
+            tx.UpdateTranasctionStatus(responseCode!, bankCode!);
+            tx.Order.UpdatePaymentStatus(txAmount: tx.Amount, txUpdatedAt: tx.UpdatedAt ?? _dateTimeProvider.UtcNow);
+
+            // Example:
+            // var tx = await _repo.GetByTxnRefAsync(txnRef);
+            // if (tx != null && responseCode == "00") { await _repo.MarkOrderPaidAsync(...); update tx status; ... }
+
+            return Result<bool>.Success(responseCode == "00");
+        }
+
+        public async Task<bool> HandleIpnAsync(IQueryCollection query)
+        {
+            // IPN is server-to-server; VNPay posts query string params
+            var dict = query.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString());
+            if (!VnPayHelper.ValidateSignature(dict, _settings.HashSecret))
+                return false;
+
+            dict.TryGetValue("vnp_TxnRef", out var txnRef);
+            dict.TryGetValue("vnp_ResponseCode", out var responseCode);
+
+            // TODO: lookup transaction by txnRef, verify amount matches, update statuses
+            // If success: mark order paid, update payment transaction record and respond "OK"
+            return responseCode == "00";
+        }
+    }
+}

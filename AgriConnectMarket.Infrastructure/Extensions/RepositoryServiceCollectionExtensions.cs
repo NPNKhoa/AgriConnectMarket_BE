@@ -28,6 +28,7 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddScoped<IPreOrderRepository, PreOrderRepository>();
             services.AddScoped<IEventTypeRepository, EventTypeRepository>();
             services.AddScoped<ICareEventRepository, CareEventRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
 
             return services;
         }

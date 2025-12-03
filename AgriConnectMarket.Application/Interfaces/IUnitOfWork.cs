@@ -18,6 +18,7 @@
         IPreOrderRepository PreOrderRepository { get; }
         IEventTypeRepository EventTypeRepository { get; }
         ICareEventRepository CareEventRepository { get; }
+        ITransactionRepository TransactionRepository { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

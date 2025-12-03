@@ -21,6 +21,7 @@ namespace AgriConnectMarket.Infrastructure.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<PreOrder> PreOrders { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -270,6 +271,19 @@ namespace AgriConnectMarket.Infrastructure.Data
                     .WithMany(t => t.CareEvents)
                     .HasForeignKey(e => e.EventTypeId)
                     .IsRequired();
+            });
+
+            modelBuilder.Entity<Transaction>(tx =>
+            {
+                tx.ToTable("Transaction");
+
+                tx.HasKey(tx => tx.Id).HasName("TransactionId");
+
+                tx.HasOne(tx => tx.Order)
+                    .WithOne(o => o.Transaction)
+                    .HasForeignKey<Transaction>(tx => tx.OrderId)
+                    .IsRequired()
+                    .OnDelete(DeleteBehavior.NoAction);
             });
         }
     }
