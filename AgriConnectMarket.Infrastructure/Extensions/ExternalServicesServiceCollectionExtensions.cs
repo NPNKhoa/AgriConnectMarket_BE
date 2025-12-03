@@ -28,6 +28,9 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddSingleton(smtpSettings);
             services.AddTransient<IEmailService, SmtpEmailService>();
 
+            services.Configure<VnPaySettings>(configuration.GetSection("VnPay"));
+
+
             return services;
         }
 

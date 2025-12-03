@@ -27,9 +27,13 @@ namespace AgriConnectMarket.Domain.Entities
         public Profile Customer { get; set; }
         public PreOrder PreOrder { get; set; }
         public Address Address { get; set; }
+        public Transaction Transaction { get; set; }
 
         private readonly List<OrderItem> _orderItems = new();
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems.AsReadOnly();
+
+        //private readonly List<Transaction> _transactions = new();
+        //public IReadOnlyCollection<Transaction> Transactions => _transactions.AsReadOnly();
 
 
         public Order()
@@ -90,7 +94,7 @@ namespace AgriConnectMarket.Domain.Entities
 
         public void UpdatePaymentStatus(string newStatus, DateTime? paidDate)
         {
-            if (newStatus.Equals(PaymentStatusConst.PAID) && paidDate is null)
+            if (newStatus.Equals(PaymentStatusConst.PAID))
             {
                 Guard.AgainstNull(paidDate, nameof(paidDate));
             }
@@ -98,6 +102,26 @@ namespace AgriConnectMarket.Domain.Entities
             PaymentStatus = newStatus;
             PaidDate = paidDate;
         }
+
+        public void UpdatePaymentStatus(decimal txAmount, DateTime txUpdatedAt)
+        {
+            if ((OrderType == OrderTypeConst.ORDER && txAmount == TotalPrice + ShippingFee)
+                || (OrderType == OrderTypeConst.PREORDER && txAmount == TotalPrice + ShippingFee - PreOrder.PartiallyPaidAmount))
+            {
+                UpdatePaymentStatus(PaymentStatusConst.PAID, txUpdatedAt);
+            }
+        }
+
+        //public void AddTransaction(Transaction tx)
+        //{
+        //    _transactions.Add(tx);
+
+        //    if ((OrderType == OrderTypeConst.ORDER && tx.Amount == TotalPrice + ShippingFee)
+        //        || (OrderType == OrderTypeConst.PREORDER && tx.Amount == TotalPrice + ShippingFee - PreOrder.PartiallyPaidAmount))
+        //    {
+        //        UpdatePaymentStatus(PaymentStatusConst.PAID, tx.UpdatedAt);
+        //    }
+        //}
 
         // HELPERS
         protected void ReCalculateTotal()

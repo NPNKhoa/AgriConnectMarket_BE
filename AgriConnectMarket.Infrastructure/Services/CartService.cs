@@ -167,7 +167,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<Guid>> DeleteItemFromCartAsync(Guid cartItemId, CancellationToken ct = default)
         {
-            var item = await _uow.CartItemRepository.GetByIdAsync(cartItemId);
+            var item = await _uow.CartItemRepository.GetByIdAsync(cartItemId, ct);
 
             if (item is null)
             {

@@ -22,6 +22,8 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddScoped<OrderService>();
             services.AddScoped<EventTypeService>();
             services.AddScoped<CareEventService>();
+            services.AddScoped<ShippingFeeService>();
+            services.AddScoped<VnPayService>();
 
             return services;
         }

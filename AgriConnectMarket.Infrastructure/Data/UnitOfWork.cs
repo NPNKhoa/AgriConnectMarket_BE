@@ -21,6 +21,7 @@ namespace AgriConnectMarket.Infrastructure.Data
         public IPreOrderRepository PreOrderRepository { get; }
         public IEventTypeRepository EventTypeRepository { get; }
         public ICareEventRepository CareEventRepository { get; }
+        public ITransactionRepository TransactionRepository { get; set; }
 
         public UnitOfWork
             (
@@ -40,7 +41,8 @@ namespace AgriConnectMarket.Infrastructure.Data
                 IOrderItemRepository orderItemRepository,
                 IPreOrderRepository preOrderRepository,
                 IEventTypeRepository eventTypeRepository,
-                ICareEventRepository careEventRepository
+                ICareEventRepository careEventRepository,
+                ITransactionRepository transactionRepository
             )
         {
             _context = context;
@@ -61,6 +63,7 @@ namespace AgriConnectMarket.Infrastructure.Data
             PreOrderRepository = preOrderRepository;
             EventTypeRepository = eventTypeRepository;
             CareEventRepository = careEventRepository;
+            TransactionRepository = transactionRepository;
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
