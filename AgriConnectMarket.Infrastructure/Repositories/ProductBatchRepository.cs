@@ -5,8 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class ProductBatchRepository(AppDbContext _dbContext) : Repository<ProductBatch>(_dbContext), IProductBatchRepository
+    public class ProductBatchRepository : Repository<ProductBatch>, IProductBatchRepository
     {
+        public ProductBatchRepository(AppDbContext _dbContext) : base(_dbContext)
+        {
+
+        }
+
         public async Task<IEnumerable<ProductBatch>> GetBySeasonAsync(Guid seasonId, bool includeSeason = false, CancellationToken ct = default)
         {
             var query = _dbContext.Set<ProductBatch>().Where(pb => pb.SeasonId.Equals(seasonId));

@@ -5,8 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class TransactionRepository(AppDbContext _dbContext) : Repository<Transaction>(_dbContext), ITransactionRepository
+    public class TransactionRepository : Repository<Transaction>, ITransactionRepository
     {
+        public TransactionRepository(AppDbContext _dbContext) : base(_dbContext)
+        {
+
+        }
+
         public async Task<Transaction> GetTransactionByRef(string txRef, bool includeOrder = false, CancellationToken ct = default)
         {
             var query = _dbContext.Set<Transaction>().AsNoTracking().Where(tx => tx.TransactionRef.Equals(txRef));

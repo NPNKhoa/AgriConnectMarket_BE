@@ -94,7 +94,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             if (profile is null)
                 return Result<CartItem>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
 
-            var cart = await _uow.CartRepository.GetByIdAsync(dto.CartId, true, false, ct);
+            var cart = await _uow.CartRepository.GetByIdAsync(dto.CartId, true, false, false, ct);
 
             if (cart is null)
             {
@@ -134,7 +134,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<CartItem>> UpdateCartItemAsync(Guid cartId, UpdateCartItemDto dto, CancellationToken ct = default)
         {
-            var cart = await _uow.CartRepository.GetByIdAsync(cartId, ct);
+            var cart = await _uow.CartRepository.GetByIdAsync(cartId, true, false, false, ct);
 
             if (cart is null)
             {
@@ -150,17 +150,13 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             var item = await _uow.CartItemRepository.GetByCartAndBatchAsync(cartId, batch.Id, ct);
 
-            cart.TotalPrice -= item.ItemPrice;
-
-            item.Quantity = dto.Quantity;
-            item.ItemPrice = dto.Quantity * batch.Price;
-
-            cart.TotalPrice += item.ItemPrice;
+            cart.UpdateCartItem(item, batch, dto.Quantity);
 
             await _uow.CartRepository.UpdateAsync(cart);
-            await _uow.CartItemRepository.UpdateAsync(item);
 
             await _uow.SaveChangesAsync();
+
+            var responseDto = new UpdateCartResponseDto(item.Id, item.Quantity, item.ItemPrice, cart.TotalPrice);
 
             return Result<CartItem>.Success(item);
         }

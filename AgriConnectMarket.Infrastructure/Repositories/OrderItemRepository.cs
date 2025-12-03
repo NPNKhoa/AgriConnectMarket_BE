@@ -4,7 +4,11 @@ using AgriConnectMarket.Infrastructure.Data;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class OrderItemRepository(AppDbContext _dbContext) : Repository<OrderItem>(_dbContext), IOrderItemRepository
+    public class OrderItemRepository : Repository<OrderItem>, IOrderItemRepository
     {
+        public OrderItemRepository(AppDbContext _dbContext) : base(_dbContext)
+        {
+
+        }
     }
 }

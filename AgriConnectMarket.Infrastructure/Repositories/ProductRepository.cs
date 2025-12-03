@@ -5,8 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class ProductRepository(AppDbContext _dbContext) : Repository<Product>(_dbContext), IProductRepository
+    public class ProductRepository : Repository<Product>, IProductRepository
     {
+        public ProductRepository(AppDbContext _dbContext) : base(_dbContext)
+        {
+
+        }
+
         public async Task<Product?> GetByIdAsync(Guid productId, bool includeCategory = false, CancellationToken cancellationToken = default)
         {
             var query = _dbContext.Set<Product>().Where(p => p.Id == productId);

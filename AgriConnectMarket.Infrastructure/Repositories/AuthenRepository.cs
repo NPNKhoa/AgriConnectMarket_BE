@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class AuthenRepository(AppDbContext _dbContext) : Repository<Account>(_dbContext), IAuthenRepository
+    public class AuthenRepository : Repository<Account>, IAuthenRepository
     {
+        public AuthenRepository(AppDbContext _dbContext) : base(_dbContext) { }
+
         public async Task<Account?> GetByUsernameAsync(string username)
         {
             return await _dbContext.Set<Account>().FirstOrDefaultAsync(u => u.UserName == username);

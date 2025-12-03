@@ -5,8 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class CareEventRepository(AppDbContext _dbContext) : Repository<CareEvent>(_dbContext), ICareEventRepository
+    public class CareEventRepository : Repository<CareEvent>, ICareEventRepository
     {
+        public CareEventRepository(AppDbContext _dbContext) : base(_dbContext)
+        {
+
+        }
+
         public async Task<CareEvent> GetLastByBatchIdAsync(Guid batchId, CancellationToken ct = default)
         {
             return await _dbContext.Set<CareEvent>().Where(c => c.BatchId == batchId).OrderByDescending(c => c.OccurredAt).FirstOrDefaultAsync();

@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class AddressRepository(AppDbContext _dbContext) : Repository<Address>(_dbContext), IAddressRepository
+    public class AddressRepository : Repository<Address>, IAddressRepository
     {
-        public async Task<Address?> GetAddressByProfileIdAsync(Guid profileId, bool includeProfile = false)
+        public AddressRepository(AppDbContext _dbContext) : base(_dbContext) { }
+
+        public async Task<Address> GetAddressByProfileIdAsync(Guid profileId, bool includeProfile = false)
         {
             var query = _dbContext.Set<Address>().Where(a => a.ProfileId == profileId && !a.IsDelete);
 
@@ -19,7 +21,7 @@ namespace AgriConnectMarket.Infrastructure.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Address>?> GetAddressesByProfileIdAsync(Guid profileId, bool includeProfile = false)
+        public async Task<IEnumerable<Address>> GetAddressesByProfileIdAsync(Guid profileId, bool includeProfile = false)
         {
             var query = _dbContext.Set<Address>().Where(a => a.ProfileId == profileId && !a.IsDelete);
 

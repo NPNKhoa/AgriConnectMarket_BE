@@ -5,8 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class FarmRepository(AppDbContext _dbContext) : Repository<Farm>(_dbContext), IFarmRepository
+    public class FarmRepository : Repository<Farm>, IFarmRepository
     {
+        public FarmRepository(AppDbContext _dbContext) : base(_dbContext)
+        {
+
+        }
+
         public async Task<Farm> GetFarmByAccount(Guid accountId, bool includeAddress = false, bool includeFarmer = false, bool includeSeason = false)
         {
             var query = _dbContext.Set<Farm>().Where(f => f.FarmerId == accountId);
