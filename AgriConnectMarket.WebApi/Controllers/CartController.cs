@@ -48,6 +48,19 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
+        [HttpPatch("{cartId}/delete-all")]
+        public async Task<IActionResult> RemoveAllItemsAsync(CancellationToken ct)
+        {
+            var result = await _cartService.DeleteAllItemsAsync(ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
         [HttpDelete("cart-items/{itemId}")]
         public async Task<IActionResult> AddToCart([FromRoute] Guid itemId, CancellationToken ct)
         {

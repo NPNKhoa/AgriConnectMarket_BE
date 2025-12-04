@@ -6,5 +6,6 @@ namespace AgriConnectMarket.Application.Interfaces
     {
         public Task<Cart> GetByIdAsync(Guid cartId, bool includeItems = false, bool includeProfile = false, bool withoutTracking = false, CancellationToken ct = default);
         public Task<Cart> GetByProfileIdAsync(Guid profileId, bool includeItems = false, bool includeProfile = false, CancellationToken ct = default);
+        public Task<Cart> GetByItemIdAsync(Guid itemId, bool includeItems = false, CancellationToken ct = default);
     }
 }

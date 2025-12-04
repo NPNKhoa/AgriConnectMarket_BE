@@ -1,4 +1,5 @@
 ﻿using AgriConnectMarket.SharedKernel.Entities;
+using AgriConnectMarket.SharedKernel.Guards;
 
 namespace AgriConnectMarket.Domain.Entities
 {
@@ -33,11 +34,38 @@ namespace AgriConnectMarket.Domain.Entities
             {
                 existingItem.Batch = batch;
                 existingItem.Quantity = quantity;
-            }
 
-            this.TotalPrice = _cartItems.Sum(i => i.ItemPrice);
+                existingItem.ItemPrice = quantity * batch.Price;
+
+                ReCalculateTotalPrice();
+            }
         }
 
         public void UpdateTotalPrice(decimal totalPrice) => TotalPrice = totalPrice;
+
+        public void DeleteFromCart(CartItem item)
+        {
+            Guard.AgainstNull(item, nameof(item));
+
+            _cartItems.Remove(item);
+
+            ReCalculateTotalPrice();
+        }
+
+        public void DeleteAllFromCart()
+        {
+            _cartItems.Clear();
+            ReCalculateTotalPrice();
+        }
+
+        private void ReCalculateTotalPrice(bool isDeleteAll = false)
+        {
+            if (isDeleteAll)
+            {
+                TotalPrice = 0;
+            }
+
+            TotalPrice = _cartItems.Sum(i => i.ItemPrice);
+        }
     }
 }

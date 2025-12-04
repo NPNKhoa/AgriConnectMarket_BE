@@ -16,6 +16,7 @@ namespace AgriConnectMarket.Domain.Entities
         public string OrderStatus { get; set; } = OrderStatusEnum.PENDING;
         public string OrderType { get; set; } = OrderTypeConst.ORDER;
         public string PaymentStatus { get; set; } = PaymentStatusConst.PENDING;
+        public string PaymentMethod { get; set; } = PaymentMethodConst.COD;
         public DateTime? PaidDate { get; set; }
         public DateTime? DeliveredDate { get; set; }
 
@@ -127,6 +128,7 @@ namespace AgriConnectMarket.Domain.Entities
         protected void ReCalculateTotal()
         {
             TotalPrice = _orderItems.Sum(i => i.SubTotal);
+            TotalPrice += ShippingFee;
         }
     }
 }

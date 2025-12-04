@@ -12,6 +12,18 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
         }
 
+        public async Task<IEnumerable<ProductBatch>> ListAllAsync(bool includeImages = false, CancellationToken ct = default)
+        {
+            var query = _dbContext.Set<ProductBatch>().AsNoTracking();
+
+            if (includeImages)
+            {
+                query = query.Include(b => b.ImageUrls).Include(b => b.Season);
+            }
+
+            return await query.ToListAsync();
+        }
+
         public async Task<IEnumerable<ProductBatch>> GetBySeasonAsync(Guid seasonId, bool includeSeason = false, CancellationToken ct = default)
         {
             var query = _dbContext.Set<ProductBatch>().Where(pb => pb.SeasonId.Equals(seasonId));
