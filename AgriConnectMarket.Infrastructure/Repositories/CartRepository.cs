@@ -5,8 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class CartRepository(AppDbContext _dbContext) : Repository<Cart>(_dbContext), ICartRepository
+    public class CartRepository : Repository<Cart>, ICartRepository
     {
+        public CartRepository(AppDbContext _dbContext) : base(_dbContext)
+        {
+
+        }
+
         public async Task<Cart> GetByProfileIdAsync(Guid profileId, bool includeItems = false, bool includeProfile = false, CancellationToken ct = default)
         {
             var query = _dbContext.Set<Cart>().Where(c => c.CustomerId == profileId);
@@ -33,9 +38,14 @@ namespace AgriConnectMarket.Infrastructure.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<Cart> GetByIdAsync(Guid cartId, bool includeItems = false, bool includeProfile = false, CancellationToken ct = default)
+        public async Task<Cart> GetByIdAsync(Guid cartId, bool includeItems = false, bool includeProfile = false, bool withoutTracking = false, CancellationToken ct = default)
         {
-            var query = _dbContext.Set<Cart>().AsNoTracking().Where(c => c.Id == cartId);
+            var query = _dbContext.Set<Cart>().Where(c => c.Id == cartId);
+
+            if (withoutTracking)
+            {
+                query = query.AsNoTracking();
+            }
 
             if (includeItems)
             {
@@ -49,6 +59,18 @@ namespace AgriConnectMarket.Infrastructure.Repositories
             if (includeProfile)
             {
                 query = query.Include(c => c.Customer);
+            }
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<Cart> GetByItemIdAsync(Guid itemId, bool includeItems = false, CancellationToken ct = default)
+        {
+            var query = _dbContext.Set<Cart>().Where(c => c.CartItems.Any(i => i.Id == itemId)).AsNoTracking();
+
+            if (includeItems)
+            {
+                query = query.Include(c => c.CartItems);
             }
 
             return await query.FirstOrDefaultAsync();

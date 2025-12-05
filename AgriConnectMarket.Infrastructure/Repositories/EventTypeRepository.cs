@@ -4,7 +4,11 @@ using AgriConnectMarket.Infrastructure.Data;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class EventTypeRepository(AppDbContext _dbContext) : Repository<CareEventType>(_dbContext), IEventTypeRepository
+    public class EventTypeRepository : Repository<CareEventType>, IEventTypeRepository
     {
+        public EventTypeRepository(AppDbContext _dbContext) : base(_dbContext)
+        {
+
+        }
     }
 }

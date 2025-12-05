@@ -2,7 +2,6 @@
 using AgriConnectMarket.Application.Interfaces;
 using AgriConnectMarket.Domain.Entities;
 using AgriConnectMarket.Infrastructure.Payment;
-using AgriConnectMarket.Infrastructure.Repositories;
 using AgriConnectMarket.Infrastructure.Settings;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Interfaces;
@@ -25,9 +24,9 @@ namespace AgriConnectMarket.Infrastructure.Services
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<Result<CreatePaymentResponseDto>> CreatePaymentUrlAsync(CreatePaymentRequestDto req, CancellationToken ct = default)
+        public async Task<Result<CreatePaymentResponseDto>> CreatePaymentUrlAsync(Guid orderId, string clientIp = "127.0.0.1", CancellationToken ct = default)
         {
-            var order = await _uow.OrderRepository.GetByIdAsync(req.OrderId, ct);
+            var order = await _uow.OrderRepository.GetByIdAsync(orderId, ct);
 
             if (order is null)
             {
@@ -35,10 +34,13 @@ namespace AgriConnectMarket.Infrastructure.Services
             }
 
             // VNPay expects integer amount in smallest unit (VND * 100)
-            long amountInCents = (long)(req.Amount * 100);
+            long amountInCents = (long)(order.TotalPrice * 100);
 
             // vnp_TxnRef: unique transaction reference in your system (string)
-            var txnRef = Guid.NewGuid().ToString("N");
+            string orderDesc = $"Pay for the order {order.OrderCode}";
+
+            var txnRef = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+
 
             // Build parameters
             var vnpParams = new Dictionary<string, string>
@@ -47,14 +49,13 @@ namespace AgriConnectMarket.Infrastructure.Services
                 { "vnp_Command", "pay" },
                 { "vnp_TmnCode", _settings.TmnCode },
                 { "vnp_Amount", amountInCents.ToString() },
-                { "vnp_BankCode", "NCB" },
                 { "vnp_CurrCode", "VND" },
-                { "vnp_TxnRef", "1" },
-                { "vnp_OrderInfo", req.OrderDescription },
+                { "vnp_TxnRef", txnRef },
+                { "vnp_OrderInfo", orderDesc },
                 { "vnp_OrderType", "other" },
                 { "vnp_Locale", _settings.Locale ?? "vn" },
                 { "vnp_ReturnUrl", _settings.ReturnUrl },
-                { "vnp_IpAddr", req.ClientIp },
+                { "vnp_IpAddr", clientIp ?? "127.0.0.1" },
                 { "vnp_CreateDate", _dateTimeProvider.UtcNow.ToString("yyyyMMddHHmmss") }
             };
 
@@ -66,15 +67,15 @@ namespace AgriConnectMarket.Infrastructure.Services
             {
                 OrderId = order.Id,
                 TransactionRef = txnRef,
-                TransactionNo = "123",
-                Amount = req.Amount,
-                Status = "Pending",
-                BankCode = "NCB",
+                TransactionNo = order.OrderCode,
+                Amount = order.TotalPrice,
+                Status = TransactionStatusConst.PENDING,
+                BankCode = "",
                 CreatedAt = DateTime.UtcNow
             };
 
-            //await _uow.TransactionRepository.AddAsync(tx, ct);
-            //await _uow.SaveChangesAsync(ct);
+            await _uow.TransactionRepository.AddAsync(tx, ct);
+            await _uow.SaveChangesAsync(ct);
 
             var responseDto = new CreatePaymentResponseDto { PaymentUrl = vnpUrl };
 

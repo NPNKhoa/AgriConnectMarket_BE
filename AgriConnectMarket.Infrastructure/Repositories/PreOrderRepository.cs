@@ -4,7 +4,11 @@ using AgriConnectMarket.Infrastructure.Data;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class PreOrderRepository(AppDbContext _dbContext) : Repository<PreOrder>(_dbContext), IPreOrderRepository
+    public class PreOrderRepository : Repository<PreOrder>, IPreOrderRepository
     {
+        public PreOrderRepository(AppDbContext _dbContext) : base(_dbContext)
+        {
+
+        }
     }
 }

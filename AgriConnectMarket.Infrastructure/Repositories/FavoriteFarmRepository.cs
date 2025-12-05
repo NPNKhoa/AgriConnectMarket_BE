@@ -5,8 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class FavoriteFarmRepository(AppDbContext _dbContext) : Repository<FavoriteFarm>(_dbContext), IFavoriteFarmRepository
+    public class FavoriteFarmRepository : Repository<FavoriteFarm>, IFavoriteFarmRepository
     {
+        public FavoriteFarmRepository(AppDbContext _dbContext) : base(_dbContext)
+        {
+
+        }
+
         public async Task<IEnumerable<FavoriteFarm>> GetByProfileAsync(Guid profileId, bool includeProfile = false, bool includeFarm = false, CancellationToken ct = default)
         {
             var query = _dbContext.Set<FavoriteFarm>().Where(f => f.CustomerId == profileId);

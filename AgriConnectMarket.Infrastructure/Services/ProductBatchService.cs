@@ -12,19 +12,37 @@ namespace AgriConnectMarket.Infrastructure.Services
 {
     public class ProductBatchService(IUnitOfWork _uow, IBatchCodeGenerator _codeGenerator)
     {
-        public async Task<Result<IEnumerable<ProductBatch>>> GetAllBatchesAsync(CancellationToken ct = default)
+        public async Task<Result<IEnumerable<ProductBatchResponseDto>>> GetAllBatchesAsync(CancellationToken ct = default)
         {
-            var batches = await _uow.ProductBatchRepository.ListAllAsync(ct);
+            var batches = await _uow.ProductBatchRepository.ListAllAsync(true, ct);
 
             if (!batches.Any())
             {
-                return Result<IEnumerable<ProductBatch>>.Fail(MessageConstant.BATCH_NOT_FOUND);
+                return Result<IEnumerable<ProductBatchResponseDto>>.Fail(MessageConstant.BATCH_NOT_FOUND);
             }
 
-            return Result<IEnumerable<ProductBatch>>.Success(batches);
+            var responseDto = batches.ToList().Select(b =>
+            {
+                List<string> urls = b.ImageUrls.ToList().Select(i => i.ImageUrl).ToList();
+                return new ProductBatchResponseDto(
+                    b.Id,
+                    b.BatchCode.Value,
+                    b.CreatedAt,
+                    b.PlantingDate,
+                    b.HarvestDate,
+                    b.Season.SeasonName,
+                    b.TotalYield,
+                    b.AvailableQuantity,
+                    b.Price,
+                    b.Units,
+                    urls
+                );
+            }).ToList();
+
+            return Result<IEnumerable<ProductBatchResponseDto>>.Success(responseDto);
         }
 
-        public async Task<Result<IEnumerable<ProductBatch>>> GetSellingBatches(ProductBatchQuery query, CancellationToken ct = default)
+        public async Task<Result<IEnumerable<ProductBatchResponseDto>>> GetSellingBatches(ProductBatchQuery query, CancellationToken ct = default)
         {
             ISpecification<ProductBatch> specs;
 
@@ -50,14 +68,32 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             specs = new FilterProductBatchByPaginationSpecification(skip, pageSize);
 
-            var batches = await _uow.ProductBatchRepository.ListAllAsync(ct);
+            var batches = await _uow.ProductBatchRepository.ListAllAsync(true, ct);
 
             if (!batches.Any())
             {
-                return Result<IEnumerable<ProductBatch>>.Fail(MessageConstant.BATCH_NOT_FOUND);
+                return Result<IEnumerable<ProductBatchResponseDto>>.Fail(MessageConstant.BATCH_NOT_FOUND);
             }
 
-            return Result<IEnumerable<ProductBatch>>.Success(batches);
+            var responseDto = batches.Select(b =>
+            {
+                List<string> urls = b.ImageUrls.Select(i => i.ImageUrl).ToList();
+                return new ProductBatchResponseDto(
+                    b.Id,
+                    b.BatchCode.Value,
+                    b.CreatedAt,
+                    b.PlantingDate,
+                    b.HarvestDate,
+                    b.Season.SeasonName,
+                    b.TotalYield,
+                    b.AvailableQuantity,
+                    b.Price,
+                    b.Units,
+                    urls
+                );
+            }).ToList();
+
+            return Result<IEnumerable<ProductBatchResponseDto>>.Success(responseDto);
         }
 
         public async Task<Result<IEnumerable<ProductBatch>>> GetBatchesBySeasonAsync(Guid seasonId, CancellationToken ct = default)

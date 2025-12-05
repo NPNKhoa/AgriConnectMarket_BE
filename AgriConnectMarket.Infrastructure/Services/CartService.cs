@@ -94,7 +94,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             if (profile is null)
                 return Result<CartItem>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
 
-            var cart = await _uow.CartRepository.GetByIdAsync(dto.CartId, true, false, ct);
+            var cart = await _uow.CartRepository.GetByIdAsync(dto.CartId, true, false, false, ct);
 
             if (cart is null)
             {
@@ -131,10 +131,9 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<CartItem>.Success(newItem);
         }
 
-
         public async Task<Result<CartItem>> UpdateCartItemAsync(Guid cartId, UpdateCartItemDto dto, CancellationToken ct = default)
         {
-            var cart = await _uow.CartRepository.GetByIdAsync(cartId, ct);
+            var cart = await _uow.CartRepository.GetByIdAsync(cartId, true, false, false, ct);
 
             if (cart is null)
             {
@@ -150,17 +149,13 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             var item = await _uow.CartItemRepository.GetByCartAndBatchAsync(cartId, batch.Id, ct);
 
-            cart.TotalPrice -= item.ItemPrice;
-
-            item.Quantity = dto.Quantity;
-            item.ItemPrice = dto.Quantity * batch.Price;
-
-            cart.TotalPrice += item.ItemPrice;
+            cart.UpdateCartItem(item, batch, dto.Quantity);
 
             await _uow.CartRepository.UpdateAsync(cart);
-            await _uow.CartItemRepository.UpdateAsync(item);
 
             await _uow.SaveChangesAsync();
+
+            var responseDto = new UpdateCartResponseDto(item.Id, item.Quantity, item.ItemPrice, cart.TotalPrice);
 
             return Result<CartItem>.Success(item);
         }
@@ -174,10 +169,39 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<Guid>.Fail(MessageConstant.CART_ITEM_NOT_FOUND);
             }
 
-            await _uow.CartItemRepository.DeleteAsync(item);
-            await _uow.SaveChangesAsync();
+            var cart = await _uow.CartRepository.GetByItemIdAsync(cartItemId, true, ct);
+
+            if (cart is null)
+            {
+                return Result<Guid>.Fail(MessageConstant.CART_NOT_INIT);
+            }
+
+            cart.DeleteFromCart(item);
+
+            await _uow.CartRepository.UpdateAsync(cart, ct);
+            await _uow.CartItemRepository.DeleteAsync(item, ct);
+            await _uow.SaveChangesAsync(ct);
 
             return Result<Guid>.Success(cartItemId);
+        }
+
+        public async Task<Result<Cart>> DeleteAllItemsAsync(CancellationToken ct = default)
+        {
+            if (_currentUserService.UserId is null)
+                return Result<Cart>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
+
+            var userId = _currentUserService.UserId.Value;
+            var profile = await _uow.ProfileRepository.GetByIdAsync(userId, ct);
+
+            if (profile is null)
+                return Result<Cart>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
+
+            var cart = await _uow.CartRepository.GetByIdAsync(profile.Cart.Id, true, false, false, ct);
+
+            cart.DeleteAllFromCart();
+
+
+            return Result<Cart>.Success(cart);
         }
     }
 }

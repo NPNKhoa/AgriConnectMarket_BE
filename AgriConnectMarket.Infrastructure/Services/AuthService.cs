@@ -37,7 +37,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             // Create domain user
             var user = new Account(dto.Username, passwordHash, dto.IsFarmer);
-            var profile = new Profile(dto.Fullname, dto.Email, dto.Phone, user.Id, dto.AvatarUrl)
+            var profile = new Domain.Entities.Profile(dto.Fullname, dto.Email, dto.Phone, user.Id, dto.AvatarUrl)
             {
                 Account = user
             };

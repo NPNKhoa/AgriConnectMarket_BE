@@ -5,8 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class ProfileRepository(AppDbContext _context) : Repository<Profile>(_context), IProfileRepository
+    public class ProfileRepository : Repository<Profile>, IProfileRepository
     {
+        public ProfileRepository(AppDbContext _context) : base(_context)
+        {
+
+        }
+
         public async Task<Profile?> GetByEmailAsync(string email, bool includeAccount = false)
         {
             var query = _dbContext.Set<Profile>().Where(u => u.Email.Equals(email.Trim()));

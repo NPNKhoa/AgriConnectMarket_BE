@@ -7,8 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class CategoryRepository(AppDbContext _dbContext) : Repository<Category>(_dbContext), ICategoryRepository
+    public class CategoryRepository : Repository<Category>, ICategoryRepository
     {
+        public CategoryRepository(AppDbContext _dbContext) : base(_dbContext)
+        {
+
+        }
+
         public async Task<Category> GetByNameAsync(string categoryName)
         {
             Guard.AgainstNullOrEmpty(categoryName, nameof(categoryName));

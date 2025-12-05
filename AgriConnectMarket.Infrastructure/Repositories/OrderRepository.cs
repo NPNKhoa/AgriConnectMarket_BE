@@ -6,8 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AgriConnectMarket.Infrastructure.Repositories
 {
-    public class OrderRepository(AppDbContext _dbContext) : Repository<Order>(_dbContext), IOrderRepository
+    public class OrderRepository : Repository<Order>, IOrderRepository
     {
+        public OrderRepository(AppDbContext _dbContext) : base(_dbContext)
+        {
+
+        }
+
         public async Task<IEnumerable<Order>> GetOrderByProfileIdAsync(Guid profileId, bool includeItems = false, bool includePreOrder = false, bool includeProfile = false, CancellationToken ct = default)
         {
             var query = _dbContext.Set<Order>().Where(o => o.CustomerId == profileId);
@@ -93,7 +98,16 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
             if (includeItems)
             {
-                query = query.Include(o => o.OrderItems);
+                query = query.Include(o => o.OrderItems)
+                                .ThenInclude(i => i.Batch)
+                                    .ThenInclude(b => b.Season)
+                                        .ThenInclude(s => s.Farm)
+                                            .ThenInclude(f => f.Address)
+                                .Include(o => o.OrderItems)
+                                    .ThenInclude(i => i.Batch)
+                                        .ThenInclude(b => b.Season)
+                                            .ThenInclude(s => s.Product)
+                                                .ThenInclude(p => p.Category);
             }
 
             if (includepPreOrder)
