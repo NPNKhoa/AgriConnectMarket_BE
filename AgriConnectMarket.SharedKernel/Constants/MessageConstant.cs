@@ -42,5 +42,7 @@
         public const string CARE_EVENT_NOTE_FOUND = "Can not found event(s)";
         public const string INVALID_CHAIN = "This chain is not verified";
         public const string TRANSACTION_FAIL = "The transaction was failed";
+        public const string CREATE_PAYMENT_URL_FAIL = "Fail to create payment URL. Kindly please try again!";
+        public const string ORDER_DATA_NOT_FOUND = "The response data of the created order can not be found";
     }
 }

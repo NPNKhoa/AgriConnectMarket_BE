@@ -98,42 +98,78 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<Order>.Success(order);
         }
 
-        public async Task<Result<Order>> CreateOrder(CreateOrderDto dto, CancellationToken ct = default)
+        public async Task<Result<CreateOrderResponseDto>> CreateOrder(CreateOrderDto dto, CancellationToken ct = default)
         {
+            // 1. Load customer
             var customer = await _uow.ProfileRepository.GetByIdAsync(dto.CustomerId, ct);
-
             if (customer is null)
-            {
-                return Result<Order>.Fail(MessageConstant.PROFILE_NOT_FOUND);
-            }
+                return Result<CreateOrderResponseDto>.Fail(MessageConstant.PROFILE_NOT_FOUND);
 
+            // 2. Load address
             var address = await _uow.AddressRepository.GetByIdAsync(dto.AddressId, ct);
-
             if (address is null)
-            {
-                return Result<Order>.Fail(MessageConstant.ADDRESS_NOT_FOUND);
-            }
+                return Result<CreateOrderResponseDto>.Fail(MessageConstant.ADDRESS_NOT_FOUND);
 
+            // 3. Create order
             string orderCode = _codeGenerator.GenerateOrderCode();
-            var order = Order.Create(dto.CustomerId, dto.AddressId, orderCode, _dateTimeProvider.UtcNow, OrderTypeConst.ORDER, dto.ShippingFee);
+            var order = Order.Create(
+                dto.CustomerId,
+                dto.AddressId,
+                orderCode,
+                _dateTimeProvider.UtcNow,
+                OrderTypeConst.ORDER,
+                dto.ShippingFee
+            );
 
+            // 4. Add all items
             foreach (var item in dto.OrderItems)
             {
                 var batch = await _uow.ProductBatchRepository.GetByIdAsync(item.BatchId, ct);
-
                 if (batch is null)
-                {
-                    return Result<Order>.Fail(MessageConstant.BATCH_NOT_FOUND);
-                }
+                    return Result<CreateOrderResponseDto>.Fail(MessageConstant.BATCH_NOT_FOUND);
 
                 order.AddItem(batch, item.Quantity);
             }
 
+            // 5. Save
             await _uow.OrderRepository.AddAsync(order, ct);
             await _uow.SaveChangesAsync(ct);
 
-            return Result<Order>.Success(order);
+            var newOrder = await _uow.OrderRepository.GetByIdAsync(order.Id, true, false, true, ct);
+
+            // 6. Build response DTO
+            var response = new CreateOrderResponseDto(
+                OrderId: newOrder.Id,
+                Customer: new ProfileDto(customer.Fullname, customer.Email, customer.Phone),
+                Address: new AddressDto(address.Province, address.District, address.Ward, address.Detail),
+                OrderCode: order.OrderCode,
+                TotalPrice: order.TotalPrice,
+                OrderDate: order.OrderDate,
+                ShippingFee: order.ShippingFee,
+                OrderStatus: order.OrderStatus,
+                OrderType: order.OrderType,
+                PaymentStatus: order.PaymentStatus,
+                PaymentMethod: order.PaymentMethod,
+                PaidDate: order.PaidDate,
+                DeliveredDate: order.DeliveredDate,
+                CreatedAt: order.CreatedAt,
+                UpdatedAt: order.UpdatedAt,
+                Transaction: order.Transaction is null
+                    ? null
+                    : new TransactionDto(
+                        order.Transaction.TransactionRef,
+                        order.Transaction.TransactionNo,
+                        order.Transaction.BankCode,
+                        order.Transaction.Amount,
+                        order.Transaction.Status,
+                        order.Transaction.CreatedAt
+                    ),
+                OrderItems: GroupOrderItems(newOrder.OrderItems)
+            );
+
+            return Result<CreateOrderResponseDto>.Success(response);
         }
+
 
         public async Task<Result<UpdateOrderStatusResponseDto>> UpdateOrderStatus(Guid orderId, UpdateOrderStatusDto dto, CancellationToken ct = default)
         {
@@ -219,6 +255,36 @@ namespace AgriConnectMarket.Infrastructure.Services
             };
 
             return Result<CreatePreOrderResponseDto>.Success(response);
+        }
+
+        /***
+         * 
+         */
+        private IReadOnlyCollection<ItemGroupedByFarmDto> GroupOrderItems(IReadOnlyCollection<OrderItem> items)
+        {
+            return items
+                .GroupBy(i => i?.Batch?.Season?.FarmId)
+                .Select(g => new ItemGroupedByFarmDto
+                {
+                    FarmId = (Guid)g.Key!,
+                    FarmName = g.First().Batch.Season.Farm.FarmName,
+                    Items = g.Select(i => new CartItemDto
+                    {
+                        ItemId = i.Id,
+                        BatchId = i.BatchId,
+                        BatchCode = i.Batch.BatchCode.Value,
+                        BatchImageUrls = i.Batch.ImageUrls.Select(i => i.ImageUrl).ToList(),
+                        ProductName = i.Batch.Season.Product.ProductName,
+                        CategoryName = i.Batch.Season.Product.Category.CategoryName,
+                        SeasonName = i.Batch.Season.SeasonName,
+                        BatchPrice = i.Batch.Price,
+                        Quantity = i.Quantity,
+                        Units = i.Batch.Units,
+                        ItemPrice = i.UnitPrice,
+                        SeasonStatus = i.Batch.Season.Status
+                    }).ToList()
+                })
+                .ToList();
         }
     }
 }

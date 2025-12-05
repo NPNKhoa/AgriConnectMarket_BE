@@ -12,14 +12,15 @@ namespace AgriConnectMarket.WebApi.Controllers
         [HttpPost("")]
         public async Task<IActionResult> CreateUrl([FromBody] CreatePaymentRequestDto dto, CancellationToken ct)
         {
-            var result = await _VNPayService.CreatePaymentUrlAsync(dto, ct);
+            var clientIp = HttpContext.Connection.RemoteIpAddress!.MapToIPv4().ToString() ?? "127.0.0.1";
+            var result = await _VNPayService.CreatePaymentUrlAsync(dto.OrderId, clientIp, ct);
 
             if (!result.IsSuccess)
             {
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(ApiResponse.SuccessResponse(result.Value));
+            return Redirect(result.Value!.PaymentUrl);
         }
 
         [HttpGet("vnpay-return")]
