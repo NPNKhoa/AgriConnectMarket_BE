@@ -44,7 +44,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             var hash = _hasher.ComputeHash(canonical);
 
-            var careEvent = CareEvent.Create(dto.BatchId, dto.EventTypeId, occurredAt, payloadJson, hash, lastBlock is not null ? lastBlock.PrevHash : FIRST_HASH);
+            var careEvent = CareEvent.Create(dto.BatchId, dto.EventTypeId, occurredAt, payloadJson, hash, lastBlock is not null ? lastBlock.Hash : FIRST_HASH);
 
             await _uow.CareEventRepository.AddAsync(careEvent, ct);
             await _uow.SaveChangesAsync(ct);
@@ -84,8 +84,6 @@ namespace AgriConnectMarket.Infrastructure.Services
                     prevHash
                 );
 
-                Console.WriteLine(e);
-
                 var expected = _hasher.ComputeHash(canonical);
 
                 if (e.PrevHash != prevHash || expected != e.Hash)
@@ -117,32 +115,6 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             return Result<IReadOnlyList<CareEventResponseDto>>.Success(dtos);
         }
-
-        //public async Task<Result<bool>> VerifyEventAsync(Guid careEventId, CancellationToken ct = default)
-        //{
-        //    var ev = await _uow.CareEventRepository.GetByIdAsync(careEventId);
-
-        //    if (ev is null)
-        //        return Result<bool>.Fail("Event not found.");
-
-        //    var prev = await _uow.CareEventRepository.GetPreviousEventAsync(ev, ct);
-
-        //    string expectedPrevHash = prev?.Hash ?? string.Empty;
-
-        //    var canonical = _hasher.BuildCareEventCanonical(
-        //        ev.BatchId.ToString(),
-        //        ev.EventType.EventTypeName,
-        //        ev.OccurredAt.ToString("o"),
-        //        ev.PayloadJson,
-        //        expectedPrevHash
-        //    );
-
-        //    var expectedHash = _hasher.ComputeHash(canonical);
-
-        //    bool ok = expectedHash == ev.Hash && ev.PreviousHash == expectedPrevHash;
-
-        //    return Result<bool>.Success(ok);
-        //}
 
         public async Task<Result<bool>> VerifyBatchChainAsync(Guid batchId, CancellationToken ct = default)
         {
