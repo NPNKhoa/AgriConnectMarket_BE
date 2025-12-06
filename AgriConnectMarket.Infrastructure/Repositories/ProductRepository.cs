@@ -12,6 +12,18 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
         }
 
+        public async Task<IEnumerable<Product>> ListAllAsync(bool includeCategory = false, CancellationToken ct = default)
+        {
+            var query = _dbContext.Set<Product>().AsNoTracking();
+
+            if (includeCategory)
+            {
+                query = query.Include(p => p.Category);
+            }
+
+            return await query.ToListAsync();
+        }
+
         public async Task<Product?> GetByIdAsync(Guid productId, bool includeCategory = false, CancellationToken cancellationToken = default)
         {
             var query = _dbContext.Set<Product>().Where(p => p.Id == productId);

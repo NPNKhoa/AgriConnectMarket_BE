@@ -98,6 +98,18 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<Order>.Success(order);
         }
 
+        public async Task<Result<Order>> GetOrderByOrderCodeAsync(string orderCode, CancellationToken ct = default)
+        {
+            var order = await _uow.OrderRepository.GetByOrderCodeAsync(orderCode, true, true, true, ct);
+
+            if (order is null)
+            {
+                return Result<Order>.Fail(MessageConstant.ORDER_NOT_FOUND);
+            }
+
+            return Result<Order>.Success(order);
+        }
+
         public async Task<Result<CreateOrderResponseDto>> CreateOrder(CreateOrderDto dto, CancellationToken ct = default)
         {
             // 1. Load customer

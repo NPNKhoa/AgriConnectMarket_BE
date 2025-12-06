@@ -13,7 +13,6 @@ namespace AgriConnectMarket.Application.DTOs.ResponseDtos
         public decimal Price { get; set; }
         public IReadOnlyList<string> ImagesUrl { get; set; }
         public DateTime PlantingDate { get; set; }
-        public DateTime HarvestDate { get; set; }
 
         // Navigation
         public Guid SeasonId { get; set; }

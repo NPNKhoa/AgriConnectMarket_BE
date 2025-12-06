@@ -12,8 +12,9 @@ namespace AgriConnectMarket.Domain.Entities
         public decimal AvailableQuantity { get; set; }
         public string Units { get; set; }
         public decimal Price { get; set; }
+        public string? VerificationQr { get; set; }
         public DateTime PlantingDate { get; set; }
-        public DateTime HarvestDate { get; set; }
+        public DateTime? HarvestDate { get; set; }
 
         // Navigation
         public Guid SeasonId { get; set; }
@@ -35,28 +36,26 @@ namespace AgriConnectMarket.Domain.Entities
 
         public ProductBatch() { }
 
-        private ProductBatch(decimal totalYield, decimal availableQuantity,
-            string units, DateTime plantingDate, Guid seasonId, decimal price)
+        private ProductBatch(decimal totalYield, string units, DateTime plantingDate, Guid seasonId)
         {
             TotalYield = totalYield;
-            AvailableQuantity = availableQuantity;
             Units = units;
             PlantingDate = plantingDate;
             SeasonId = seasonId;
-            HarvestDate = DateTime.UtcNow;
-            Price = price;
+
+            AvailableQuantity = 0;
+            VerificationQr = null;
+            HarvestDate = null;
+            Price = 0;
         }
 
-        public static ProductBatch Create(Guid seasonId, decimal totalYield, decimal availableQuantity,
-            DateTime plantingDate, decimal price, string units = "kg")
+        public static ProductBatch Create(Guid seasonId, decimal totalYield, DateTime plantingDate, string units = "kg")
         {
             Guard.AgainstNull(seasonId, nameof(seasonId));
             Guard.AgainstNegative(totalYield, nameof(totalYield));
-            Guard.AgainstNegative(availableQuantity, nameof(availableQuantity));
             Guard.AgainstNull(plantingDate, nameof(plantingDate));
-            Guard.AgainstNegative(price, nameof(price));
 
-            return new ProductBatch(totalYield, availableQuantity, units, plantingDate, seasonId, price);
+            return new ProductBatch(totalYield, units, plantingDate, seasonId);
         }
 
         public void SetBatchCode(BatchCode code)
@@ -64,6 +63,24 @@ namespace AgriConnectMarket.Domain.Entities
             Guard.AgainstNull(code, nameof(code));
 
             BatchCode = code;
+        }
+
+        public void Harvest(DateTime currentDateTimeUtc, decimal totalYield)
+        {
+            Guard.AgainstNull(currentDateTimeUtc, nameof(currentDateTimeUtc));
+            Guard.AgainstNegative(totalYield, nameof(totalYield));
+
+            this.HarvestDate = currentDateTimeUtc;
+            this.TotalYield = totalYield;
+        }
+
+        public void Sell(decimal availableQuantity, decimal price)
+        {
+            Guard.AgainstOutOfRange(availableQuantity, 0, this.TotalYield, nameof(availableQuantity));
+            Guard.AgainstNegative(price, nameof(price));
+
+            this.AvailableQuantity = availableQuantity;
+            this.Price = price;
         }
 
         public void UpdateInventory(decimal soldQuantity)

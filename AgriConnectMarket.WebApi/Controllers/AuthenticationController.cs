@@ -46,7 +46,6 @@ namespace AgriConnectMarket.WebApi.Controllers
         {
             var result = await _authService.VerifyAsync(token, ct);
 
-
             if (!result.IsSuccess)
             {
                 string webFailedUrl = $"http://localhost:5173/email-verified?error={result.Error}";
