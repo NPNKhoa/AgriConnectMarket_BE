@@ -44,7 +44,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             var hash = _hasher.ComputeHash(canonical);
 
-            var careEvent = CareEvent.Create(dto.BatchId, dto.EventTypeId, occurredAt, payloadJson, hash, lastBlock is not null ? lastBlock.Hash : FIRST_HASH);
+            var careEvent = CareEvent.Create(dto.BatchId, dto.EventTypeId, occurredAt, payloadJson, dto.ImageUrl ?? "", hash, lastBlock is not null ? lastBlock.Hash : FIRST_HASH);
 
             await _uow.CareEventRepository.AddAsync(careEvent, ct);
             await _uow.SaveChangesAsync(ct);
@@ -105,9 +105,11 @@ namespace AgriConnectMarket.Infrastructure.Services
                 .Select(e => new CareEventResponseDto
                 {
                     Id = e.Id,
-                    EventTypeId = e.EventTypeId,
+                    EventType = e.EventType.EventTypeName,
                     OccurredAt = e.OccurredAt,
                     Payload = e.Payload,
+                    ImageUrl = e.ImageUrl ?? "",
+                    BatchId = e.BatchId,
                     Hash = e.Hash,
                     PrevHash = e.PrevHash
                 })

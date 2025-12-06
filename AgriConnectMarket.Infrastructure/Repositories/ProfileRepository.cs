@@ -12,6 +12,18 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
         }
 
+        public async Task<IEnumerable<Profile>> ListAllAsync(bool includeAccount = false, CancellationToken ct = default)
+        {
+            var query = _dbContext.Set<Profile>().AsNoTracking();
+
+            if (includeAccount)
+            {
+                query = query.Include(u => u.Account);
+            }
+
+            return await query.ToListAsync();
+        }
+
         public async Task<Profile?> GetByEmailAsync(string email, bool includeAccount = false)
         {
             var query = _dbContext.Set<Profile>().Where(u => u.Email.Equals(email.Trim()));

@@ -20,7 +20,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Redirect(result.Value!.PaymentUrl);
+            return Ok(result.Value);
         }
 
         [HttpGet("vnpay-return")]

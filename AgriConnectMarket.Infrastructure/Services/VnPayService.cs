@@ -36,11 +36,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             // VNPay expects integer amount in smallest unit (VND * 100)
             long amountInCents = (long)(order.TotalPrice * 100);
 
-            // vnp_TxnRef: unique transaction reference in your system (string)
-            string orderDesc = $"Pay for the order {order.OrderCode}";
-
             var txnRef = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
-
 
             // Build parameters
             var vnpParams = new Dictionary<string, string>
@@ -51,7 +47,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 { "vnp_Amount", amountInCents.ToString() },
                 { "vnp_CurrCode", "VND" },
                 { "vnp_TxnRef", txnRef },
-                { "vnp_OrderInfo", orderDesc },
+                { "vnp_OrderInfo", order.OrderCode },
                 { "vnp_OrderType", "other" },
                 { "vnp_Locale", _settings.Locale ?? "vn" },
                 { "vnp_ReturnUrl", _settings.ReturnUrl },

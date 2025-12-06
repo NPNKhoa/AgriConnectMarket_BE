@@ -139,12 +139,9 @@ namespace AgriConnectMarket.WebApi.Controllers
             var dto = new CreateProductBatchDto()
             {
                 PlantingDate = request.PlantingDate,
-                AvailableQuantity = request.AvailableQuantity,
-                Price = request.Price,
                 SeasonId = request.SeasonId,
                 TotalYield = request.TotalYield,
                 Units = request.Units,
-                IsActive = request.IsActive,
                 ImageUrl = urls
             };
 
@@ -162,6 +159,32 @@ namespace AgriConnectMarket.WebApi.Controllers
         public async Task<IActionResult> UpdateInventoryBatch([FromRoute] Guid batchId, [FromBody] UpdateInventoryDto dto, CancellationToken ct)
         {
             var result = await _batchService.UpdateInventoryAsync(batchId, dto, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
+        [HttpPatch("{batchId}/harvest")]
+        public async Task<IActionResult> HarvestBatch([FromRoute] Guid batchId, [FromBody] UpdateBatchHarvestDateDto dto, CancellationToken ct)
+        {
+            var result = await _batchService.UpdateHarvestDateAsync(batchId, dto, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
+        [HttpPatch("{batchId}/sell")]
+        public async Task<IActionResult> SellBatch([FromRoute] Guid batchId, [FromBody] SellProductBatchRequestDto dto, CancellationToken ct)
+        {
+            var result = await _batchService.SellBatchAsync(batchId, dto, ct);
 
             if (!result.IsSuccess)
             {

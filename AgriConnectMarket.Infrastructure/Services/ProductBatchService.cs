@@ -5,12 +5,14 @@ using AgriConnectMarket.Application.Interfaces;
 using AgriConnectMarket.Application.Specifications.ProductBatchSpecs;
 using AgriConnectMarket.Domain.Entities;
 using AgriConnectMarket.SharedKernel.Constants;
+using AgriConnectMarket.SharedKernel.Interfaces;
 using AgriConnectMarket.SharedKernel.Result;
 using AgriConnectMarket.SharedKernel.Specifications;
+using System.Data;
 
 namespace AgriConnectMarket.Infrastructure.Services
 {
-    public class ProductBatchService(IUnitOfWork _uow, IBatchCodeGenerator _codeGenerator)
+    public class ProductBatchService(IUnitOfWork _uow, IBatchCodeGenerator _codeGenerator, IDateTimeProvider _dateTimeProvider, IQrCodeGenerator _qrCodeGenerator)
     {
         public async Task<Result<IEnumerable<ProductBatchResponseDto>>> GetAllBatchesAsync(CancellationToken ct = default)
         {
@@ -83,7 +85,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                     b.BatchCode.Value,
                     b.CreatedAt,
                     b.PlantingDate,
-                    b.HarvestDate,
+                    (DateTime)b.HarvestDate!,
                     b.Season.SeasonName,
                     b.TotalYield,
                     b.AvailableQuantity,
@@ -166,8 +168,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<CreateProductBatchResultDto>.Fail(MessageConstant.FARM_MISSING_PREFIX);
             }
 
-
-            var entity = ProductBatch.Create(dto.SeasonId, dto.TotalYield, dto.AvailableQuantity, dto.PlantingDate, dto.Price, dto.Units);
+            var entity = ProductBatch.Create(dto.SeasonId, dto.TotalYield, dto.PlantingDate, dto.Units);
 
             var codeString = await _codeGenerator.GenerateNextCodeAsync(farm.BatchCodePrefix, ct);
 
@@ -190,7 +191,6 @@ namespace AgriConnectMarket.Infrastructure.Services
                 Price = entity.Price,
                 AvailableQuantity = entity.AvailableQuantity,
                 PlantingDate = entity.PlantingDate,
-                HarvestDate = entity.HarvestDate
             };
 
             return Result<CreateProductBatchResultDto>.Success(responseDto);
@@ -208,6 +208,45 @@ namespace AgriConnectMarket.Infrastructure.Services
             entity.UpdateInventory(dto.soldQuantity);
 
             await _uow.ProductBatchRepository.UpdateAsync(entity);
+            await _uow.SaveChangesAsync(ct);
+
+            return Result<ProductBatch>.Success(entity);
+        }
+
+        public async Task<Result<ProductBatch>> UpdateHarvestDateAsync(Guid batchId, UpdateBatchHarvestDateDto dto, CancellationToken ct = default)
+        {
+            var entity = await _uow.ProductBatchRepository.GetByIdAsync(batchId, ct);
+
+            if (entity is null)
+            {
+                return Result<ProductBatch>.Fail(MessageConstant.BATCH_NOT_FOUND);
+            }
+
+            var currentDate = _dateTimeProvider.UtcNow;
+            entity.Harvest(currentDate, dto.totalYield);
+
+            await _uow.ProductBatchRepository.UpdateAsync(entity);
+            await _uow.SaveChangesAsync();
+
+            return Result<ProductBatch>.Success(entity);
+        }
+
+        public async Task<Result<ProductBatch>> SellBatchAsync(Guid batchId, SellProductBatchRequestDto dto, CancellationToken ct = default)
+        {
+            var entity = await _uow.ProductBatchRepository.GetByIdAsync(batchId, ct);
+
+            if (entity is null)
+            {
+                return Result<ProductBatch>.Fail(MessageConstant.BATCH_NOT_FOUND);
+            }
+
+            entity.Sell(dto.availableQuantity, dto.price);
+
+            var generatedQrCodeUrl = await _qrCodeGenerator.GenerateAndUploadBatchQrAsync(batchId, ct);
+
+            entity.VerificationQr = generatedQrCodeUrl;
+
+            await _uow.ProductBatchRepository.UpdateAsync(entity, ct);
             await _uow.SaveChangesAsync(ct);
 
             return Result<ProductBatch>.Success(entity);

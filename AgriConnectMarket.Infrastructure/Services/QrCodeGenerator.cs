@@ -5,6 +5,8 @@ using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.Extensions.Options;
 using QRCoder;
+using System.Net;
+using System.Net.Sockets;
 
 namespace AgriConnectMarket.Infrastructure.Services
 {
@@ -32,7 +34,8 @@ namespace AgriConnectMarket.Infrastructure.Services
                 throw new ArgumentException("Batch not found");
 
             // 2) Build the payload URL (this is the ONLY data inside QR)
-            string url = $"https://api.agriconnect.com/trace/batches/{batchId}";
+            string currentIp = GetIp();
+            string url = $"http://127.0.0.1:5173/product/{batchId}/care-events/verify";
 
             // 3) Create QR PNG bytes
             byte[] png = GenerateQrPng(url);
@@ -53,7 +56,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 throw new Exception(uploadResult.Error);
 
             // 5) Return Cloudinary public URL
-            return uploadResult.SecureUrl.ToString();
+            return uploadResult.Url!;
         }
 
         private byte[] GenerateQrPng(string url)
@@ -62,6 +65,22 @@ namespace AgriConnectMarket.Infrastructure.Services
             using var data = qrGen.CreateQrCode(url, QRCodeGenerator.ECCLevel.M);
             using var png = new PngByteQRCode(data);
             return png.GetGraphic(20);
+        }
+
+        private string GetIp()
+        {
+            string localIP = "";
+
+            foreach (var ip in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    localIP = ip.ToString();
+                    break;
+                }
+            }
+
+            return localIP;
         }
     }
 }
