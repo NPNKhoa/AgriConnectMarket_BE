@@ -107,7 +107,8 @@ namespace AgriConnectMarket.Infrastructure.Repositories
                                     .ThenInclude(i => i.Batch)
                                         .ThenInclude(b => b.Season)
                                             .ThenInclude(s => s.Product)
-                                                .ThenInclude(p => p.Category);
+                                                .ThenInclude(p => p.Category)
+                                .Include(o => o.Address);
             }
 
             if (includepPreOrder)
