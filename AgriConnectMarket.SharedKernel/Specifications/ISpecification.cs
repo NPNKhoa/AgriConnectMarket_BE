@@ -15,6 +15,7 @@ namespace AgriConnectMarket.SharedKernel.Specifications
 
         Expression<Func<T, bool>>? Criteria { get; }
         List<Expression<Func<T, object>>> Includes { get; }
+        List<List<LambdaExpression>> IncludeChains { get; }
         Expression<Func<T, object>>? OrderBy { get; }
         Expression<Func<T, object>>? OrderByDesc { get; }
         int? Skip { get; }

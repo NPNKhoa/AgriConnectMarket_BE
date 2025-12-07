@@ -6,6 +6,7 @@ namespace AgriConnectMarket.SharedKernel.Specifications
     {
         public Expression<Func<T, bool>>? Criteria { get; protected set; }
         public List<Expression<Func<T, object>>> Includes { get; } = new();
+        public List<List<LambdaExpression>> IncludeChains { get; } = new();
         public Expression<Func<T, object>>? OrderBy { get; protected set; }
         public Expression<Func<T, object>>? OrderByDesc { get; protected set; }
         public int? Skip { get; protected set; }
@@ -14,6 +15,7 @@ namespace AgriConnectMarket.SharedKernel.Specifications
 
         // helper methods for concrete specs to call
         protected void AddInclude(Expression<Func<T, object>> includeExpression) => Includes.Add(includeExpression);
+        protected void AddIncludeChain(params LambdaExpression[] chain) => IncludeChains.Add(chain.ToList());
         protected void ApplyCriteria(Expression<Func<T, bool>> criteria) => Criteria = criteria;
         protected void ApplyOrderBy(Expression<Func<T, object>> orderByExpression) => OrderBy = orderByExpression;
         protected void ApplyOrderByDescending(Expression<Func<T, object>> orderByDescExpression) => OrderByDesc = orderByDescExpression;

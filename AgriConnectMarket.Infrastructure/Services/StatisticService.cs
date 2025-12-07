@@ -1,5 +1,7 @@
-﻿using AgriConnectMarket.Application.DTOs.ResponseDtos;
+﻿using AgriConnectMarket.Application.DTOs.QueryDtos;
+using AgriConnectMarket.Application.DTOs.ResponseDtos;
 using AgriConnectMarket.Application.Interfaces;
+using AgriConnectMarket.Application.Specifications.OrderSpecs;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Result;
 
@@ -7,30 +9,77 @@ namespace AgriConnectMarket.Infrastructure.Services
 {
     public class StatisticService(IUnitOfWork _uow)
     {
-        //public async Task<Result<RevenuStatisticDto>> Revenue(Guid farmId, RevenueQuery query, CancellationToken ct = default)
-        //{
-        //    var spec = new FilterOrderByCompletedInYearSpec(farmId, query.year);
+        public async Task<Result<IEnumerable<RevenuStatisticDto>>> Revenue(Guid farmId, RevenueQuery query, CancellationToken ct = default)
+        {
+            var spec = new FilterOrderByCompletedInYearSpec(farmId, query.year);
 
-        //    var orders = await _uow.OrderRepository.ListAsync(spec, ct);
+            var orders = await _uow.OrderRepository.ListAsync(spec, ct);
 
-        //    if (!orders.Any())
-        //    {
-        //        return Result<RevenuStatisticDto>.Fail(MessageConstant.UNKNOWN_ERROR);
-        //    }
+            if (!orders.Any())
+            {
+                return Result<IEnumerable<RevenuStatisticDto>>.Fail(MessageConstant.UNKNOWN_ERROR);
+            }
 
-        //    var res = orders.ToList().GroupBy(o => o.CreatedAt.Month.ToString())
-        //        .Select(g => new RevenuStatisticDto(g.Key.ToString(), ));
-        //}
+            var res = orders
+                .GroupBy(o => o.CreatedAt.Month.ToString("00"))
+                .Select(o =>
+                    new RevenuStatisticDto(o.Key, o.Sum(o => o.TotalPrice))
+                )
+                .OrderBy(o => o.month)
+                .ToList();
 
-        //public async Task<Result> TopCustomers(Guid farmId, CancellationToken ct = default)
-        //{
+            return Result<IEnumerable<RevenuStatisticDto>>.Success(res);
+        }
 
-        //}
+        public async Task<Result<IEnumerable<TopCustomerStatsDto>>> TopCustomers(Guid farmId, CancellationToken ct = default)
+        {
+            var spec = new FilterPaidOrderByFarmSpecification(farmId);
 
-        //public async Task<Result> SellingProducts(Guid farmId, CancellationToken ct = default)
-        //{
+            var orders = await _uow.OrderRepository.ListAsync(spec, ct);
 
-        //}
+            if (!orders.Any())
+            {
+                return Result<IEnumerable<TopCustomerStatsDto>>.Fail(MessageConstant.ORDER_NOT_FOUND);
+            }
+
+            var res = orders
+                .GroupBy(o =>
+                    new BriefCustomerInfoDto(
+                        o.Customer.Id,
+                        o.Customer.Email,
+                        o.Customer.Fullname
+                    )
+                )
+                .Select(g =>
+                    new TopCustomerStatsDto(g.Key, g.Count())
+                )
+                .OrderByDescending(t => t.Amount)
+                .Take(5)
+                .ToList();
+
+            return Result<IEnumerable<TopCustomerStatsDto>>.Success(res);
+        }
+
+        public async Task<Result<IEnumerable<BestSellingProductStatDto>>> BestSellingProducts(Guid farmId, CancellationToken ct = default)
+        {
+            var items = await _uow.OrderItemRepository.ListAsync(new FilterOrderItemInFarmAndPaidOrderSpecification(farmId), ct);
+
+            if (!items.Any())
+            {
+                return Result<IEnumerable<BestSellingProductStatDto>>.Fail(MessageConstant.ORDER_NOT_FOUND);
+            }
+
+            var res = items
+                .GroupBy(i =>
+                    new BriefProductDto(i.Batch.Season.Product.Id, i.Batch.Season.Product.ProductName)
+                )
+                .Select(g => new BestSellingProductStatDto(g.Key, g.Count()))
+                .OrderByDescending(b => b.amount)
+                .Take(5)
+                .ToList();
+
+            return Result<IEnumerable<BestSellingProductStatDto>>.Success(res);
+        }
 
         public async Task<Result<IEnumerable<TotalUserStatisticDto>>> TotalUsers(CancellationToken ct = default)
         {
