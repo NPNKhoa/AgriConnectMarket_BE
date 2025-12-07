@@ -1,5 +1,5 @@
 ﻿namespace AgriConnectMarket.Application.DTOs.ResponseDtos
 {
-    public record ProductBatchResponseDto(Guid Id, string batchCode, DateTime createdAt, DateTime plantingDate, DateTime? harvestDate,
-            string season, decimal totalYield, decimal avaibleQuantity, decimal price, string units, ICollection<string> imageUrls);
+    public record ProductBatchResponseDto(Guid Id, string batchCode, string product, string season, string farm, DateTime createdAt,
+            DateTime plantingDate, DateTime? harvestDate, decimal totalYield, decimal avaibleQuantity, decimal price, string units, ICollection<string> imageUrls);
 }

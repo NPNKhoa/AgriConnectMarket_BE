@@ -18,7 +18,12 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
             if (includeImages)
             {
-                query = query.Include(b => b.ImageUrls).Include(b => b.Season);
+                query = query
+                    .Include(b => b.ImageUrls)
+                    .Include(b => b.Season)
+                        .ThenInclude(s => s.Product)
+                    .Include(b => b.Season)
+                        .ThenInclude(s => s.Farm);
             }
 
             return await query.ToListAsync();
