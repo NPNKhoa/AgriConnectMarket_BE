@@ -11,7 +11,7 @@ namespace AgriConnectMarket.WebApi.Controllers
 {
     [Route("api/farms")]
     [ApiController]
-    public class FarmController(FarmService _farmService, CertificateService _certificateService, ICloudinaryAdapter _cloudinaryService) : ControllerBase
+    public class FarmController(FarmService _farmService, CertificateService _certificateService, StatisticService _statService, ICloudinaryAdapter _cloudinaryService) : ControllerBase
     {
         [HttpGet("")]
         public async Task<IActionResult> GetAll([FromQuery] FarmQuery? query, CancellationToken ct)
@@ -237,6 +237,45 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
 
             return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.FARM_MARKED_MALL));
+        }
+
+        [HttpGet("{farmId}/revenue")]
+        public async Task<IActionResult> GetFarmRevenue([FromRoute] Guid farmId, [FromQuery] RevenueQuery query, CancellationToken ct)
+        {
+            var result = await _statService.Revenue(farmId, query, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
+        [HttpGet("{farmId}/top-customers")]
+        public async Task<IActionResult> GetTopVipCustomer([FromRoute] Guid farmId, CancellationToken ct)
+        {
+            var result = await _statService.TopCustomers(farmId, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
+        [HttpGet("{farmId}/top-products")]
+        public async Task<IActionResult> GetTopSellingProducts([FromRoute] Guid farmId, CancellationToken ct)
+        {
+            var result = await _statService.BestSellingProducts(farmId, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
     }
 }

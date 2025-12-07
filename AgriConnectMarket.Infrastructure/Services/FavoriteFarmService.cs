@@ -48,6 +48,13 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<FavoriteFarm>.Fail(MessageConstant.PROFILE_NOT_FOUND);
             }
 
+            var existing = await _uow.FavoriteFarmRepository.GetByFKsAsync(profile.Id, dto.FarmId);
+
+            if (existing is not null)
+            {
+                return Result<FavoriteFarm>.Fail(MessageConstant.FARM_EXIST_IN_FAVORITE);
+            }
+
             var entity = FavoriteFarm.Create(profile.Id, dto.FarmId);
             await _uow.FavoriteFarmRepository.AddAsync(entity, ct);
             await _uow.SaveChangesAsync();
@@ -71,6 +78,11 @@ namespace AgriConnectMarket.Infrastructure.Services
             }
 
             var existing = await _uow.FavoriteFarmRepository.GetByFKsAsync(profile.Id, dto.FarmId);
+
+            if (existing is null)
+            {
+                return Result<Guid>.Fail(MessageConstant.FAVORITE_FARM_NOT_FOUND);
+            }
 
             await _uow.FavoriteFarmRepository.DeleteAsync(existing, ct);
             await _uow.SaveChangesAsync();
