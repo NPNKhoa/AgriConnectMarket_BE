@@ -22,16 +22,6 @@ namespace AgriConnectMarket.Infrastructure.Specifications
                 query = query.Include(include);
             }
 
-            foreach (var chain in spec.IncludeChains)
-            {
-                var includable = query.Include(chain[0]);
-
-                for (int i = 1; i < chain.Count; i++)
-                    includable = includable.ThenInclude(chain[i]);
-
-                query = includable;
-            }
-
             // apply ordering
             if (spec.OrderBy != null)
             {
