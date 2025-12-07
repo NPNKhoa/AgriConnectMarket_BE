@@ -7,6 +7,8 @@ namespace AgriConnectMarket.Application.Specifications.ProductBatchSpecs
     {
         public FilterProductBatchByPaginationSpecification(int skip, int take)
         {
+            ApplyCriteria(b => b.HarvestDate != null && b.Price > 0);
+
             ApplyPaging(skip, take);
         }
     }
