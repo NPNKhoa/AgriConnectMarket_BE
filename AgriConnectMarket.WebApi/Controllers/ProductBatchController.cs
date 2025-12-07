@@ -1,4 +1,5 @@
-﻿using AgriConnectMarket.Application.DTOs.RequestDtos;
+﻿using AgriConnectMarket.Application.DTOs.QueryDtos;
+using AgriConnectMarket.Application.DTOs.RequestDtos;
 using AgriConnectMarket.Infrastructure.CloudinarySettings;
 using AgriConnectMarket.Infrastructure.Services;
 using AgriConnectMarket.SharedKernel.Responses;
@@ -29,6 +30,19 @@ namespace AgriConnectMarket.WebApi.Controllers
         public async Task<IActionResult> GetAllBatches(CancellationToken ct)
         {
             var result = await _batchService.GetAllBatchesAsync(ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
+        [HttpGet("selling")]
+        public async Task<IActionResult> GetSellingBatches([FromQuery] ProductBatchQuery query, CancellationToken ct)
+        {
+            var result = await _batchService.GetSellingBatches(query, ct);
 
             if (!result.IsSuccess)
             {
