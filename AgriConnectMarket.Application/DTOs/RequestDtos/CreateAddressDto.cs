@@ -7,6 +7,5 @@
         public string Ward { get; set; }
         public string? Detail { get; set; }
         public bool IsDefault { get; set; } = false;
-        public Guid ProfileId { get; set; }
     }
 }

@@ -11,7 +11,6 @@ namespace AgriConnectMarket.Application.DTOs.ResponseDtos
         public string OrderStatus { get; set; }
         public string OrderType { get; set; }
         public string PaymentStatus { get; set; }
-        public decimal? PartiallyPaidAmount { get; set; }
         public DateTime? PaidDate { get; set; }
         public string? Note { get; set; }
 

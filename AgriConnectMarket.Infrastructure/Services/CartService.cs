@@ -191,7 +191,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<Cart>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
 
             var userId = _currentUserService.UserId.Value;
-            var profile = await _uow.ProfileRepository.GetByIdAsync(userId, ct);
+            var profile = await _uow.ProfileRepository.GetByIdAsync(userId, true, ct);
 
             if (profile is null)
                 return Result<Cart>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
@@ -200,6 +200,8 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             cart.DeleteAllFromCart();
 
+            await _uow.CartRepository.UpdateAsync(cart, ct);
+            await _uow.SaveChangesAsync(ct);
 
             return Result<Cart>.Success(cart);
         }
