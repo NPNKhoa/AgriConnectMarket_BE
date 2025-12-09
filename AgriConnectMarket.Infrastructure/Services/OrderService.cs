@@ -229,14 +229,14 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<CreatePreOrderResponseDto>> CreatePreOrder(CreatePreOrderDto dto, CancellationToken ct = default)
         {
-            var customer = await _uow.ProfileRepository.GetByIdAsync(dto.CustomerId);
+            var customer = await _uow.ProfileRepository.GetByIdAsync(dto.CustomerId, ct);
 
             if (customer is null)
             {
                 return Result<CreatePreOrderResponseDto>.Fail(MessageConstant.PROFILE_NOT_FOUND);
             }
 
-            var product = await _uow.ProductRepository.GetByIdAsync(dto.ProductId);
+            var product = await _uow.ProductRepository.GetByIdAsync(dto.ProductId, ct);
 
             if (product is null)
             {
@@ -248,8 +248,8 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             var preOrder = PreOrder.Create(order, dto.ProductId, dto.Quantity, dto.Note!);
 
-            await _uow.PreOrderRepository.AddAsync(preOrder);
-            await _uow.SaveChangesAsync();
+            await _uow.PreOrderRepository.AddAsync(preOrder, ct);
+            await _uow.SaveChangesAsync(ct);
 
             var response = new CreatePreOrderResponseDto()
             {
@@ -258,7 +258,6 @@ namespace AgriConnectMarket.Infrastructure.Services
                 OrderStatus = order.OrderStatus,
                 OrderDate = order.OrderDate,
                 PaymentStatus = order.PaymentStatus,
-                PartiallyPaidAmount = preOrder.PartiallyPaidAmount,
                 PaidDate = order.PaidDate,
                 Note = preOrder.Note,
                 Product = product,
@@ -267,6 +266,39 @@ namespace AgriConnectMarket.Infrastructure.Services
             };
 
             return Result<CreatePreOrderResponseDto>.Success(response);
+        }
+
+        public async Task<Result<Guid>> ApprovePreOrder(Guid orderId, CancellationToken ct = default)
+        {
+            var order = await _uow.PreOrderRepository.GetByIdAsync(orderId, ct);
+
+            if (order is null)
+            {
+                return Result<Guid>.Fail(MessageConstant.ORDER_NOT_FOUND);
+            }
+
+            order.Approve(DateTime.UtcNow);
+
+            await _uow.PreOrderRepository.UpdateAsync(order, ct);
+            await _uow.SaveChangesAsync(ct);
+
+            return Result<Guid>.Success(order.OrderId);
+        }
+
+        public async Task<Result<Guid>> DeclinePreOrder(Guid orderId, CancellationToken ct = default)
+        {
+            var order = await _uow.PreOrderRepository.GetByIdAsync(orderId, ct);
+
+            if (order is null)
+            {
+                return Result<Guid>.Fail(MessageConstant.ORDER_NOT_FOUND);
+            }
+
+            await _uow.PreOrderRepository.DeleteAsync(order, ct);
+            await _uow.OrderRepository.DeleteAsync(order.Order, ct);
+            await _uow.SaveChangesAsync(ct);
+
+            return Result<Guid>.Success(order.OrderId);
         }
 
         /***

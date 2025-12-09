@@ -13,13 +13,15 @@ namespace AgriConnectMarket.Infrastructure.Repositories
         {
         }
 
-        public async Task<IEnumerable<OrderItem>> ListAysnc(ISpecification<OrderItem> spec, bool includeProduct = false, CancellationToken ct = default)
+        public async Task<IEnumerable<OrderItem>> ListAsync(ISpecification<OrderItem> spec, bool includeProduct = false, CancellationToken ct = default)
         {
             var query = SpecificationEvaluator.GetQuery(_dbContext.Set<OrderItem>().AsQueryable(), spec).AsNoTracking();
 
             if (includeProduct)
             {
-                query = query.Include(i => i.Batch.Season.Product);
+                query = query.Include(i => i.Batch)
+                                .ThenInclude(b => b.Season)
+                                    .ThenInclude(s => s.Product);
             }
 
             return await query.ToListAsync(ct);

@@ -206,7 +206,7 @@ namespace AgriConnectMarket.Infrastructure.Data
                 ci.HasOne(ci => ci.Cart)
                     .WithMany(c => c.CartItems)
                     .HasForeignKey(ci => ci.CartId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Order>(o =>

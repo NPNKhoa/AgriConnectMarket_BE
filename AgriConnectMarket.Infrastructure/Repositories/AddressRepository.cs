@@ -32,5 +32,17 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
             return await query.ToListAsync();
         }
+
+        public async Task<Address> GetDefaultAddressAsync(bool includeProfile = false, CancellationToken ct = default)
+        {
+            var query = _dbContext.Set<Address>().Where(a => a.IsDefault && !a.IsDelete);
+
+            if (includeProfile)
+            {
+                query = query.Include(a => a.Profile);
+            }
+
+            return await query.FirstOrDefaultAsync();
+        }
     }
 }

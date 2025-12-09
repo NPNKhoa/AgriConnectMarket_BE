@@ -7,5 +7,6 @@ namespace AgriConnectMarket.Application.Interfaces
         public Task<IEnumerable<Profile>> ListAllAsync(bool includeAccount = false, CancellationToken ct = default);
         public Task<Profile?> GetByEmailAsync(string email, bool includeAccount = false);
         public Task<Profile?> GetByAccountIdAsync(Guid accountId, bool includeAccount = false);
+        public Task<Profile?> GetByIdAsync(Guid profileId, bool includeCart = false, CancellationToken ct = default);
     }
 }

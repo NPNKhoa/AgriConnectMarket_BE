@@ -63,6 +63,7 @@ namespace AgriConnectMarket.Domain.Entities
             if (isDeleteAll)
             {
                 TotalPrice = 0;
+                return;
             }
 
             TotalPrice = _cartItems.Sum(i => i.ItemPrice);

@@ -23,19 +23,30 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<CreateAddressResultDto>> CreateAddessAsync(CreateAddressDto dto, CancellationToken ct = default)
         {
-            var user = await _uow.ProfileRepository.GetByIdAsync(dto.ProfileId, ct);
-
-            if (user is null)
+            if (_currentUserService.UserId is null)
             {
-                return Result<CreateAddressResultDto>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
+                return Result<CreateAddressResultDto>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
             }
 
-            var entity = new Address(dto.Province, dto.District, dto.Ward, dto.Detail, dto.ProfileId, dto.IsDefault)
+            var userId = (Guid)_currentUserService.UserId;
+
+            var existingDefault = await _uow.AddressRepository.GetDefaultAddressAsync(false, ct);
+
+            if (existingDefault is not null)
+            {
+                existingDefault.IsDefault = false;
+                await _uow.AddressRepository.UpdateAsync(existingDefault);
+            }
+
+            var user = await _uow.ProfileRepository.GetByIdAsync(userId, ct);
+
+            var entity = new Address(dto.Province, dto.District, dto.Ward, dto.Detail, userId, dto.IsDefault)
             {
                 Profile = user
             };
 
             var result = await _uow.AddressRepository.AddAsync(entity, ct);
+            await _uow.SaveChangesAsync();
 
             var resultDto = new CreateAddressResultDto()
             {
@@ -59,6 +70,14 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<UpdateAddressResultDto>.Fail(MessageConstant.ACCOUNT_NOT_FOUND);
             }
 
+            var existingDefault = await _uow.AddressRepository.GetDefaultAddressAsync(false, ct);
+
+            if (existingDefault is not null)
+            {
+                existingDefault.IsDefault = false;
+                await _uow.AddressRepository.UpdateAsync(existingDefault);
+            }
+
             existingAddress.Province = dto.Province;
             existingAddress.District = dto.District;
             existingAddress.Ward = dto.Ward;
@@ -66,6 +85,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             existingAddress.IsDefault = dto.IsDefault;
 
             await _uow.AddressRepository.UpdateAsync(existingAddress, ct);
+            await _uow.SaveChangesAsync();
 
             var resultDto = new UpdateAddressResultDto()
             {

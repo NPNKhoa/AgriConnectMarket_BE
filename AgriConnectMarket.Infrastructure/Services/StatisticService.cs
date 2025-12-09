@@ -9,26 +9,35 @@ namespace AgriConnectMarket.Infrastructure.Services
 {
     public class StatisticService(IUnitOfWork _uow)
     {
-        public async Task<Result<IEnumerable<RevenuStatisticDto>>> Revenue(Guid farmId, RevenueQuery query, CancellationToken ct = default)
+        public async Task<Result<IEnumerable<RevenuStatisticDto>>> Revenue(
+            Guid farmId,
+            RevenueQuery query,
+            CancellationToken ct = default)
         {
             var spec = new FilterOrderByCompletedInYearSpec(farmId, query.year);
-
             var orders = await _uow.OrderRepository.ListAsync(spec, ct);
 
-            if (!orders.Any())
+            var allMonths = Enumerable.Range(1, 12)
+                .ToDictionary(m => m.ToString("00"), m => 0m);
+
+            var revenueByMonth = orders
+                .GroupBy(o => o.CreatedAt.Month.ToString("00"))
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Sum(o => o.TotalPrice)
+                );
+
+            foreach (var item in revenueByMonth)
             {
-                return Result<IEnumerable<RevenuStatisticDto>>.Fail(MessageConstant.UNKNOWN_ERROR);
+                allMonths[item.Key] = item.Value;
             }
 
-            var res = orders
-                .GroupBy(o => o.CreatedAt.Month.ToString("00"))
-                .Select(o =>
-                    new RevenuStatisticDto(o.Key, o.Sum(o => o.TotalPrice))
-                )
-                .OrderBy(o => o.month)
+            var result = allMonths
+                .Select(m => new RevenuStatisticDto(m.Key, m.Value))
+                .OrderBy(m => m.month)
                 .ToList();
 
-            return Result<IEnumerable<RevenuStatisticDto>>.Success(res);
+            return Result<IEnumerable<RevenuStatisticDto>>.Success(result);
         }
 
         public async Task<Result<IEnumerable<TopCustomerStatsDto>>> TopCustomers(Guid farmId, CancellationToken ct = default)
@@ -62,7 +71,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<IEnumerable<BestSellingProductStatDto>>> BestSellingProducts(Guid farmId, CancellationToken ct = default)
         {
-            var items = await _uow.OrderItemRepository.ListAsync(new FilterOrderItemInFarmAndPaidOrderSpecification(farmId), ct);
+            var items = await _uow.OrderItemRepository.ListAsync(new FilterOrderItemInFarmAndPaidOrderSpecification(farmId), true, ct);
 
             if (!items.Any())
             {

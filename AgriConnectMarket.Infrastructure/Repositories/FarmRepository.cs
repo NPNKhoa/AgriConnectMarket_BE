@@ -34,7 +34,7 @@ namespace AgriConnectMarket.Infrastructure.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<Farm> GetByIdAsync(Guid farmId, bool includeAddress = false, bool includeFarmer = false, bool includeSeason = false)
+        public async Task<Farm> GetByIdAsync(Guid farmId, bool includeAddress = false, bool includeFarmer = false, bool includeSeason = false, CancellationToken ct = default)
         {
             var query = _dbContext.Set<Farm>().Where(f => f.Id == farmId && !f.IsDelete);
 
@@ -53,7 +53,7 @@ namespace AgriConnectMarket.Infrastructure.Repositories
                 query = query.Include(f => f.Seasons);
             }
 
-            return await query.FirstOrDefaultAsync();
+            return await query.FirstOrDefaultAsync(ct);
         }
     }
 }
