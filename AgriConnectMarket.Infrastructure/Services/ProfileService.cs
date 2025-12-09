@@ -9,13 +9,13 @@ namespace AgriConnectMarket.Infrastructure.Services
 {
     public class ProfileService(IUnitOfWork _uow, ICurrentUserService _currentUserService)
     {
-        public async Task<Result<Domain.Entities.Profile>> UpdateProfile(Guid profileId, UpdateProfileDto dto, CancellationToken ct = default)
+        public async Task<Result<Profile>> UpdateProfile(Guid profileId, UpdateProfileDto dto, CancellationToken ct = default)
         {
             var existingProfile = await _uow.ProfileRepository.GetByIdAsync(profileId, ct);
 
             if (existingProfile is null)
             {
-                return Result<Domain.Entities.Profile>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
+                return Result<Profile>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
             }
 
             existingProfile.Fullname = dto.Fullname;
@@ -24,38 +24,38 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             await _uow.ProfileRepository.UpdateAsync(existingProfile, ct);
 
-            return Result<Domain.Entities.Profile>.Success(existingProfile);
+            return Result<Profile>.Success(existingProfile);
         }
 
-        public async Task<Result<Domain.Entities.Profile>> UpdateAvatarAsync(Guid profileId, UpdateProfileDto dto, CancellationToken ct = default)
+        public async Task<Result<Profile>> UpdateAvatarAsync(Guid profileId, UpdateProfileDto dto, CancellationToken ct = default)
         {
             var existingProfile = await _uow.ProfileRepository.GetByIdAsync(profileId, ct);
 
             if (existingProfile is null)
             {
-                return Result<Domain.Entities.Profile>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
+                return Result<Profile>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
             }
 
             existingProfile.AvatarUrl = dto.AvatarUrl;
 
             await _uow.ProfileRepository.UpdateAsync(existingProfile, ct);
 
-            return Result<Domain.Entities.Profile>.Success(existingProfile);
+            return Result<Profile>.Success(existingProfile);
         }
 
-        public async Task<Result<IEnumerable<Domain.Entities.Profile>>> GetFullListAsync(CancellationToken ct = default)
+        public async Task<Result<IEnumerable<Profile>>> GetFullListAsync(CancellationToken ct = default)
         {
-            var profiles = await _uow.ProfileRepository.ListAllAsync(ct);
+            var profiles = await _uow.ProfileRepository.ListAsync(new IncludeAccountAddressInProfileSpecification(), ct);
 
             if (!profiles.Any())
             {
-                return Result<IEnumerable<Domain.Entities.Profile>>.Fail(MessageConstant.PROFILE_NOT_FOUND);
+                return Result<IEnumerable<Profile>>.Fail(MessageConstant.PROFILE_NOT_FOUND);
             }
 
-            return Result<IEnumerable<Domain.Entities.Profile>>.Success(profiles.ToList());
+            return Result<IEnumerable<Profile>>.Success(profiles.ToList());
         }
 
-        public async Task<Result<IEnumerable<Domain.Entities.Profile>>> GetProfilesAsync(string searchTerm = "", CancellationToken ct = default)
+        public async Task<Result<IEnumerable<Profile>>> GetProfilesAsync(string searchTerm = "", CancellationToken ct = default)
         {
             var searchSpec = new FilterProfileBySearchTermSpecification(searchTerm);
 
@@ -63,29 +63,29 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             if (!profiles.Any())
             {
-                return Result<IEnumerable<Domain.Entities.Profile>>.Fail(MessageConstant.PROFILE_NOT_FOUND);
+                return Result<IEnumerable<Profile>>.Fail(MessageConstant.PROFILE_NOT_FOUND);
             }
 
-            return Result<IEnumerable<Domain.Entities.Profile>>.Success(profiles);
+            return Result<IEnumerable<Profile>>.Success(profiles);
         }
 
-        public async Task<Result<Domain.Entities.Profile>> GetProfileById(Guid profileId, CancellationToken ct = default)
+        public async Task<Result<Profile>> GetProfileById(Guid profileId, CancellationToken ct = default)
         {
-            var existing = await _uow.ProfileRepository.GetByIdAsync(profileId, ct);
+            var existing = await _uow.ProfileRepository.GetByIdAsync(profileId, false, ct);
 
             if (existing is null)
             {
-                return Result<Domain.Entities.Profile>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
+                return Result<Profile>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
             }
 
-            return Result<Domain.Entities.Profile>.Success(existing);
+            return Result<Profile>.Success(existing);
         }
 
-        public async Task<Result<Domain.Entities.Profile>> GetMyProfile(CancellationToken ct = default)
+        public async Task<Result<Profile>> GetMyProfile(CancellationToken ct = default)
         {
             if (_currentUserService.UserId is null)
             {
-                return Result<Domain.Entities.Profile>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
+                return Result<Profile>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
             }
 
             var userId = _currentUserService.UserId.Value;
@@ -93,10 +93,10 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             if (profile is null)
             {
-                return Result<Domain.Entities.Profile>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
+                return Result<Profile>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
             }
 
-            return Result<Domain.Entities.Profile>.Success(profile);
+            return Result<Profile>.Success(profile);
         }
     }
 }

@@ -22,6 +22,7 @@ namespace AgriConnectMarket.Infrastructure.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<PreOrder> PreOrders { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<PasswordOtp> PasswordOtps { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
@@ -284,6 +285,20 @@ namespace AgriConnectMarket.Infrastructure.Data
                     .HasForeignKey<Transaction>(tx => tx.OrderId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<PasswordOtp>(b =>
+            {
+                b.ToTable("PasswordOtps");
+                b.HasKey(x => x.Id).HasName("PasswordOtpId");
+                b.Property(x => x.HashedOtp).IsRequired();
+                b.Property(x => x.Salt).HasMaxLength(100).IsRequired();
+                b.Property(x => x.CreatedAt).IsRequired();
+                b.Property(x => x.ExpiresAt).IsRequired();
+                b.Property(x => x.UserId).IsRequired();
+                b.Property(x => x.AttemptCount).IsRequired();
+                b.Property(x => x.Consumed).IsRequired();
+                b.Property(x => x.Purpose).IsRequired();
             });
         }
     }

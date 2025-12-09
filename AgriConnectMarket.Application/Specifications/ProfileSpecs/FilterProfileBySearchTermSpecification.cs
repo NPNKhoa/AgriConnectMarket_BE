@@ -12,6 +12,9 @@ namespace AgriConnectMarket.Application.Specifications.ProfileSpecs
                 || f.Email.ToLower().Contains(searchTerm.ToLower())
                 || f.Phone.Contains(searchTerm)
             );
+
+            AddInclude(p => p.Account);
+            AddInclude(p => p.Addresses);
         }
     }
 }

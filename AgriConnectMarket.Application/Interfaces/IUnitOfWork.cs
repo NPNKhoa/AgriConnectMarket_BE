@@ -19,6 +19,7 @@
         IEventTypeRepository EventTypeRepository { get; }
         ICareEventRepository CareEventRepository { get; }
         ITransactionRepository TransactionRepository { get; set; }
+        IPasswordOtpRepository PasswordOtpRepository { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
