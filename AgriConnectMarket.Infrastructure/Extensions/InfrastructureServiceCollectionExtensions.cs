@@ -32,6 +32,8 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddScoped<IHashingStrategy, Sha256Hashing>();
             services.AddScoped<IQrCodeGenerator, QrCodeGenerator>();
             services.AddScoped<IEmailTemplateService, EmailTemplateService>();
+            services.AddScoped<IRandomGenerator, RandomGenerator>();
+            services.AddScoped<IHashingService, Pbkdf2HashingService>();
 
             return services;
         }

@@ -255,6 +255,42 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<Farm>.Success(farm);
         }
 
+        public async Task<Result<Farm>> GetFarmsByAccountAsync(Guid accountId, CancellationToken ct = default)
+        {
+            var farm = await _uow.FarmRepository.GetFarmByAccount(accountId, true, true, true);
+
+            if (farm is null)
+            {
+                return Result<Farm>.Fail(MessageConstant.FARM_NOT_FOUND);
+            }
+
+            return Result<Farm>.Success(farm);
+        }
+
+        public async Task<Result<IEnumerable<FeaturedFarmResponseDto>>> GetFeaturedFarms(CancellationToken ct = default)
+        {
+            var orders = await _uow.OrderItemRepository.ListAllAsync(ct);
+
+            if (!orders.Any())
+            {
+                return Result<IEnumerable<FeaturedFarmResponseDto>>.Success([]);
+            }
+
+            var farms = orders.GroupBy(o =>
+            {
+                var farm = o.Batch.Season.Farm;
+
+                return new FeaturedFarmResponseDto(farm.Id, farm.FarmName, farm.FarmDesc ?? "", farm.BannerUrl ?? "", farm.FarmName, farm.Phone ?? "", farm.IsConfirmAsMall);
+            })
+            .OrderByDescending(g => g.Count())
+            .Select(g => g.Key)
+            .ToList()
+            .Take(5);
+
+            return Result<IEnumerable<FeaturedFarmResponseDto>>.Success(farms);
+        }
+
+
         // HELPER
         private async Task<bool> isBatchCodePrefixConflicting(string bathCodePrefix)
         {

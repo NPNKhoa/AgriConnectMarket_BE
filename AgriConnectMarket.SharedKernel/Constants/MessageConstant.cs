@@ -46,5 +46,6 @@
         public const string TRANSACTION_FAIL = "The transaction was failed";
         public const string CREATE_PAYMENT_URL_FAIL = "Fail to create payment URL. Kindly please try again!";
         public const string ORDER_DATA_NOT_FOUND = "The response data of the created order can not be found";
+        public const string REQUEST_OTP_SUCCESS = "We have sent instructions to reset your password if the account exists.";
     }
 }

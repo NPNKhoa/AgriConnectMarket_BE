@@ -1,6 +1,7 @@
 ﻿using AgriConnectMarket.Application.DTOs.RequestDtos;
 using AgriConnectMarket.Application.DTOs.ResponseDtos;
 using AgriConnectMarket.Application.Interfaces;
+using AgriConnectMarket.Application.Specifications.OrderSpecs;
 using AgriConnectMarket.Domain.Entities;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Interfaces;
@@ -12,7 +13,7 @@ namespace AgriConnectMarket.Infrastructure.Services
     {
         public async Task<Result<IEnumerable<Order>>> GetAllOrdersAsync(CancellationToken ct = default)
         {
-            var orders = await _uow.OrderRepository.ListAllAsync(ct);
+            var orders = await _uow.OrderRepository.ListAsync(new SortOrderByCreatedDateSpecification(), ct);
 
             if (!orders.Any())
             {
@@ -225,6 +226,18 @@ namespace AgriConnectMarket.Infrastructure.Services
                 OrderId = order.Id,
                 OrderStatus = order.OrderStatus
             });
+        }
+
+        public async Task<Result<IEnumerable<Order>>> GetByProfileAsync(Guid profileId, CancellationToken ct = default)
+        {
+            var orders = await _uow.OrderRepository.GetByProfileId(profileId, new InlcudeOrderItemAddressInOrderSpecification(), ct);
+
+            if (!orders.Any())
+            {
+                return Result<IEnumerable<Order>>.Success([]);
+            }
+
+            return Result<IEnumerable<Order>>.Success(orders);
         }
 
         public async Task<Result<CreatePreOrderResponseDto>> CreatePreOrder(CreatePreOrderDto dto, CancellationToken ct = default)

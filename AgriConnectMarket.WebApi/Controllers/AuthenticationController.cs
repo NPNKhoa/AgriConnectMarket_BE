@@ -11,7 +11,7 @@ namespace AgriConnectMarket.WebApi.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    public class AuthenticationController(AuthService _authService, ICloudinaryAdapter _cloudinaryService) : ControllerBase
+    public class AuthenticationController(AuthService _authService, ForgotPasswordService _forgotService, ICloudinaryAdapter _cloudinaryService) : ControllerBase
     {
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromForm] Models.RegisterRequest request, CancellationToken ct)
@@ -118,6 +118,29 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
 
             return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_UPDATE_SUCCESS_MESSAGE));
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto, CancellationToken ct)
+        {
+            // Validate input format
+            await _forgotService.RequestOtpAsync(dto.Email, ct);
+            // Always return 200 OK with generic message
+            return Ok(new { message = "If this account exists we have sent instructions to reset the password." });
+        }
+
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOtpDto dto, CancellationToken ct)
+        {
+            var result = await _forgotService.VerifyOtpAsync(dto.Email, dto.Otp, ct);
+            return Ok(result.Value); // short-lived token
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto, CancellationToken ct)
+        {
+            await _forgotService.ResetPasswordAsync(dto.Email, dto.ResetToken, dto.NewPassword, ct);
+            return Ok(new { message = "Password changed." });
         }
     }
 }

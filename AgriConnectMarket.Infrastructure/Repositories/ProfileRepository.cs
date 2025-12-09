@@ -49,7 +49,10 @@ namespace AgriConnectMarket.Infrastructure.Repositories
         }
         public async Task<Profile?> GetByIdAsync(Guid profileId, bool includeCart = false, CancellationToken ct = default)
         {
-            var query = _dbContext.Set<Profile>().Where(u => u.Id == profileId);
+            var query = _dbContext.Set<Profile>()
+                .Include(p => p.Account)
+                .Include(p => p.Addresses)
+                .Where(u => u.Id == profileId);
 
             if (includeCart)
             {
