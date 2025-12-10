@@ -17,15 +17,15 @@ namespace AgriConnectMarket.Domain.Entities
 
         }
 
-        private CartItem(Guid cartId, Guid itemId, int quantity, decimal itemPrice)
+        private CartItem(Guid cartId, Guid batchId, int quantity, decimal itemPrice)
         {
             CartId = cartId;
-            BatchId = itemId;
+            BatchId = batchId;
             Quantity = quantity;
             ItemPrice = itemPrice;
         }
 
-        public static CartItem Create(Guid cartId, Guid itemId, int quantity, decimal itemPrice)
-            => new CartItem(cartId, itemId, quantity, itemPrice);
+        public static CartItem Create(Guid cartId, Guid batchId, int quantity, decimal itemPrice)
+            => new CartItem(cartId, batchId, quantity, itemPrice);
     }
 }

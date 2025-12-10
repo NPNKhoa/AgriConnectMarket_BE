@@ -1,4 +1,5 @@
 ﻿using AgriConnectMarket.Domain.Entities;
+using AgriConnectMarket.SharedKernel.Specifications;
 
 namespace AgriConnectMarket.Application.Interfaces
 {
@@ -10,5 +11,6 @@ namespace AgriConnectMarket.Application.Interfaces
         public Task<IEnumerable<ProductBatch>> GetBySeasonAsync(Guid seasonId, bool includeSeason = false, CancellationToken ct = default);
         public Task<IEnumerable<ProductBatch>> GetByFarmAsync(Guid farmId, bool includeSeason = false, CancellationToken ct = default);
         public Task<IEnumerable<ProductBatch>> GetByFarmerAsync(Guid farmerId, bool includeAllRelated = false, CancellationToken ct = default);
+        Task<IReadOnlyList<ProductBatch>> ListAsync(ISpecification<ProductBatch> spec, bool includeRelated = false, CancellationToken cancellationToken = default);
     }
 }
