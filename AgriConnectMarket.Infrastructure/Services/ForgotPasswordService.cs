@@ -2,7 +2,6 @@
 using AgriConnectMarket.Application.Interfaces;
 using AgriConnectMarket.Application.SettingObjects;
 using AgriConnectMarket.Domain.Entities;
-using AgriConnectMarket.Infrastructure.Data;
 using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Interfaces;
 using AgriConnectMarket.SharedKernel.Result;
@@ -10,7 +9,7 @@ using System.Security.Claims;
 
 namespace AgriConnectMarket.Infrastructure.Services
 {
-    public class ForgotPasswordService(UnitOfWork _uow, IRandomGenerator _randomGenerator, IEmailService _emailService, IDateTimeProvider _clock, IHashingService _hashing, IJwtService _jwt)
+    public class ForgotPasswordService(IUnitOfWork _uow, IRandomGenerator _randomGenerator, IEmailService _emailService, IDateTimeProvider _clock, IHashingService _hashing, IJwtService _jwt)
     {
         public async Task<Result<string>> RequestOtpAsync(string emailOrPhone, CancellationToken ct)
         {
