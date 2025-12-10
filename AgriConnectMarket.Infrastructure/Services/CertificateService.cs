@@ -16,12 +16,12 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<string>.Fail(MessageConstant.FARM_NOT_FOUND);
             }
 
-            farm.CertificateUrl = dto.CertificateUrl;
+            farm.UpdateCertificateUrl(dto.CertificateUrl);
 
             await _uow.FarmRepository.UpdateAsync(farm, ct);
             await _uow.SaveChangesAsync();
 
-            return Result<string>.Success(farm.CertificateUrl);
+            return Result<string>.Success(farm.CertificateUrl ?? "");
         }
 
         public async Task<Result<string>> UpdateCertificate(Guid farmId, string newUrl, CancellationToken ct = default)
@@ -33,12 +33,12 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<string>.Fail(MessageConstant.FARM_NOT_FOUND);
             }
 
-            farm.CertificateUrl = newUrl;
+            farm.UpdateCertificateUrl(newUrl);
 
             await _uow.FarmRepository.UpdateAsync(farm, ct);
             await _uow.SaveChangesAsync();
 
-            return Result<string>.Success(farm.CertificateUrl);
+            return Result<string>.Success(farm.CertificateUrl ?? "");
         }
 
         public async Task<Result<Guid>> DeleteCertificate(Guid farmId, CancellationToken ct = default)
@@ -50,7 +50,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<Guid>.Fail(MessageConstant.FARM_NOT_FOUND);
             }
 
-            farm.CertificateUrl = null;
+            farm.UpdateCertificateUrl("");
 
             await _uow.FarmRepository.UpdateAsync(farm, ct);
             await _uow.SaveChangesAsync();

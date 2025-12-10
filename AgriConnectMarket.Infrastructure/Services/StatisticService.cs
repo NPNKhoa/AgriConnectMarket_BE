@@ -48,7 +48,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             if (!orders.Any())
             {
-                return Result<IEnumerable<TopCustomerStatsDto>>.Fail(MessageConstant.ORDER_NOT_FOUND);
+                return Result<IEnumerable<TopCustomerStatsDto>>.Success([]);
             }
 
             var res = orders
@@ -75,7 +75,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             if (!items.Any())
             {
-                return Result<IEnumerable<BestSellingProductStatDto>>.Fail(MessageConstant.ORDER_NOT_FOUND);
+                return Result<IEnumerable<BestSellingProductStatDto>>.Success([]);
             }
 
             var res = items

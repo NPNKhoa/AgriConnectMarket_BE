@@ -152,6 +152,19 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
+        [HttpPatch("{orderId}/process")]
+        public async Task<IActionResult> ProcessOrderNextStep([FromRoute] Guid orderId, [FromBody] UpdateOrderStatusDto dto, CancellationToken ct)
+        {
+            var result = await _orderService.ProcessOrder(orderId, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
         [HttpPatch("{orderId}/cancel")]
         public async Task<IActionResult> CancelOrder([FromRoute] Guid orderId, CancellationToken ct)
         {

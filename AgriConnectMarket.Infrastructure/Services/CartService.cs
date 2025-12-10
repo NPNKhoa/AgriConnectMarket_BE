@@ -64,6 +64,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                                 BatchPrice = batch.Price,
                                 Units = batch.Units,
                                 Quantity = i.Quantity,
+                                IsOutOfStock = batch.AvailableQuantity - i.Quantity < 0,
                                 ItemPrice = i.ItemPrice
                             };
                         }).ToList()
@@ -107,6 +108,11 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             if (batch is null)
                 return Result<CartItem>.Fail(MessageConstant.BATCH_NOT_FOUND);
+
+            if (batch.AvailableQuantity - dto.Quantity <= 0)
+            {
+                return Result<CartItem>.Fail(MessageConstant.OUT_OF_STOCK);
+            }
 
             decimal unitPrice = batch.Price;
 

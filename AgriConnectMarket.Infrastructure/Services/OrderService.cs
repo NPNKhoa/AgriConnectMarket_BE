@@ -186,11 +186,23 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<UpdateOrderStatusResponseDto>> UpdateOrderStatus(Guid orderId, UpdateOrderStatusDto dto, CancellationToken ct = default)
         {
-            var order = await _uow.OrderRepository.GetByIdAsync(orderId, ct);
+            var order = await _uow.OrderRepository.GetByIdAsync(orderId,true, false, false, ct);
 
             if (order is null)
             {
                 return Result<UpdateOrderStatusResponseDto>.Fail(MessageConstant.ORDER_NOT_FOUND);
+            }
+
+            if (dto.OrderStatus.Equals(OrderStatusEnum.PROCESSING))
+            {
+                foreach (var item in order.OrderItems)
+                {
+                    var existingItem = await _uow.ProductBatchRepository.GetByIdAsync(item.BatchId, ct);
+
+                    existingItem!.AvailableQuantity -= item.Quantity;
+
+                    await _uow.SaveChangesAsync(ct);
+                }
             }
 
             DateTime? deliveredDate = dto.OrderStatus.Equals(OrderStatusEnum.DELIVERED) ? _dateTimeProvider.UtcNow : null;
@@ -279,6 +291,23 @@ namespace AgriConnectMarket.Infrastructure.Services
             };
 
             return Result<CreatePreOrderResponseDto>.Success(response);
+        }
+
+        public async Task<Result<ProcessOrderResponseDto>> ProcessOrder(Guid orderId, CancellationToken ct = default)
+        {
+            var order = await _uow.OrderRepository.GetByIdAsync(orderId, ct);
+
+            if (order is null)
+            {
+                return Result<ProcessOrderResponseDto>.Fail(MessageConstant.ORDER_NOT_FOUND);
+            }
+
+            order.ProcessOrder();
+
+            await _uow.OrderRepository.UpdateAsync(order, ct);
+            await _uow.SaveChangesAsync(ct);
+
+            return Result<ProcessOrderResponseDto>.Success(new ProcessOrderResponseDto(orderId, order.OrderStatus));
         }
 
         public async Task<Result<Guid>> ApprovePreOrder(Guid orderId, CancellationToken ct = default)

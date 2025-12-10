@@ -16,7 +16,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             if (!farms.Any())
             {
-                return Result<ICollection<Season>>.Fail(MessageConstant.SEASON_NOT_FOUND);
+                return Result<ICollection<Season>>.Success([]);
             }
 
             return Result<ICollection<Season>>.Success(farms.ToList());
@@ -42,7 +42,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             if (!seasons.Any())
             {
-                return Result<ICollection<Season>>.Fail(MessageConstant.SEASON_NOT_FOUND);
+                return Result<ICollection<Season>>.Success([]);
             }
 
             return Result<ICollection<Season>>.Success(seasons.ToList());

@@ -290,7 +290,6 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<IEnumerable<FeaturedFarmResponseDto>>.Success(farms);
         }
 
-
         // HELPER
         private async Task<bool> isBatchCodePrefixConflicting(string bathCodePrefix)
         {
