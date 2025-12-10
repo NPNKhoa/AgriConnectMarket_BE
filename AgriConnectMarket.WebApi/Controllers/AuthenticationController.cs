@@ -126,7 +126,7 @@ namespace AgriConnectMarket.WebApi.Controllers
             // Validate input format
             await _forgotService.RequestOtpAsync(dto.Email, ct);
             // Always return 200 OK with generic message
-            return Ok(new { message = "If this account exists we have sent instructions to reset the password." });
+            return Ok(new { message = MessageConstant.REQUEST_OTP_SUCCESS });
         }
 
         [HttpPost("verify-otp")]
@@ -140,7 +140,7 @@ namespace AgriConnectMarket.WebApi.Controllers
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto, CancellationToken ct)
         {
             await _forgotService.ResetPasswordAsync(dto.Email, dto.ResetToken, dto.NewPassword, ct);
-            return Ok(new { message = "Password changed." });
+            return Ok(new { message = MessageConstant.PASSWORD_UPDATE_SUCCESS });
         }
     }
 }

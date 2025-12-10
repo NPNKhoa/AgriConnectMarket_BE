@@ -10,6 +10,8 @@ namespace AgriConnectMarket.Application.Specifications.ProductBatchSpecs
             ApplyCriteria(b => b.HarvestDate != null && b.Price > 0);
 
             ApplyPaging(skip, take);
+
+            AddInclude(b => b.ImageUrls);
         }
     }
 }

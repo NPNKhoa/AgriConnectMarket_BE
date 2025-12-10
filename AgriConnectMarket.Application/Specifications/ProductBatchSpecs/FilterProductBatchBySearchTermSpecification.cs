@@ -9,6 +9,7 @@ namespace AgriConnectMarket.Application.Specifications.ProductBatchSpecs
         public FilterProductBatchBySearchTermSpecification(string searchTerm = "")
         {
             string normalizedString = Normalizer.NormalizeStringToUpper(searchTerm);
+
             ApplyCriteria(b => b.Season.Product.ProductName.ToUpper().Contains(normalizedString) || b.BatchCode.Value.Contains(normalizedString));
         }
     }

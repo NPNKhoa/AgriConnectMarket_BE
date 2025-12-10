@@ -100,8 +100,8 @@ namespace AgriConnectMarket.Infrastructure.Services
             if (cart is null)
             {
                 cart = Cart.InitCart(profile.Id);
-                await _uow.CartRepository.AddAsync(cart);
-                await _uow.SaveChangesAsync();
+                await _uow.CartRepository.AddAsync(cart, ct);
+                await _uow.SaveChangesAsync(ct);
             }
 
             var batch = await _uow.ProductBatchRepository.GetByIdAsync(dto.BatchId, false, true, ct);
@@ -114,25 +114,15 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<CartItem>.Fail(MessageConstant.OUT_OF_STOCK);
             }
 
-            decimal unitPrice = batch.Price;
+            decimal batchPrice = batch.Price;
 
-            var existing = cart.CartItems!.FirstOrDefault(i => i.BatchId == dto.BatchId);
+            var existingItem = cart.CartItems!.FirstOrDefault(i => i.BatchId == dto.BatchId);
 
-            if (existing is not null)
-            {
-                existing.Quantity += dto.Quantity;
-                existing.ItemPrice = existing.Quantity * unitPrice;
+            var newItem = cart.UpdateCartItem(existingItem, dto.BatchId, batchPrice, dto.Quantity);
 
-                await _uow.CartItemRepository.UpdateAsync(existing);
-                await _uow.SaveChangesAsync();
 
-                return Result<CartItem>.Success(existing);
-            }
-
-            var newItem = CartItem.Create(cart.Id, dto.BatchId, dto.Quantity, unitPrice * dto.Quantity);
-
-            await _uow.CartItemRepository.AddAsync(newItem);
-            await _uow.SaveChangesAsync();
+            await _uow.CartRepository.UpdateAsync(cart, ct);
+            await _uow.SaveChangesAsync(ct);
 
             return Result<CartItem>.Success(newItem);
         }

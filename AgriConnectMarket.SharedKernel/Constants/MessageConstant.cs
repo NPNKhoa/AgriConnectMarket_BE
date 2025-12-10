@@ -47,6 +47,7 @@
         public const string CREATE_PAYMENT_URL_FAIL = "Fail to create payment URL. Kindly please try again!";
         public const string ORDER_DATA_NOT_FOUND = "The response data of the created order can not be found";
         public const string REQUEST_OTP_SUCCESS = "We have sent instructions to reset your password if the account exists.";
+        public const string PASSWORD_UPDATE_SUCCESS = "Your password is updated successfully. Please login again";
         public const string OUT_OF_STOCK = "Out of stock";
         public const string CAN_NOT_PROCESS_UNPAID_ORDER = "This order did not paid yet and you can't process it to the next step";
     }
