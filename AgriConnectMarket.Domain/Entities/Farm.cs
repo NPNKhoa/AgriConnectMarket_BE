@@ -12,13 +12,13 @@ namespace AgriConnectMarket.Domain.Entities
         public string? FarmDesc { get; set; }
         public string? BatchCodePrefix { get; set; }
         public string? BannerUrl { get; set; }
-        public string? CertificateUrl { get; set; }
+        public string? CertificateUrl { get; private set; }
         public string? Phone { get; set; }
         public string? Area { get; set; }
         public bool IsDelete { get; set; }
         public bool IsBanned { get; set; }
         public bool IsValidForSelling { get; set; }
-        public bool IsConfirmAsMall { get; set; }
+        public bool IsConfirmAsMall { get; private set; }
 
 
         // Auditable properties
@@ -86,6 +86,12 @@ namespace AgriConnectMarket.Domain.Entities
             this.IsConfirmAsMall = true;
 
             return true;
+        }
+
+        public void UpdateCertificateUrl(string url)
+        {
+            this.CertificateUrl = url;
+            this.IsConfirmAsMall = false;
         }
     }
 }

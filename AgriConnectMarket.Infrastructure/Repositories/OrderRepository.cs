@@ -38,6 +38,8 @@ namespace AgriConnectMarket.Infrastructure.Repositories
                 query = query.Include(o => o.Customer);
             }
 
+            query = query.OrderByDescending(o => o.OrderDate);
+
             return await query.ToListAsync();
         }
 

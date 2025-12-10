@@ -14,6 +14,6 @@
         public string Ward { get; set; }
         public string? Detail { get; set; }
 
-        public IFormFile FarmBanner { get; set; }
+        public IFormFile? FarmBanner { get; set; }
     }
 }

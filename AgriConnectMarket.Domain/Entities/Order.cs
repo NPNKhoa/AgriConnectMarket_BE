@@ -106,9 +106,38 @@ namespace AgriConnectMarket.Domain.Entities
 
         public void UpdatePaymentStatus(decimal txAmount, DateTime txUpdatedAt)
         {
-            if (txAmount == TotalPrice + ShippingFee)
+            UpdatePaymentStatus(PaymentStatusConst.PAID, txUpdatedAt);
+
+            //if (txAmount == TotalPrice + ShippingFee)
+            //{
+            //    UpdatePaymentStatus(PaymentStatusConst.PAID, txUpdatedAt);
+            //}
+        }
+
+        public void ProcessOrder()
+        {
+            string oldStatus = OrderStatus;
+
+            switch (oldStatus)
             {
-                UpdatePaymentStatus(PaymentStatusConst.PAID, txUpdatedAt);
+                case OrderStatusEnum.PENDING:
+                    if (PaymentMethod.Equals(PaymentMethodConst.ONLINE) 
+                        && !PaymentStatus.Equals(PaymentStatusConst.PAID)) // handle them case Pre-Order
+                    {
+                        throw new InvalidOperationException(MessageConstant.CAN_NOT_PROCESS_UNPAID_ORDER);
+                    }
+
+                    OrderStatus = OrderStatusEnum.PROCESSING;
+
+                    break;
+                case OrderStatusEnum.PROCESSING:
+                    OrderStatus = OrderStatusEnum.SHIPPING;
+                    break;
+                case OrderStatusEnum.SHIPPING:
+                    OrderStatus = OrderStatusEnum.DELIVERED;
+                    break;
+                default:
+                    break;
             }
         }
 
