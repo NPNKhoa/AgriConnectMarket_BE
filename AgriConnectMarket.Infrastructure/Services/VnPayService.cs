@@ -78,17 +78,18 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<CreatePaymentResponseDto>.Success(responseDto);
         }
 
-        public async Task<Result<bool>> HandleReturnAsync(IQueryCollection query, CancellationToken ct = default)
+        public async Task<Result<VnPayResponseDto>> HandleReturnAsync(IQueryCollection query, CancellationToken ct = default)
         {
             // Client returns here after payment (browser redirect)
             var dict = query.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToString());
             if (!VnPayHelper.ValidateSignature(dict, _settings.HashSecret))
-                return Result<bool>.Fail(MessageConstant.TRANSACTION_FAIL);
+                return Result<VnPayResponseDto>.Fail(MessageConstant.TRANSACTION_FAIL);
 
             // read vnp_TxnRef, vnp_ResponseCode, vnp_TransactionNo, etc.
             dict.TryGetValue("vnp_TxnRef", out var txnRef);
             dict.TryGetValue("vnp_ResponseCode", out var responseCode); // "00" success
             dict.TryGetValue("vnp_BankCode", out var bankCode);
+            dict.TryGetValue("vnp_OrderInfo", out var orderCode);
 
             // find tx by txnRef (repo method not shown; add it)
             // if success, mark order paid and update tx
@@ -97,7 +98,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             if (responseCode is null || bankCode is null || responseCode != "00")
             {
-                return Result<bool>.Fail(MessageConstant.TRANSACTION_FAIL);
+                return Result<VnPayResponseDto>.Fail(MessageConstant.TRANSACTION_FAIL);
             }
 
             var tx = await _uow.TransactionRepository.GetTransactionByRef(txnRef!, true, ct);
@@ -109,11 +110,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             await _uow.OrderRepository.UpdateAsync(tx.Order, ct);
             await _uow.SaveChangesAsync(ct);
 
-            // Example:
-            // var tx = await _repo.GetByTxnRefAsync(txnRef);
-            // if (tx != null && responseCode == "00") { await _repo.MarkOrderPaidAsync(...); update tx status; ... }
-
-            return Result<bool>.Success(responseCode == "00");
+            return Result<VnPayResponseDto>.Success(new VnPayResponseDto(responseCode, orderCode!));
         }
 
         public async Task<bool> HandleIpnAsync(IQueryCollection query)
