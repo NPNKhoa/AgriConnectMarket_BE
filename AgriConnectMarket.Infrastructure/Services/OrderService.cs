@@ -186,11 +186,16 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<UpdateOrderStatusResponseDto>> UpdateOrderStatus(Guid orderId, UpdateOrderStatusDto dto, CancellationToken ct = default)
         {
-            var order = await _uow.OrderRepository.GetByIdAsync(orderId,true, false, false, ct);
+            var order = await _uow.OrderRepository.GetByIdAsync(orderId, true, false, false, ct);
 
             if (order is null)
             {
                 return Result<UpdateOrderStatusResponseDto>.Fail(MessageConstant.ORDER_NOT_FOUND);
+            }
+
+            if (dto.OrderStatus.Equals(OrderStatusEnum.DELIVERED))
+            {
+                order.PaymentStatus = PaymentStatusConst.PAID;
             }
 
             if (dto.OrderStatus.Equals(OrderStatusEnum.PROCESSING))

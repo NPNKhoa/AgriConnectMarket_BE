@@ -82,7 +82,6 @@ namespace AgriConnectMarket.Infrastructure.Services
             existingAddress.District = dto.District;
             existingAddress.Ward = dto.Ward;
             existingAddress.Detail = dto.Detail;
-            existingAddress.IsDefault = dto.IsDefault;
 
             await _uow.AddressRepository.UpdateAsync(existingAddress, ct);
             await _uow.SaveChangesAsync();
@@ -98,6 +97,31 @@ namespace AgriConnectMarket.Infrastructure.Services
             };
 
             return Result<UpdateAddressResultDto>.Success(resultDto);
+        }
+
+        public async Task<Result<Guid>> SetDefaultAddress(Guid addressId, CancellationToken ct = default)
+        {
+            var existing = await _uow.AddressRepository.GetByIdAsync(addressId, ct);
+
+            if (existing is null)
+            {
+                return Result<Guid>.Fail(MessageConstant.ADDRESS_NOT_FOUND);
+            }
+
+            var currentDefault = await _uow.AddressRepository.GetDefaultAddressAsync(false, ct);
+
+            if (currentDefault is not null)
+            {
+                currentDefault.IsDefault = false;
+                await _uow.AddressRepository.UpdateAsync(currentDefault, ct);
+            }
+
+            existing.IsDefault = true;
+
+            await _uow.AddressRepository.UpdateAsync(existing, ct);
+            await _uow.SaveChangesAsync(ct);
+
+            return Result<Guid>.Success(addressId);
         }
 
         public async Task<Result<Guid>> DeleteAddressAsync(Guid addressId, CancellationToken ct = default)

@@ -145,7 +145,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             var item = await _uow.CartItemRepository.GetByCartAndBatchAsync(cartId, batch.Id, ct);
 
-            cart.UpdateCartItem(item, batch, dto.Quantity);
+            cart.UpdateCartItem(item, batch.Id, batch.Price, dto.Quantity);
 
             await _uow.CartRepository.UpdateAsync(cart);
 

@@ -105,6 +105,10 @@ namespace AgriConnectMarket.Infrastructure.Services
             tx.UpdateTranasctionStatus(responseCode!, bankCode!);
             tx.Order.UpdatePaymentStatus(txAmount: tx.Amount, txUpdatedAt: tx.UpdatedAt ?? _dateTimeProvider.UtcNow);
 
+            await _uow.TransactionRepository.UpdateAsync(tx, ct);
+            await _uow.OrderRepository.UpdateAsync(tx.Order, ct);
+            await _uow.SaveChangesAsync(ct);
+
             // Example:
             // var tx = await _repo.GetByTxnRefAsync(txnRef);
             // if (tx != null && responseCode == "00") { await _repo.MarkOrderPaidAsync(...); update tx status; ... }
