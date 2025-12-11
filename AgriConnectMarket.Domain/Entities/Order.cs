@@ -106,12 +106,10 @@ namespace AgriConnectMarket.Domain.Entities
 
         public void UpdatePaymentStatus(decimal txAmount, DateTime txUpdatedAt)
         {
-            UpdatePaymentStatus(PaymentStatusConst.PAID, txUpdatedAt);
-
-            //if (txAmount == TotalPrice + ShippingFee)
-            //{
-            //    UpdatePaymentStatus(PaymentStatusConst.PAID, txUpdatedAt);
-            //}
+            if (txAmount == TotalPrice + ShippingFee)
+            {
+                UpdatePaymentStatus(PaymentStatusConst.PAID, txUpdatedAt);
+            }
         }
 
         public void ProcessOrder()
@@ -121,7 +119,7 @@ namespace AgriConnectMarket.Domain.Entities
             switch (oldStatus)
             {
                 case OrderStatusEnum.PENDING:
-                    if (PaymentMethod.Equals(PaymentMethodConst.ONLINE) 
+                    if (PaymentMethod.Equals(PaymentMethodConst.ONLINE)
                         && !PaymentStatus.Equals(PaymentStatusConst.PAID)) // handle them case Pre-Order
                     {
                         throw new InvalidOperationException(MessageConstant.CAN_NOT_PROCESS_UNPAID_ORDER);

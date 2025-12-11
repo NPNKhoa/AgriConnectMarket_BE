@@ -28,18 +28,21 @@ namespace AgriConnectMarket.Domain.Entities
 
         public CartItem UpdateCartItem(CartItem? item, Guid batchId, decimal batchPrice, int quantity)
         {
-            var existingItem = _cartItems.FirstOrDefault(ci => ci.Id == item.Id);
-
-            if (item is null || existingItem is null)
+            if (item is null)
             {
                 var newItem = CartItem.Create(this.Id, batchId, quantity, batchPrice * quantity);
                 _cartItems.Add(newItem);
+
+                ReCalculateTotalPrice();
+
                 return newItem;
             }
 
-            existingItem.Quantity = quantity;
+            var existingItem = _cartItems.FirstOrDefault(ci => ci.Id == item.Id);
 
-            existingItem.ItemPrice = quantity * batchPrice;
+            existingItem!.Quantity += quantity;
+
+            existingItem!.ItemPrice = existingItem!.Quantity * batchPrice;
 
             ReCalculateTotalPrice();
 
