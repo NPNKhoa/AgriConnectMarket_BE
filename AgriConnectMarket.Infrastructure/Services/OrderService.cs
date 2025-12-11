@@ -193,6 +193,11 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<UpdateOrderStatusResponseDto>.Fail(MessageConstant.ORDER_NOT_FOUND);
             }
 
+            if (dto.OrderStatus.Equals(OrderStatusEnum.DELIVERED))
+            {
+                order.PaymentStatus = PaymentStatusConst.PAID;
+            }
+
             if (dto.OrderStatus.Equals(OrderStatusEnum.PROCESSING))
             {
                 foreach (var item in order.OrderItems)
