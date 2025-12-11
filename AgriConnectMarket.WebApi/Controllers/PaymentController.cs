@@ -29,14 +29,7 @@ namespace AgriConnectMarket.WebApi.Controllers
             // Querystring contains vnp_* parameters
             var result = await _VNPayService.HandleReturnAsync(Request.Query);
 
-            if (result.IsSuccess && result.Value)
-            {
-                return Redirect("http://localhost:5173/payment-success");
-            }
-            else
-            {
-                return Redirect("http://localhost:5173/payment-failed");
-            }
+            return Redirect($"http://localhost:5173/payment-result?responseCode={result.Value!.responseCode}&orderCode={result.Value.orderCode}");
         }
 
         [HttpGet("vnpay-ipn")]
