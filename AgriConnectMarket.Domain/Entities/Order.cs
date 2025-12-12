@@ -106,7 +106,7 @@ namespace AgriConnectMarket.Domain.Entities
 
         public void UpdatePaymentStatus(decimal txAmount, DateTime txUpdatedAt)
         {
-            if (txAmount == TotalPrice + ShippingFee)
+            if (txAmount == TotalPrice)
             {
                 UpdatePaymentStatus(PaymentStatusConst.PAID, txUpdatedAt);
             }

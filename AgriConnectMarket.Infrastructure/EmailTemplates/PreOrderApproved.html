@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="en" style="margin:0; padding:0; font-family:Arial, Helvetica, sans-serif;">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Pre-Order Approved</title>
+	</head>
+
+	<body style="margin:0; padding:0; background:#f6f8fa; font-family:Arial, Helvetica, sans-serif;">
+
+		<table width="100%" border="0" cellpadding="0" cellspacing="0" style="background:#f6f8fa; padding:40px 0;">
+			<tr>
+				<td align="center">
+					<table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+
+						<!-- Header -->
+						<tr>
+							<td style="background:#4CAF50; padding:20px; text-align:center; color:#ffffff;">
+								<h1 style="margin:0; font-size:24px;">Your Pre-Order Has Been Approved</h1>
+							</td>
+						</tr>
+
+						<!-- Message Section -->
+						<tr>
+							<td style="padding:30px;">
+								<p style="font-size:16px; line-height:1.6; color:#333;">
+									Dear Customer,
+								</p>
+
+								<p style="font-size:16px; line-height:1.6; color:#333;">
+									We are pleased to inform you that your pre-order has been
+									<strong style="color:#4CAF50;">successfully approved</strong>.
+									Our system is now preparing to transfer your deposit to the farmer, ensuring that your order is secured and ready for fulfillment.
+									Thank you for your trust—we truly appreciate your support of our agricultural partners.
+								</p>
+
+								<!-- Bank Information -->
+								<h3 style="margin-top:30px; font-size:18px; color:#4CAF50;">Bank Information</h3>
+								<table cellpadding="8" cellspacing="0" style="width:100%; background:#f9f9f9; border-radius:8px;">
+									<tr>
+										<td style="font-size:15px; color:#555;">Bank Name:</td>
+										<td style="font-size:15px; font-weight:bold; color:#333;">{{bankName}}</td>
+									</tr>
+									<tr>
+										<td style="font-size:15px; color:#555;">Account Number:</td>
+										<td style="font-size:15px; font-weight:bold; color:#333;">{{accountNumber}}</td>
+									</tr>
+									<tr>
+										<td style="font-size:15px; color:#555;">Account Holder:</td>
+										<td style="font-size:15px; font-weight:bold; color:#333;">{{Fullname}}</td>
+									</tr>
+								</table>
+
+								<p style="font-size:15px; margin-top:15px; color:#d9534f;">
+									⚠️ Please ensure that all payment details are entered exactly as shown above
+									to avoid any delays or failed transfers.
+								</p>
+
+								<!-- Notice Section -->
+								<h3 style="margin-top:30px; font-size:18px; color:#4CAF50;">Important Notice</h3>
+
+								<p style="font-size:16px; line-height:1.6; color:#333;">
+									Your order is expected to be delivered on:
+									<strong>{{deliveryDate}}</strong>
+								</p>
+
+								<p style="font-size:16px; line-height:1.6; color:#c0392b; font-weight:bold; background:#fdecea; padding:12px 16px; border-left:4px solid #c0392b; border-radius:6px;">
+									Please complete the deposit transfer within
+									<strong>2 days</strong> from the date of this email
+									({{emailSentDate}}) to secure your order.
+								</p>
+
+								<p style="font-size:16px; line-height:1.6; color:#333; margin-top:25px;">
+									If you have any questions, feel free to contact our support team.
+								</p>
+
+								<p style="font-size:16px; line-height:1.6; color:#333;">
+									Warm regards,<br />
+									<strong>AgriConnect Market</strong>
+								</p>
+							</td>
+						</tr>
+
+						<!-- Footer -->
+						<tr>
+							<td style="background:#f0f0f0; padding:15px; text-align:center; color:#777; font-size:13px;">
+								© {{year}} AgriConnect Market. All rights reserved.
+							</td>
+						</tr>
+
+					</table>
+				</td>
+			</tr>
+		</table>
+
+	</body>
+</html>

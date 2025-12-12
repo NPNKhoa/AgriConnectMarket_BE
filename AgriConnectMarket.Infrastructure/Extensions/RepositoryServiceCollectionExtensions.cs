@@ -30,6 +30,7 @@ namespace AgriConnectMarket.Infrastructure.Extensions
             services.AddScoped<ICareEventRepository, CareEventRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<IPasswordOtpRepository, PasswordOtpRepository>();
+            services.AddScoped<IViolationReportRepository, ViolationRepository>();
 
             return services;
         }

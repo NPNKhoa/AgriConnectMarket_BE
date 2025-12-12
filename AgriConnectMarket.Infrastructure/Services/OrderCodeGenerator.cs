@@ -11,7 +11,7 @@ namespace AgriConnectMarket.Infrastructure.Services
         {
             var ts = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
             var suffix = RandomAlphaNumeric(4);
-            return $"{Prefix}-{ts}-{suffix}";
+            return $"{prefix}-{ts}-{suffix}";
         }
 
 

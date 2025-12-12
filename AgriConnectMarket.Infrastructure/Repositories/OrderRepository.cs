@@ -93,6 +93,29 @@ namespace AgriConnectMarket.Infrastructure.Repositories
             return await query.ToListAsync(ct);
         }
 
+        public async Task<IEnumerable<Order>> GetPreOrdersByFarmIdAsync(Guid farmId, bool includeItems = false, bool includepPreOrder = false, bool includeProfile = false, CancellationToken ct = default)
+        {
+            var query = _dbContext
+                .Set<Order>()
+                .Where(o => o.OrderType.Equals(OrderTypeConst.PREORDER) && o.PreOrder.Batch.Season.FarmId == farmId);
+
+            if (includeItems)
+            {
+                query = query.Include(o => o.OrderItems);
+            }
+
+            if (includepPreOrder)
+            {
+                query = query.Include(o => o.PreOrder);
+            }
+
+            if (includeProfile)
+            {
+                query = query.Include(o => o.Customer);
+            }
+
+            return await query.ToListAsync(ct);
+        }
 
         public async Task<Order> GetByIdAsync(Guid orderId, bool includeItems = false, bool includepPreOrder = false, bool includeProfile = false, CancellationToken ct = default)
         {
@@ -133,6 +156,40 @@ namespace AgriConnectMarket.Infrastructure.Repositories
             var query = _dbContext
                 .Set<Order>()
                 .Where(o => o.OrderCode == orderCode);
+
+            if (includeItems)
+            {
+                query = query.Include(o => o.OrderItems)
+                                .ThenInclude(i => i.Batch)
+                                    .ThenInclude(b => b.Season)
+                                        .ThenInclude(s => s.Farm)
+                                            .ThenInclude(f => f.Address)
+                                .Include(o => o.OrderItems)
+                                    .ThenInclude(i => i.Batch)
+                                        .ThenInclude(b => b.Season)
+                                            .ThenInclude(s => s.Product)
+                                                .ThenInclude(p => p.Category);
+            }
+
+            if (includepPreOrder)
+            {
+                query = query.Include(o => o.PreOrder);
+            }
+
+            if (includeProfile)
+            {
+                query = query.Include(o => o.Customer);
+            }
+
+            return await query.FirstOrDefaultAsync(ct);
+        }
+
+
+        public async Task<Order> GetByPreOrderCodeAsync(string orderCode, bool includeItems = false, bool includepPreOrder = false, bool includeProfile = false, CancellationToken ct = default)
+        {
+            var query = _dbContext
+                .Set<Order>()
+                .Where(o => o.OrderType == OrderTypeConst.PREORDER && o.OrderCode == orderCode);
 
             if (includeItems)
             {
