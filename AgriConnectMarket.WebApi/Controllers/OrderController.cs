@@ -20,30 +20,6 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            //if (dto.PaymentMethod is not null && dto.PaymentMethod.Contains(PaymentMethodConst.ONLINE))
-            //{
-            //    var clientIp = HttpContext.Connection.RemoteIpAddress!.MapToIPv4().ToString() ?? "127.0.0.1";
-
-            //    if (result.Value is null)
-            //    {
-            //        return BadRequest(ApiResponse.FailResponse(MessageConstant.ORDER_DATA_NOT_FOUND));
-            //    }
-
-            //    var vnPayResult = await _vnPayService.CreatePaymentUrlAsync(result.Value.OrderId, clientIp, ct);
-
-            //    if (!vnPayResult.IsSuccess)
-            //    {
-            //        return BadRequest(ApiResponse.FailResponse(MessageConstant.CREATE_PAYMENT_URL_FAIL));
-            //    }
-
-            //    if (result.Value is null)
-            //    {
-            //        return BadRequest(ApiResponse.FailResponse(MessageConstant.UNKNOWN_ERROR));
-            //    }
-
-            //    Redirect(vnPayResult.Value!.PaymentUrl);
-            //}
-
             return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
@@ -100,10 +76,49 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
+        [HttpGet("pre-orders/{orderId}")]
+        public async Task<IActionResult> GetPreOrderDetail([FromRoute] Guid orderId, CancellationToken ct)
+        {
+            var result = await _orderService.GetPreOrderDetailAsync(orderId, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
+        [HttpGet("pre-orders/order-code/{orderCode}")]
+        public async Task<IActionResult> GetPreOrderDetail([FromRoute] string orderCode, CancellationToken ct)
+        {
+            var result = await _orderService.GetOrderByOrderCodeAsync(orderCode, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
         [HttpGet("farm/{farmId}")]
         public async Task<IActionResult> GetFarmOrders([FromRoute] Guid farmId, CancellationToken ct)
         {
             var result = await _orderService.GetFarmOrderAsync(farmId, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
+        [HttpGet("/api/farm/{farmId}/pre-orders")]
+        public async Task<IActionResult> GetFarmPreOrders([FromRoute] Guid farmId, CancellationToken ct)
+        {
+            var result = await _orderService.GetFarmPreOrderAsync(farmId, ct);
 
             if (!result.IsSuccess)
             {
@@ -138,6 +153,20 @@ namespace AgriConnectMarket.WebApi.Controllers
 
             return Ok(ApiResponse.SuccessResponse(result.Value));
         }
+
+        [HttpPatch("pre-orders/{orderId}/approve")]
+        public async Task<IActionResult> ApprovePreOrders([FromRoute] Guid orderId, [FromBody] ApprovePreOrder dto, CancellationToken ct)
+        {
+            var result = await _orderService.ApprovePreOrder(orderId, dto, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
 
         [HttpPatch("{orderId}/order-status")]
         public async Task<IActionResult> UpdateOrderStatus([FromRoute] Guid orderId, [FromBody] UpdateOrderStatusDto dto, CancellationToken ct)

@@ -23,6 +23,7 @@ namespace AgriConnectMarket.Infrastructure.Data
         public ICareEventRepository CareEventRepository { get; }
         public ITransactionRepository TransactionRepository { get; set; }
         public IPasswordOtpRepository PasswordOtpRepository { get; set; }
+        public IViolationReportRepository ViolationReportRepository { get; set; }
 
         public UnitOfWork
             (
@@ -44,7 +45,8 @@ namespace AgriConnectMarket.Infrastructure.Data
                 IEventTypeRepository eventTypeRepository,
                 ICareEventRepository careEventRepository,
                 ITransactionRepository transactionRepository,
-                IPasswordOtpRepository passwordOtpRepository
+                IPasswordOtpRepository passwordOtpRepository,
+                IViolationReportRepository violationReportRepository
             )
         {
             _context = context;
@@ -67,6 +69,7 @@ namespace AgriConnectMarket.Infrastructure.Data
             CareEventRepository = careEventRepository;
             TransactionRepository = transactionRepository;
             PasswordOtpRepository = passwordOtpRepository;
+            ViolationReportRepository = violationReportRepository;
         }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

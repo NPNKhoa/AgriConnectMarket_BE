@@ -29,8 +29,8 @@ namespace AgriConnectMarket.Domain.Entities
             Order = order;
         }
 
-        public static PreOrder Create(Order order, Guid productId, decimal quantity, string note = "")
-            => new PreOrder(order, productId, quantity, note);
+        public static PreOrder Create(Order order, Guid batchId, decimal quantity, string note = "")
+            => new PreOrder(order, batchId, quantity, note);
 
         public void Approve(DateTime releaseDate)
         {
