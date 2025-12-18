@@ -33,11 +33,11 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<IEnumerable<FavoriteFarm>>.Success(favoriteFarms);
         }
 
-        public async Task<Result<FavoriteFarm>> AddToListAsync(UpdateFavoriteFarmDto dto, CancellationToken ct = default)
+        public async Task<Result<string>> AddToListAsync(UpdateFavoriteFarmDto dto, CancellationToken ct = default)
         {
             if (_currentUserService.UserId is null)
             {
-                return Result<FavoriteFarm>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
+                return Result<string>.Fail(MessageConstant.NOT_AUTHENTICATED_USER);
             }
 
             var userId = _currentUserService.UserId.Value;
@@ -45,21 +45,24 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             if (profile is null)
             {
-                return Result<FavoriteFarm>.Fail(MessageConstant.PROFILE_NOT_FOUND);
+                return Result<string>.Fail(MessageConstant.PROFILE_NOT_FOUND);
             }
 
             var existing = await _uow.FavoriteFarmRepository.GetByFKsAsync(profile.Id, dto.FarmId);
 
             if (existing is not null)
             {
-                return Result<FavoriteFarm>.Fail(MessageConstant.FARM_EXIST_IN_FAVORITE);
+                await _uow.FavoriteFarmRepository.DeleteAsync(existing, ct);
+                await _uow.SaveChangesAsync(ct);
+
+                return Result<string>.Fail("removed");
             }
 
             var entity = FavoriteFarm.Create(profile.Id, dto.FarmId);
             await _uow.FavoriteFarmRepository.AddAsync(entity, ct);
             await _uow.SaveChangesAsync();
 
-            return Result<FavoriteFarm>.Success(entity);
+            return Result<string>.Success("added");
         }
 
         public async Task<Result<Guid>> RemoveFromListAsync(UpdateFavoriteFarmDto dto, CancellationToken ct = default)

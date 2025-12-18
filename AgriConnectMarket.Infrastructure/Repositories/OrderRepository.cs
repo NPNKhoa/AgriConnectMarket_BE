@@ -56,11 +56,6 @@ namespace AgriConnectMarket.Infrastructure.Repositories
                                             .ThenInclude(p => p.Category);
             }
 
-            if (includePreOrder)
-            {
-                query = query.Include(o => o.PreOrder);
-            }
-
             if (includeProfile)
             {
                 query = query.Include(o => o.Customer);

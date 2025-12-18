@@ -71,7 +71,8 @@ namespace AgriConnectMarket.Infrastructure.Repositories
             {
                 query = query
                     .Include(pb => pb.Season)
-                        .ThenInclude(s => s.Product);
+                        .ThenInclude(s => s.Product)
+                    .Include(pb => pb.ImageUrls);
             }
 
             return await query.ToListAsync(ct);

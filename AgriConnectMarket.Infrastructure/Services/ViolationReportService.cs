@@ -32,7 +32,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             await _uow.ViolationReportRepository.AddAsync(entity, ct);
             await _uow.SaveChangesAsync(ct);
 
-            var response = new AddViolationReportResponseDto(profile.Fullname, entity.ReportContent, entity.EvidenceUrl ?? "", entity.CreatedAt);
+            var response = new AddViolationReportResponseDto(profile.Fullname, entity.ReportContent, entity.EvidenceUrl ?? "", entity.FarmId, entity.CreatedAt);
 
             return Result<AddViolationReportResponseDto>.Success(response);
         }
@@ -46,7 +46,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<IEnumerable<AddViolationReportResponseDto>>.Success([]);
             }
 
-            var response = entities.Select(e => new AddViolationReportResponseDto(e.Customer.Fullname, e.ReportContent, e.EvidenceUrl ?? "", e.CreatedAt));
+            var response = entities.Select(e => new AddViolationReportResponseDto(e.Customer?.Fullname, e.ReportContent, e.EvidenceUrl ?? "", e.FarmId, e.CreatedAt));
 
             return Result<IEnumerable<AddViolationReportResponseDto>>.Success(response);
         }

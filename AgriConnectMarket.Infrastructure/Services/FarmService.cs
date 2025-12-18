@@ -9,6 +9,7 @@ using AgriConnectMarket.SharedKernel.Guards;
 using AgriConnectMarket.SharedKernel.Normalization;
 using AgriConnectMarket.SharedKernel.Result;
 using AgriConnectMarket.SharedKernel.Specifications;
+using Microsoft.Identity.Client;
 
 namespace AgriConnectMarket.Infrastructure.Services
 {
@@ -288,6 +289,23 @@ namespace AgriConnectMarket.Infrastructure.Services
             .Take(5);
 
             return Result<IEnumerable<FeaturedFarmResponseDto>>.Success(farms);
+        }
+
+        public async Task<Result<Guid>> BanFarm(Guid farmId, CancellationToken ct = default)
+        {
+            var existing = await _uow.FarmRepository.GetByIdAsync(farmId, ct);
+
+            if (existing is null)
+            {
+                return Result<Guid>.Fail(MessageConstant.FARM_NOT_FOUND);
+            }
+
+            existing.IsBanned = true;
+
+            await _uow.FarmRepository.UpdateAsync(existing, ct);
+            await _uow.SaveChangesAsync(ct);
+
+            return Result<Guid>.Success(farmId);
         }
 
         // HELPER
