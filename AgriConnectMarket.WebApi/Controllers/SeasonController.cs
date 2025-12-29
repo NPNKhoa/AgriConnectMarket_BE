@@ -66,6 +66,17 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_UPDATE_SUCCESS_MESSAGE));
         }
 
+        [HttpPatch("{seasonId}/status")]
+        public async Task<IActionResult> UpdateSeasonStatus([FromRoute] Guid seasonId, [FromBody] UpdateSeasonStatusDto dto, CancellationToken ct)
+        {
+            var result = await _seasonService.UpdateSeasonStatusAsync(seasonId, dto, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_UPDATE_SUCCESS_MESSAGE));
+        }
+
         [HttpDelete("{seasonId}")]
         public async Task<IActionResult> UpdateSeason([FromRoute] Guid seasonId, CancellationToken ct)
         {

@@ -300,6 +300,9 @@ namespace AgriConnectMarket.Infrastructure.Data
                 b.Property(x => x.Consumed).IsRequired();
                 b.Property(x => x.Purpose).IsRequired();
             });
+
+            // SEEDING
+            CareEventTypeSeeding.ExecuteSeeding(modelBuilder);
         }
     }
 }
