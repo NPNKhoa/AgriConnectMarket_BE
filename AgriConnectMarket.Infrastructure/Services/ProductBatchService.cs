@@ -8,6 +8,7 @@ using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Interfaces;
 using AgriConnectMarket.SharedKernel.Result;
 using AgriConnectMarket.SharedKernel.Specifications;
+using Microsoft.Extensions.FileSystemGlobbing;
 using System.Data;
 
 namespace AgriConnectMarket.Infrastructure.Services
@@ -134,6 +135,27 @@ namespace AgriConnectMarket.Infrastructure.Services
             {
                 return Result<IEnumerable<ProductBatch>>.Success([]);
             }
+
+            var responseDto = batch.Select(b =>
+            {
+                List<string> urls = b.ImageUrls.Select(i => i.ImageUrl).ToList();
+                return new ProductBatchResponseDto(
+                    b.Id,
+                    b.BatchCode.Value,
+                    b.Season?.Product?.ProductName,
+                    b.Season?.SeasonName,
+                    b.Season?.Product?.Category?.CategoryName,
+                    b.Season?.Farm?.FarmName,
+                    b.CreatedAt,
+                    b.PlantingDate,
+                    b.HarvestDate,
+                    b.TotalYield,
+                    b.AvailableQuantity,
+                    b.Price,
+                    b.Units,
+                    urls
+                );
+            }).ToList();
 
             return Result<IEnumerable<ProductBatch>>.Success(batch);
         }

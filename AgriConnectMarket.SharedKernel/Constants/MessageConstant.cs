@@ -8,6 +8,8 @@
         public const string COMMON_DELETE_SUCCESS_MESSAGE = "Delete successfully!";
         public const string UNKNOWN_ERROR = "An unexpected error occured!";
         public const string EXISTING_USERNAME = "Username already exist";
+        public const string BLOCKED_ACCOUNT = "Your account is blocked, please contact the admin for more information!";
+        public const string BANNED_FARM = "Your farm is banner, please contact the admin for more information!";
         public const string LOGIN_SUCCESS = "Login success!";
         public const string EMAIL_NOT_FOUND = "This email is not registered yet";
         public const string PROFILE_NOT_FOUND = "Can not find the requested profile";

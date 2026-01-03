@@ -240,7 +240,10 @@ namespace AgriConnectMarket.Infrastructure.Data
             {
                 i.ToTable("PreOrders");
 
-                i.HasKey(i => i.OrderId).HasName("PreOrderId");
+                i.HasKey(i => i.OrderId);
+
+                i.Property(i => i.OrderId)
+                    .HasColumnName("OrderId");
 
                 i.HasOne(i => i.Order)
                     .WithOne(o => o.PreOrder)
@@ -299,6 +302,23 @@ namespace AgriConnectMarket.Infrastructure.Data
                 b.Property(x => x.AttemptCount).IsRequired();
                 b.Property(x => x.Consumed).IsRequired();
                 b.Property(x => x.Purpose).IsRequired();
+            });
+
+            modelBuilder.Entity<ViolationReport>(r =>
+            {
+                r.ToTable("ViolationReports");
+
+                r.HasKey(r => r.Id);
+
+                r.HasOne(r => r.Customer)
+                    .WithMany(c => c.ViolationReports)
+                    .HasForeignKey(r => r.CustomerId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                r.HasOne(r => r.Farm)
+                    .WithMany(f => f.ViolationReports)
+                    .HasForeignKey(r => r.FarmId)
+                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             // SEEDING

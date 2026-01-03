@@ -35,6 +35,7 @@ namespace AgriConnectMarket.Domain.Entities
 
         public ICollection<Season> Seasons { get; set; }
         public ICollection<FavoriteFarm> FavoriteFarms { get; set; }
+        public virtual ICollection<ViolationReport> ViolationReports { get; set; }
 
         public Farm() { }
 

@@ -53,7 +53,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             if (existing is not null)
             {
                 await _uow.FavoriteFarmRepository.DeleteAsync(existing, ct);
-                await _uow.SaveChangesAsync();
+                await _uow.SaveChangesAsync(ct);
 
                 return Result<string>.Success("removed");
             }

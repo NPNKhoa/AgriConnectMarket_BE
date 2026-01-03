@@ -64,7 +64,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<IEnumerable<Order>>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
             }
 
-            var orders = await _uow.OrderRepository.GetOrderByProfileIdAsync(profile.Id, true, true, false, ct);
+            var orders = await _uow.OrderRepository.GetPreOrderByProfileIdAsync(profile.Id, true, true, false, ct);
 
             if (!orders.Any())
             {
@@ -389,7 +389,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 IsHtml = true
             });
 
-            order.Approve(DateTime.UtcNow);
+            order.Approve(dto.expectedReleaseDate);
 
             await _uow.PreOrderRepository.UpdateAsync(order, ct);
             await _uow.SaveChangesAsync(ct);
