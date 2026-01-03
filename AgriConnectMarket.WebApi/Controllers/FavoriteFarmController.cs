@@ -32,7 +32,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(result.Value);
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
 
         [HttpPatch("")]

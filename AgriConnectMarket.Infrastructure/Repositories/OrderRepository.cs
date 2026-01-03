@@ -90,7 +90,7 @@ namespace AgriConnectMarket.Infrastructure.Repositories
                 query = query.Include(o => o.Customer);
             }
 
-            return await query.ToListAsync(ct);
+            return await query.OrderByDescending(o => o.CreatedAt).ToListAsync(ct);
         }
 
         public async Task<IEnumerable<Order>> GetPreOrdersByFarmIdAsync(Guid farmId, bool includeItems = false, bool includepPreOrder = false, bool includeProfile = false, CancellationToken ct = default)

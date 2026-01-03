@@ -127,6 +127,11 @@ namespace AgriConnectMarket.Domain.Entities
 
                     OrderStatus = OrderStatusEnum.PROCESSING;
 
+                    foreach (var item in _orderItems)
+                    {
+                        item.Batch.AvailableQuantity -= item.Quantity;
+                    }
+
                     break;
                 case OrderStatusEnum.PROCESSING:
                     OrderStatus = OrderStatusEnum.SHIPPING;

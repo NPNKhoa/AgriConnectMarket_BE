@@ -11,81 +11,82 @@ namespace AgriConnectMarket.Infrastructure.Data
                 new CareEventType
                 (
                     Guid.NewGuid(),
-                    "Chuẩn bị đất",
-                    "Hoạt động chuẩn bị đất trước khi gieo trồng.",
-                    "[\"Phương pháp\",\"Máy móc thiết bị sử dụng\",\"Độ sâu làm đất\",\"Số lần làm đất\",\"Chất cải tạo đất (loại)\",\"Chất cải tạo đất (lượng)\",\"Nhiên liệu tiêu thụ\",\"Ghi chú\"]"
+                    "Soil preparation",
+                    "Prepare the soil before planting.",
+                    "[\"Method\",\"Equipment used\",\"Tillage depth\",\"Number of passes\",\"Soil amendment (type)\",\"Soil amendment (amount)\",\"Fuel consumed\",\"Notes\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
-                    "Kiểm tra đất",
-                    "Phân tích mẫu đất và ghi nhận kết quả.",
-                    "[\"Ngày lấy mẫu\",\"Vị trí lấy mẫu\",\"Phòng thí nghiệm\",\"Chỉ tiêu phân tích\",\"Kết quả\",\"Khuyến nghị\",\"Tệp đính kèm\"]"
+                    "Soil testing",
+                    "Analyze soil samples and record results.",
+                    "[\"Sampling location\",\"Laboratory\",\"Parameters tested\",\"Results\",\"Recommendations\",\"Attachments\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
-                    "Gieo trồng / cấy",
-                    "Ghi nhận quá trình gieo hạt hoặc trồng cây con.",
-                    "[\"Giống / mã lô\",\"Nhà cung cấp\",\"Mật độ / khoảng cách\",\"Hình thức gieo trồng\",\"Tỷ lệ nảy mầm\",\"Ngày hoàn thành\",\"Ghi chú\"]"
+                    "Planting / transplanting",
+                    "Record the planting or transplanting process.",
+                    "[\"Variety / seed lot\",\"Supplier\",\"Spacing / density\",\"Planting method\",\"Germination rate\",\"Notes\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
-                    "Tưới nước",
-                    "Hoạt động tưới và cung cấp nước cho cây.",
-                    "[\"Phương pháp tưới\",\"Thời gian tưới\",\"Lượng nước\",\"Nguồn nước\",\"Xử lý nước\",\"Ghi chú thời tiết\"]"
+                    "Irrigation",
+                    "Provide water to crops.",
+                    "[\"Irrigation method\",\"Duration\",\"Water volume\",\"Water source\",\"Water treatment\",\"Weather notes\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
-                    "Bón phân",
-                    "Cung cấp dinh dưỡng cho cây trồng.",
-                    "[\"Tên sản phẩm\",\"Công thức\",\"Loại (hữu cơ/hoá học)\",\"Liều lượng\",\"Phương pháp bón\",\"Thời gian cách ly\",\"Nhà cung cấp\",\"Mã lô\",\"Ghi chú\"]"
+                    "Fertilization",
+                    "Provide nutrients to the crop.",
+                    "[\"Product name\",\"Formula\",\"Type (organic/synthetic)\",\"Rate\",\"Application method\",\"Withholding period\",\"Supplier\",\"Notes\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
-                    "Phòng trừ sâu bệnh",
-                    "Quản lý sâu bệnh bằng biện pháp sinh học hoặc hoá học.",
-                    "[\"Đối tượng (sâu/bệnh)\",\"Tên sản phẩm\",\"Hoạt chất\",\"Liều lượng\",\"Nồng độ pha\",\"PHI (thời gian cách ly)\",\"REI (thời gian cách ly lao động)\",\"Thiết bị phun\",\"Thời tiết khi phun\",\"Xác nhận PPE\",\"Ghi chú\"]"
+                    "Pest and disease control",
+                    "Manage pests or diseases using biological or chemical methods.",
+                    "[\"Target pest/disease\",\"Product name\",\"Active ingredient\",\"Rate\",\"Dilution\",\"PHI (pre-harvest interval)\",\"REI (re-entry interval)\",\"Application equipment\",\"Weather during application\",\"PPE confirmation\",\"Notes\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
-                    "Làm cỏ",
-                    "Loại bỏ cỏ dại để giảm cạnh tranh dinh dưỡng.",
-                    "[\"Phương pháp\",\"Diện tích xử lý\",\"Nhân công\",\"Mức độ cỏ dại\",\"Ghi chú\"]"
+                    "Weeding",
+                    "Remove weeds to reduce competition.",
+                    "[\"Method\",\"Area treated\",\"Labor\",\"Weed pressure\",\"Notes\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
-                    "Tỉa / tạo tán",
-                    "Điều chỉnh tán lá, cành hoặc quả để tối ưu sinh trưởng.",
-                    "[\"Loại tác động\",\"Mục đích\",\"Khu vực / số cây\",\"Xử lý phế phẩm\",\"Ghi chú\"]"
+                    "Pruning / training",
+                    "Adjust canopy, branches, or fruits to optimize growth.",
+                    "[\"Operation type\",\"Purpose\",\"Area / number of plants\",\"Waste handling\",\"Notes\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
-                    "Theo dõi sinh trưởng",
-                    "Ghi nhận tình trạng sinh trưởng và phát hiện sớm rủi ro.",
-                    "[\"Nhận xét\",\"Chiều cao / sinh trưởng\",\"Dấu hiệu sâu bệnh\",\"Ảnh chụp\",\"Khuyến nghị\",\"Công việc tiếp theo\"]"
+                    "Growth monitoring",
+                    "Record plant growth and identify risks early.",
+                    "[\"Observations\",\"Growth/height\",\"Pest or disease signs\",\"Photos\",\"Recommendations\",\"Follow-up tasks\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
-                    "Thụ phấn",
-                    "Hoạt động hỗ trợ hoặc ghi nhận quá trình thụ phấn.",
-                    "[\"Hình thức thụ phấn\",\"Vị trí tổ ong\",\"Mật độ ong\",\"Tỷ lệ đậu quả ước tính\",\"Ghi chú\"]"
+                    "Pollination",
+                    "Support or record pollination activities.",
+                    "[\"Pollination method\",\"Hive placement\",\"Bee density\",\"Estimated fruit set\",\"Notes\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
-                    "Thu hoạch",
-                    "Ghi nhận thời điểm và sản lượng thu hoạch.",
-                    "[\"Ngày thu hoạch\",\"Thời gian\",\"Sản lượng\",\"Phân loại\",\"Nhóm lao động\",\"Mã lô sau thu hoạch\",\"Nơi chuyển đến\",\"Ghi chú\"]"
+                    "Harvest",
+                    "Record harvest timing and quantities.",
+                    "[\"Time\",\"Quantity\",\"Grade\",\"Worker team\",\"Post-harvest lot\",\"Destination\",\"Notes\"]"
                 )
             );
         }
+
     }
 }
