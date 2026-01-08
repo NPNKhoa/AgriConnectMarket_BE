@@ -1,14 +1,13 @@
 ﻿using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Entities;
+using AgriConnectMarket.SharedKernel.Guards;
 using AgriConnectMarket.SharedKernel.Interfaces;
 
 namespace AgriConnectMarket.Domain.Entities
 {
     public class Transaction : BaseEntity<Guid>, IAuditableEntity
     {
-        public Guid OrderId { get; set; }
         public string TransactionRef { get; set; }
-        public string TransactionNo { get; set; }
         public string BankCode { get; set; }
         public decimal Amount { get; set; }
         public string Status { get; set; }
@@ -18,32 +17,38 @@ namespace AgriConnectMarket.Domain.Entities
         public DateTime? UpdatedAt { get; set; }
         public string? UpdatedBy { get; set; }
 
-        public virtual Order Order { get; set; }
+        private readonly List<Order> _orders = new();
+        public IReadOnlyCollection<Order> Orders => _orders.AsReadOnly();
 
         public Transaction()
         {
 
         }
 
-        private Transaction(Guid orderId, string txRef, string txNo, decimal amount, DateTime createdAt)
+        private Transaction(string txRef, decimal amount, DateTime createdAt)
         {
-            this.OrderId = orderId;
             this.TransactionRef = txRef;
-            this.TransactionNo = txNo;
             this.Status = TransactionStatusConst.PENDING;
             this.CreatedAt = createdAt;
             this.Amount = amount;
-            this.BankCode = "NCB";
+            this.BankCode = "";
         }
 
-        public static Transaction Create(Guid orderId, string txRef, string txNo, decimal amount, DateTime createdAt)
-            => new Transaction(orderId, txRef, txNo, amount, createdAt);
+        public static Transaction Create(string txRef, decimal amount, DateTime createdAt)
+            => new Transaction(txRef, amount, createdAt);
 
         public void UpdateTranasctionStatus(string vnpResponseCode, string bankCode)
         {
             this.Status = vnpResponseCode.Equals("00") ? TransactionStatusConst.SUCCESS : TransactionStatusConst.FAIL;
             this.BankCode = bankCode ?? "";
             this.UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void UpdateBankCode(string bankCode)
+        {
+            Guard.AgainstNullOrEmpty(bankCode, nameof(bankCode));
+
+            BankCode = bankCode;
         }
     }
 }

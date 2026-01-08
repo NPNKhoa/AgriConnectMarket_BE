@@ -2,6 +2,6 @@
 {
     public class CreatePaymentRequestDto
     {
-        public Guid OrderId { get; set; }
+        public IEnumerable<Guid> OrderId { get; set; }
     }
 }

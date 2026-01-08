@@ -18,7 +18,7 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
             if (includeOrder)
             {
-                query = query.Include(t => t.Order);
+                query = query.Include(tx => tx.Orders);
             }
 
             return await query.FirstOrDefaultAsync();

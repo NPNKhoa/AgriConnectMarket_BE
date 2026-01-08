@@ -212,7 +212,6 @@ namespace AgriConnectMarket.Infrastructure.Services
                     ? null
                     : new TransactionDto(
                         order.Transaction.TransactionRef,
-                        order.Transaction.TransactionNo,
                         order.Transaction.BankCode,
                         order.Transaction.Amount,
                         order.Transaction.Status,

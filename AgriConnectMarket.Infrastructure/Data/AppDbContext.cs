@@ -221,6 +221,12 @@ namespace AgriConnectMarket.Infrastructure.Data
                     .HasForeignKey(o => o.CustomerId)
                     .IsRequired()
                     .OnDelete(DeleteBehavior.NoAction);
+
+                o.HasOne(o => o.Transaction)
+                    .WithMany(tx => tx.Orders)
+                    .HasForeignKey(o => o.TransactionId)
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<OrderItem>(i =>
@@ -282,12 +288,6 @@ namespace AgriConnectMarket.Infrastructure.Data
                 tx.ToTable("Transaction");
 
                 tx.HasKey(tx => tx.Id).HasName("TransactionId");
-
-                tx.HasOne(tx => tx.Order)
-                    .WithOne(o => o.Transaction)
-                    .HasForeignKey<Transaction>(tx => tx.OrderId)
-                    .IsRequired()
-                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             modelBuilder.Entity<PasswordOtp>(b =>

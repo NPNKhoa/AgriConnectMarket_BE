@@ -42,6 +42,7 @@
         public const string CART_NOT_INIT = "This cart was not initialized yet. Please try again!";
         public const string CART_ITEM_NOT_FOUND = "Can not found this item";
         public const string ORDER_NOT_FOUND = "Can not found order(s)";
+        public const string ORDER_ID_REQUIRED = "Order ID(s) is required!";
         public const string EVENT_TYPE_NOT_FOUND = "Can not found event type(s)";
         public const string CARE_EVENT_NOTE_FOUND = "Can not found event(s)";
         public const string INVALID_CHAIN = "This chain is not verified";
@@ -52,5 +53,6 @@
         public const string PASSWORD_UPDATE_SUCCESS = "Your password is updated successfully. Please login again";
         public const string OUT_OF_STOCK = "Out of stock";
         public const string CAN_NOT_PROCESS_UNPAID_ORDER = "This order did not paid yet and you can't process it to the next step";
+        public const string TRANSACTION_NOT_FOUND = "Can not found transaction(s)";
     }
 }

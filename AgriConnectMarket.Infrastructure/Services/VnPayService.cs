@@ -8,6 +8,7 @@ using AgriConnectMarket.SharedKernel.Interfaces;
 using AgriConnectMarket.SharedKernel.Result;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using System.Text;
 
 namespace AgriConnectMarket.Infrastructure.Services
 {
@@ -24,19 +25,38 @@ namespace AgriConnectMarket.Infrastructure.Services
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<Result<CreatePaymentResponseDto>> CreatePaymentUrlAsync(Guid orderId, string clientIp = "127.0.0.1", CancellationToken ct = default)
+        public async Task<Result<CreatePaymentResponseDto>> CreatePaymentUrlAsync(IEnumerable<Guid> orderIds, string clientIp = "127.0.0.1", CancellationToken ct = default)
         {
-            var order = await _uow.OrderRepository.GetByIdAsync(orderId, ct);
-
-            if (order is null)
+            if (!orderIds.Any())
             {
-                return Result<CreatePaymentResponseDto>.Fail(MessageConstant.ORDER_NOT_FOUND);
+                return Result<CreatePaymentResponseDto>.Fail(MessageConstant.ORDER_ID_REQUIRED);
             }
 
-            // VNPay expects integer amount in smallest unit (VND * 100)
-            long amountInCents = (long)(order.TotalPrice * 100);
-
+            long amountInCents = 0;
             var txnRef = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+            var orderInfo = new StringBuilder();
+
+            var tx = Transaction.Create(txnRef, amountInCents / 100, _dateTimeProvider.UtcNow);
+            await _uow.TransactionRepository.AddAsync(tx, ct);
+            await _uow.SaveChangesAsync(ct);
+
+            foreach (var id in orderIds)
+            {
+                var order = await _uow.OrderRepository.GetByIdAsync(id, ct);
+
+                if (order is null)
+                {
+                    return Result<CreatePaymentResponseDto>.Fail($"{MessageConstant.ORDER_NOT_FOUND} with ID: {id}");
+                }
+
+                orderInfo.Append($"{order.OrderCode.ToString()}");
+                amountInCents = (long)(order.TotalPrice * 100);
+
+                order.TransactionId = tx.Id;
+
+                await _uow.OrderRepository.UpdateAsync(order, ct);
+                await _uow.SaveChangesAsync(ct);
+            }
 
             // Build parameters
             var vnpParams = new Dictionary<string, string>
@@ -47,7 +67,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 { "vnp_Amount", amountInCents.ToString() },
                 { "vnp_CurrCode", "VND" },
                 { "vnp_TxnRef", txnRef },
-                { "vnp_OrderInfo", order.OrderCode },
+                { "vnp_OrderInfo", orderInfo.ToString() },
                 { "vnp_OrderType", "other" },
                 { "vnp_Locale", _settings.Locale ?? "vn" },
                 { "vnp_ReturnUrl", _settings.ReturnUrl },
@@ -57,21 +77,6 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             // Build URL with secure hash
             var vnpUrl = VnPayHelper.BuildVnPayUrl(_settings.Url, _settings.HashSecret, vnpParams);
-
-            // Save transaction placeholder (so you can match it on return/ipn)
-            var tx = new Transaction
-            {
-                OrderId = order.Id,
-                TransactionRef = txnRef,
-                TransactionNo = order.OrderCode,
-                Amount = order.TotalPrice,
-                Status = TransactionStatusConst.PENDING,
-                BankCode = "",
-                CreatedAt = DateTime.UtcNow
-            };
-
-            await _uow.TransactionRepository.AddAsync(tx, ct);
-            await _uow.SaveChangesAsync(ct);
 
             var responseDto = new CreatePaymentResponseDto { PaymentUrl = vnpUrl };
 
@@ -91,11 +96,6 @@ namespace AgriConnectMarket.Infrastructure.Services
             dict.TryGetValue("vnp_BankCode", out var bankCode);
             dict.TryGetValue("vnp_OrderInfo", out var orderCode);
 
-            // find tx by txnRef (repo method not shown; add it)
-            // if success, mark order paid and update tx
-            // For demo, we'll assume we can find and mark paid
-            // TODO: implement GetTransactionByTxnRef in repository
-
             if (responseCode is null || bankCode is null || responseCode != "00")
             {
                 return Result<VnPayResponseDto>.Fail(MessageConstant.TRANSACTION_FAIL);
@@ -104,10 +104,16 @@ namespace AgriConnectMarket.Infrastructure.Services
             var tx = await _uow.TransactionRepository.GetTransactionByRef(txnRef!, true, ct);
 
             tx.UpdateTranasctionStatus(responseCode!, bankCode!);
-            tx.Order.UpdatePaymentStatus(txAmount: tx.Amount, txUpdatedAt: tx.UpdatedAt ?? _dateTimeProvider.UtcNow);
+            tx.UpdateBankCode(bankCode);
 
             await _uow.TransactionRepository.UpdateAsync(tx, ct);
-            await _uow.OrderRepository.UpdateAsync(tx.Order, ct);
+
+            foreach (var order in tx.Orders)
+            {
+                order.UpdatePaymentStatus(txAmount: tx.Amount, txUpdatedAt: tx.UpdatedAt ?? _dateTimeProvider.UtcNow);
+                await _uow.OrderRepository.UpdateAsync(order, ct);
+            }
+
             await _uow.SaveChangesAsync(ct);
 
             return Result<VnPayResponseDto>.Success(new VnPayResponseDto(responseCode, orderCode!));
