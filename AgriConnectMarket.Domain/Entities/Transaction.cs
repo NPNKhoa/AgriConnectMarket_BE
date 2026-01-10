@@ -11,6 +11,7 @@ namespace AgriConnectMarket.Domain.Entities
         public string BankCode { get; set; }
         public decimal Amount { get; set; }
         public string Status { get; set; }
+        public bool IsResolved { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public string? CreatedBy { get; set; }
@@ -49,6 +50,24 @@ namespace AgriConnectMarket.Domain.Entities
             Guard.AgainstNullOrEmpty(bankCode, nameof(bankCode));
 
             BankCode = bankCode;
+        }
+
+        public void UpdateAmount(decimal amount)
+        {
+            Guard.AgainstNull(amount, nameof(amount));
+            Guard.AgainstNegative(amount, nameof(amount));
+
+            Amount = amount;
+        }
+
+        public void ResolveTransaction()
+        {
+            if (this.Status.Equals(TransactionStatusConst.FAIL))
+            {
+                throw new InvalidOperationException(MessageConstant.CANNOT_RESOLVE_FAILED_TX);
+            }
+
+            this.IsResolved = true;
         }
     }
 }

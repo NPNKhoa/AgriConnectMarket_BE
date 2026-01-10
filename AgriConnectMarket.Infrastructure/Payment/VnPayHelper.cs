@@ -1,11 +1,57 @@
-﻿using System.Security.Cryptography;
+﻿using AgriConnectMarket.SharedKernel.Constants;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace AgriConnectMarket.Infrastructure.Payment
 {
     public static class VnPayHelper
     {
-        // Build VNPay URL from base url, secret and parameters
+        private static readonly Dictionary<string, string> _errors = new()
+        {
+            // ===== Common / Payment =====
+            ["00"] = "Transaction successful",
+            ["07"] = "Transaction successful but marked as suspicious",
+            ["09"] = "Card/Account is not registered for Internet Banking",
+            ["10"] = "Authentication failed more than allowed attempts",
+            ["11"] = "Payment timeout",
+            ["12"] = "Card/Account is locked",
+            ["13"] = "Incorrect OTP",
+            ["24"] = "Transaction cancelled by user",
+            ["51"] = "Insufficient account balance",
+            ["65"] = "Daily transaction limit exceeded",
+            ["75"] = "Bank system under maintenance",
+            ["79"] = "Payment password incorrect too many times",
+            ["99"] = "Unknown error",
+
+            // ===== Query / Refund / API =====
+            ["02"] = "Invalid merchant (check vnp_TmnCode)",
+            ["03"] = "Invalid data format",
+            ["04"] = "Full refund is not allowed after partial refund",
+            ["13R"] = "Only partial refund is allowed",
+            ["91"] = "Transaction not found",
+            ["93"] = "Invalid refund amount",
+            ["94"] = "Duplicate request within allowed time",
+            ["95"] = "Transaction failed at VNPay",
+            ["97"] = "Invalid signature",
+            ["98"] = "Timeout exception"
+        };
+
+        /// <summary>
+        /// Get VNPay error description by error code
+        /// </summary>
+        public static string GetDescription(string? code)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+                return MessageConstant.INVALID_VNPAY_ERR_CODE;
+
+            return _errors.TryGetValue(code, out var description)
+                ? description
+                : MessageConstant.UNKNOWN_ERROR;
+        }
+
+        /// <summary>
+        /// Build VNPay URL from base url, secret and parameters
+        /// </summary>
         public static string BuildVnPayUrl(string baseUrl, string hashSecret, IDictionary<string, string> input)
         {
             // 1. Sort input by key ascending
@@ -30,10 +76,6 @@ namespace AgriConnectMarket.Infrastructure.Payment
             }
 
             // 3. Compute HMAC SHA512 of the hash data string
-            //var dataBytes = Encoding.UTF8.GetBytes(queryBuilder.ToString());
-            //var keyBytes = Encoding.UTF8.GetBytes(hashSecret.ToString());
-            //using var hmac = new HMACSHA512(keyBytes);
-            //var secureHash = BitConverter.ToString(hmac.ComputeHash(dataBytes)).Replace("-", string.Empty);
             var secureHash = HmacSha512(hashSecret.ToString(), queryBuilder.ToString());
 
             // 4. Append vnp_SecureHash to query
@@ -43,7 +85,9 @@ namespace AgriConnectMarket.Infrastructure.Payment
             return $"{baseUrl}?{queryBuilder}";
         }
 
-        // Validate signature present in query params
+        /// <summary>
+        /// Validate signature present in query params
+        /// </summary>
         public static bool ValidateSignature(IDictionary<string, string> query, string hashSecret)
         {
             // VNPay returns vnp_SecureHash and vnp_SecureHashType

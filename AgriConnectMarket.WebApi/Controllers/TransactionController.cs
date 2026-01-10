@@ -20,5 +20,31 @@ namespace AgriConnectMarket.WebApi.Controllers
 
             return Ok(ApiResponse.SuccessResponse(result.Value));
         }
+
+        [HttpGet("{transactionId}")]
+        public async Task<IActionResult> GetTransactionById([FromRoute] Guid transactionId, CancellationToken ct)
+        {
+            var result = await _txService.GetByIdAsync(transactionId, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
+
+        [HttpPatch("{transactionId}/resolve")]
+        public async Task<IActionResult> ResolveTransaction([FromRoute] Guid transactionId, CancellationToken ct)
+        {
+            var result = await _txService.ResolveTransactionAsync(transactionId, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.Success);
+        }
     }
 }

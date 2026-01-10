@@ -38,7 +38,6 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             var tx = Transaction.Create(txnRef, amountInCents / 100, _dateTimeProvider.UtcNow);
             await _uow.TransactionRepository.AddAsync(tx, ct);
-            await _uow.SaveChangesAsync(ct);
 
             foreach (var id in orderIds)
             {
@@ -50,13 +49,15 @@ namespace AgriConnectMarket.Infrastructure.Services
                 }
 
                 orderInfo.Append($"{order.OrderCode.ToString()}");
-                amountInCents = (long)(order.TotalPrice * 100);
+                amountInCents += (long)(order.TotalPrice * 100);
 
                 order.TransactionId = tx.Id;
 
                 await _uow.OrderRepository.UpdateAsync(order, ct);
-                await _uow.SaveChangesAsync(ct);
             }
+
+            tx.UpdateAmount(amountInCents / 100);
+            await _uow.SaveChangesAsync(ct);
 
             // Build parameters
             var vnpParams = new Dictionary<string, string>
@@ -98,7 +99,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             if (responseCode is null || bankCode is null || responseCode != "00")
             {
-                return Result<VnPayResponseDto>.Fail(MessageConstant.TRANSACTION_FAIL);
+                return Result<VnPayResponseDto>.Fail(VnPayHelper.GetDescription(responseCode));
             }
 
             var tx = await _uow.TransactionRepository.GetTransactionByRef(txnRef!, true, ct);

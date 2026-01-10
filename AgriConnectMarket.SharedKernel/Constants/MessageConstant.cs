@@ -54,5 +54,7 @@
         public const string OUT_OF_STOCK = "Out of stock";
         public const string CAN_NOT_PROCESS_UNPAID_ORDER = "This order did not paid yet and you can't process it to the next step";
         public const string TRANSACTION_NOT_FOUND = "Can not found transaction(s)";
+        public const string INVALID_VNPAY_ERR_CODE = "Invalid error code";
+        public const string CANNOT_RESOLVE_FAILED_TX = "You can not resolve a failed transaction";
     }
 }
