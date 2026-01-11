@@ -22,7 +22,7 @@
         public const string ACCOUNT_VERIFIED = "Account verified!";
         public const string FARM_NOT_FOUND = "Can not found farm(s)";
         public const string FARM_BANNED = "Your farm was banned! Please contact administrator for more information!";
-        public const string BAN_FARM_SUCCESS = "Banned!";
+        public const string BAN_FARM_SUCCESS = "Farm Banned!";
         public const string SEASON_NOT_FOUND = "Can not found season(s)";
         public const string CLOSE_SEASON_SUCCESS = "Close season successfully";
         public const string ADDRESS_NOT_FOUND = "Can not found address(es)";
@@ -32,8 +32,10 @@
         public const string PRODUCT_CONFLICT = "This product already exist, please choose another one!";
         public const string FARM_MISSING_INFO_FOR_SELL = "This farm is missing requirement informations for selling. " +
             "Please ask the farmer provide them or they will not be able to sell their products";
+        public const string FARM_MISSING_CERT = "This farm have not uploaded certificate yet. This job can only be continue when the farmer uploads their certificate";
         public const string FARM_SELL_ALLOWING_SUCCESS = "This farm is allowed for selling products successfully!";
         public const string FARM_MARKED_MALL = "This farm is marked as a mall farm successfully!";
+        public const string FARM_BANNED_OR_DELETED = "This farm is marked as a mall farm successfully!";
         public const string BATCH_CODE_CONFLICT = "This batch code already exist, please choose another one!";
         public const string BATCH_NOT_FOUND = "Can not found batch(es)";
         public const string FARM_MISSING_PREFIX = "Please configure the prefix before creating a batch";

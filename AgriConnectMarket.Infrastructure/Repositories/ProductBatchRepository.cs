@@ -91,6 +91,7 @@ namespace AgriConnectMarket.Infrastructure.Repositories
             {
                 query = query.Include(b => b.Season)
                     .ThenInclude(s => s.Farm)
+                        .ThenInclude(f => f.Address)
                 .Include(b => b.Season)
                     .ThenInclude(s => s.Product)
                 .Include(b => b.ImageUrls);

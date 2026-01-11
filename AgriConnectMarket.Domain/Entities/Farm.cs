@@ -57,6 +57,8 @@ namespace AgriConnectMarket.Domain.Entities
             FarmerId = farmerId;
             IsDelete = false;
             IsBanned = false;
+            IsConfirmAsMall = false;
+            IsValidForSelling = false;
         }
 
         public void ToggleFarmBanned()
@@ -71,22 +73,25 @@ namespace AgriConnectMarket.Domain.Entities
                 || string.IsNullOrEmpty(this.Area)
                 || string.IsNullOrEmpty(this.Phone))
             {
-                throw new Exception(MessageConstant.FARM_MISSING_INFO_FOR_SELL);
+                throw new InvalidOperationException(MessageConstant.FARM_MISSING_INFO_FOR_SELL);
             }
 
             this.IsValidForSelling = true;
         }
 
-        public bool ConfirmMallFarm()
+        public void ConfirmMallFarm()
         {
             if (string.IsNullOrEmpty(this.CertificateUrl))
             {
-                return false;
+                throw new InvalidOperationException(MessageConstant.FARM_MISSING_CERT);
+            }
+
+            if (this.IsBanned || this.IsDelete)
+            {
+                throw new InvalidOperationException(MessageConstant.FARM_BANNED_OR_DELETED);
             }
 
             this.IsConfirmAsMall = true;
-
-            return true;
         }
 
         public void UpdateCertificateUrl(string url)
