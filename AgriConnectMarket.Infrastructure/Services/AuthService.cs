@@ -124,6 +124,11 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<LoginResultDto>.Fail(MessageConstant.WRONG_CREDENTIALS);
             }
 
+            if (existing.IsDeLeted == true || existing.IsActive == false)
+            {
+                return Result<LoginResultDto>.Fail(MessageConstant.BLOCKED_ACCOUNT);
+            }
+
             if (!VerifyPassword(dto.Password, existing.Password))
             {
                 return Result<LoginResultDto>.Fail(MessageConstant.WRONG_CREDENTIALS);

@@ -64,7 +64,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<IEnumerable<Order>>.Fail(MessageConstant.PROFILE_ID_NOT_FOUND);
             }
 
-            var orders = await _uow.OrderRepository.GetOrderByProfileIdAsync(profile.Id, true, true, false, ct);
+            var orders = await _uow.OrderRepository.GetPreOrderByProfileIdAsync(profile.Id, true, true, false, ct);
 
             if (!orders.Any())
             {
@@ -212,7 +212,6 @@ namespace AgriConnectMarket.Infrastructure.Services
                     ? null
                     : new TransactionDto(
                         order.Transaction.TransactionRef,
-                        order.Transaction.TransactionNo,
                         order.Transaction.BankCode,
                         order.Transaction.Amount,
                         order.Transaction.Status,
@@ -340,7 +339,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
         public async Task<Result<ProcessOrderResponseDto>> ProcessOrder(Guid orderId, CancellationToken ct = default)
         {
-            var order = await _uow.OrderRepository.GetByIdAsync(orderId, ct);
+            var order = await _uow.OrderRepository.GetByIdAsync(orderId, true, true, ct: ct);
 
             if (order is null)
             {
@@ -352,7 +351,9 @@ namespace AgriConnectMarket.Infrastructure.Services
             await _uow.OrderRepository.UpdateAsync(order, ct);
             await _uow.SaveChangesAsync(ct);
 
-            return Result<ProcessOrderResponseDto>.Success(new ProcessOrderResponseDto(orderId, order.OrderStatus));
+            var response = new ProcessOrderResponseDto(orderId, order.OrderStatus);
+
+            return Result<ProcessOrderResponseDto>.Success(response);
         }
 
         public async Task<Result<Guid>> ApprovePreOrder(Guid orderId, ApprovePreOrder dto, CancellationToken ct = default)
@@ -387,7 +388,7 @@ namespace AgriConnectMarket.Infrastructure.Services
                 IsHtml = true
             });
 
-            order.Approve(DateTime.UtcNow);
+            order.Approve(dto.expectedReleaseDate);
 
             await _uow.PreOrderRepository.UpdateAsync(order, ct);
             await _uow.SaveChangesAsync(ct);

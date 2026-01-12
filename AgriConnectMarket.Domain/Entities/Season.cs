@@ -47,5 +47,22 @@ namespace AgriConnectMarket.Domain.Entities
             this.FarmId = farmId;
             this.ProductId = productId;
         }
+
+        public void UpdateStatus(string newStatus)
+        {
+            Guard.AgainstInvalidEnumValue(typeof(SeasonStatusEnums), newStatus, nameof(newStatus));
+
+            this.Status = newStatus;
+
+            switch (newStatus)
+            {
+                case SeasonStatusEnums.CLOSED:
+                case SeasonStatusEnums.HARVESTED:
+                    this.EndDate = DateTime.UtcNow;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

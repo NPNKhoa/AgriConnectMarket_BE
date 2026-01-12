@@ -8,6 +8,8 @@
         public const string COMMON_DELETE_SUCCESS_MESSAGE = "Delete successfully!";
         public const string UNKNOWN_ERROR = "An unexpected error occured!";
         public const string EXISTING_USERNAME = "Username already exist";
+        public const string BLOCKED_ACCOUNT = "Your account is blocked, please contact the admin for more information!";
+        public const string BANNED_FARM = "Your farm is banner, please contact the admin for more information!";
         public const string LOGIN_SUCCESS = "Login success!";
         public const string EMAIL_NOT_FOUND = "This email is not registered yet";
         public const string PROFILE_NOT_FOUND = "Can not find the requested profile";
@@ -20,7 +22,7 @@
         public const string ACCOUNT_VERIFIED = "Account verified!";
         public const string FARM_NOT_FOUND = "Can not found farm(s)";
         public const string FARM_BANNED = "Your farm was banned! Please contact administrator for more information!";
-        public const string BAN_FARM_SUCCESS = "Banned!";
+        public const string BAN_FARM_SUCCESS = "Farm Banned!";
         public const string SEASON_NOT_FOUND = "Can not found season(s)";
         public const string CLOSE_SEASON_SUCCESS = "Close season successfully";
         public const string ADDRESS_NOT_FOUND = "Can not found address(es)";
@@ -30,8 +32,10 @@
         public const string PRODUCT_CONFLICT = "This product already exist, please choose another one!";
         public const string FARM_MISSING_INFO_FOR_SELL = "This farm is missing requirement informations for selling. " +
             "Please ask the farmer provide them or they will not be able to sell their products";
+        public const string FARM_MISSING_CERT = "This farm have not uploaded certificate yet. This job can only be continue when the farmer uploads their certificate";
         public const string FARM_SELL_ALLOWING_SUCCESS = "This farm is allowed for selling products successfully!";
         public const string FARM_MARKED_MALL = "This farm is marked as a mall farm successfully!";
+        public const string FARM_BANNED_OR_DELETED = "This farm is marked as a mall farm successfully!";
         public const string BATCH_CODE_CONFLICT = "This batch code already exist, please choose another one!";
         public const string BATCH_NOT_FOUND = "Can not found batch(es)";
         public const string FARM_MISSING_PREFIX = "Please configure the prefix before creating a batch";
@@ -40,6 +44,7 @@
         public const string CART_NOT_INIT = "This cart was not initialized yet. Please try again!";
         public const string CART_ITEM_NOT_FOUND = "Can not found this item";
         public const string ORDER_NOT_FOUND = "Can not found order(s)";
+        public const string ORDER_ID_REQUIRED = "Order ID(s) is required!";
         public const string EVENT_TYPE_NOT_FOUND = "Can not found event type(s)";
         public const string CARE_EVENT_NOTE_FOUND = "Can not found event(s)";
         public const string INVALID_CHAIN = "This chain is not verified";
@@ -50,5 +55,8 @@
         public const string PASSWORD_UPDATE_SUCCESS = "Your password is updated successfully. Please login again";
         public const string OUT_OF_STOCK = "Out of stock";
         public const string CAN_NOT_PROCESS_UNPAID_ORDER = "This order did not paid yet and you can't process it to the next step";
+        public const string TRANSACTION_NOT_FOUND = "Can not found transaction(s)";
+        public const string INVALID_VNPAY_ERR_CODE = "Invalid error code";
+        public const string CANNOT_RESOLVE_FAILED_TX = "You can not resolve a failed transaction";
     }
 }

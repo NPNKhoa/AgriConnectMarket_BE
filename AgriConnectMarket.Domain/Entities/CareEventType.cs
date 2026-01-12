@@ -6,6 +6,7 @@ namespace AgriConnectMarket.Domain.Entities
     {
         public string EventTypeName { get; set; }
         public string EventTypeDesc { get; set; }
+        public string? PayloadFields { get; set; }
 
         public ICollection<CareEvent> CareEvents { get; set; }
 
@@ -18,6 +19,14 @@ namespace AgriConnectMarket.Domain.Entities
         {
             EventTypeName = name;
             EventTypeDesc = description;
+        }
+
+        public CareEventType(Guid id, string name, string description, string fields)
+        {
+            Id = id;
+            EventTypeName = name;
+            EventTypeDesc = description;
+            PayloadFields = fields;
         }
 
         public static CareEventType Create(string name, string description)

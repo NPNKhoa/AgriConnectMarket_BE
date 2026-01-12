@@ -99,6 +99,34 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<UpdateSeasonResponseDto>.Success(response);
         }
 
+        public async Task<Result<UpdateSeasonResponseDto>> UpdateSeasonStatusAsync(Guid seasonId, UpdateSeasonStatusDto dto, CancellationToken ct = default)
+        {
+            Guard.AgainstNull(seasonId, nameof(seasonId));
+
+            var season = await _uow.SeasonRepository.GetByIdAsync(seasonId, ct);
+
+            if (season == null)
+            {
+                return Result<UpdateSeasonResponseDto>.Fail(MessageConstant.SEASON_NOT_FOUND);
+            }
+
+            season.UpdateStatus(dto.newStatus);
+
+            await _uow.SeasonRepository.UpdateAsync(season, ct);
+            await _uow.SaveChangesAsync(ct);
+
+            var response = new UpdateSeasonResponseDto()
+            {
+                SeasonName = season.SeasonName,
+                SeasonDesc = season.SeasonDesc,
+                Status = season.Status,
+                StartDate = season.StartDate,
+                EndDate = season.EndDate
+            };
+
+            return Result<UpdateSeasonResponseDto>.Success(response);
+        }
+
         public async Task<Result<Guid>> DeleteAsync(Guid seasonId, CancellationToken ct = default)
         {
             Guard.AgainstNull(seasonId, nameof(seasonId));

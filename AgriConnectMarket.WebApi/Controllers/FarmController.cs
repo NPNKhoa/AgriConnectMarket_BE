@@ -136,6 +136,17 @@ namespace AgriConnectMarket.WebApi.Controllers
             return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_UPDATE_SUCCESS_MESSAGE));
         }
 
+        [HttpPatch("{farmId}/ban")]
+        public async Task<IActionResult> BanFarm([FromRoute] Guid farmId, CancellationToken ct)
+        {
+            var result = await _farmService.BanFarm(farmId, ct);
+
+            if (!result.IsSuccess)
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+
+            return Ok(ApiResponse.SuccessResponse(result.Value, MessageConstant.COMMON_UPDATE_SUCCESS_MESSAGE));
+        }
+
         [HttpDelete("{farmId}")]
         public async Task<IActionResult> DeleteFarm([FromRoute] Guid farmId, CancellationToken ct)
         {

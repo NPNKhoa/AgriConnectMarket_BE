@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AgriConnectMarket.Application.DTOs.ResponseDtos
+﻿namespace AgriConnectMarket.Application.DTOs.ResponseDtos
 {
-    public class ProcessOrderResponseDto(Guid orderId, string newStatus);
+    public record ProcessOrderResponseDto(Guid orderId, string newStatus);
 }
