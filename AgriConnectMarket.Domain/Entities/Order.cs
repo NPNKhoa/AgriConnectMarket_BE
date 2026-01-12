@@ -104,10 +104,12 @@ namespace AgriConnectMarket.Domain.Entities
 
         public void UpdatePaymentStatus(decimal txAmount, DateTime txUpdatedAt)
         {
-            if (txAmount == TotalPrice)
-            {
-                UpdatePaymentStatus(PaymentStatusConst.PAID, txUpdatedAt);
-            }
+            //if (txAmount == TotalPrice)
+            //{
+            //    UpdatePaymentStatus(PaymentStatusConst.PAID, txUpdatedAt);
+            //}
+
+            UpdatePaymentStatus(PaymentStatusConst.PAID, txUpdatedAt); // Refactor later
         }
 
         public void ProcessOrder()

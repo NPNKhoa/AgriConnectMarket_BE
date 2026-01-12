@@ -28,9 +28,9 @@ namespace AgriConnectMarket.WebApi.Controllers
         {
             // Querystring contains vnp_* parameters
             var result = await _VNPayService.HandleReturnAsync(Request.Query);
-            const string clientPayementResultUrl = "http://localhost:5173/payment-result";
+            string clientPayementResultUrl = result?.Value?.returnUrl ?? "http://192.168.1.231:5173/payment-result";
 
-            if (!result.IsSuccess)
+            if (result is null || !result.IsSuccess)
             {
                 return Redirect($"{clientPayementResultUrl}?errorMessage={result.Error}");
             }

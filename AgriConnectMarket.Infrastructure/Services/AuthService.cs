@@ -129,21 +129,6 @@ namespace AgriConnectMarket.Infrastructure.Services
                 return Result<LoginResultDto>.Fail(MessageConstant.BLOCKED_ACCOUNT);
             }
 
-            if (existing.Role == ROLE.FARMER)
-            {
-                var farm = await _uow.FarmRepository.GetFarmByAccount(existing.Id);
-
-                if (farm is null)
-                {
-                    return Result<LoginResultDto>.Fail(MessageConstant.FARM_NOT_FOUND);
-                }
-
-                if (farm.IsDelete || farm.IsBanned)
-                {
-                    return Result<LoginResultDto>.Fail(MessageConstant.BANNED_FARM);
-                }
-            }
-
             if (!VerifyPassword(dto.Password, existing.Password))
             {
                 return Result<LoginResultDto>.Fail(MessageConstant.WRONG_CREDENTIALS);

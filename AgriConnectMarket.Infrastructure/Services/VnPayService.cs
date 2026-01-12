@@ -97,6 +97,8 @@ namespace AgriConnectMarket.Infrastructure.Services
             dict.TryGetValue("vnp_BankCode", out var bankCode);
             dict.TryGetValue("vnp_OrderInfo", out var orderCode);
 
+            string returnUrl = _settings.ClientBaseResultUrl;
+
             if (responseCode is null || bankCode is null || responseCode != "00")
             {
                 return Result<VnPayResponseDto>.Fail(VnPayHelper.GetDescription(responseCode));
@@ -117,7 +119,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             await _uow.SaveChangesAsync(ct);
 
-            return Result<VnPayResponseDto>.Success(new VnPayResponseDto(responseCode, orderCode!));
+            return Result<VnPayResponseDto>.Success(new VnPayResponseDto(responseCode, orderCode!, returnUrl!));
         }
 
         public async Task<bool> HandleIpnAsync(IQueryCollection query)

@@ -8,7 +8,6 @@ using AgriConnectMarket.SharedKernel.Constants;
 using AgriConnectMarket.SharedKernel.Interfaces;
 using AgriConnectMarket.SharedKernel.Result;
 using AgriConnectMarket.SharedKernel.Specifications;
-using Microsoft.Extensions.FileSystemGlobbing;
 using System.Data;
 
 namespace AgriConnectMarket.Infrastructure.Services
@@ -276,6 +275,41 @@ namespace AgriConnectMarket.Infrastructure.Services
             await _uow.SaveChangesAsync(ct);
 
             return Result<ProductBatch>.Success(entity);
+        }
+
+        public async Task<Result<IEnumerable<ProductBatch>>> GetRecommendedForUserAsync(Guid userId, CancellationToken ct)
+        {
+            var profile = await _uow.ProfileRepository.GetByIdAsync(userId, ct);
+
+            if (profile is null)
+            {
+                return Result<IEnumerable<ProductBatch>>.Success([]);
+            }
+
+            var orders = await _uow.OrderRepository.GetOrderByProfileIdAsync(profile.Id, true, false, false, ct);
+
+            if (!orders.Any())
+            {
+                return Result<IEnumerable<ProductBatch>>.Success([]);
+            }
+
+            var batches = await _uow.ProductBatchRepository.ListAllAsync(ct);
+
+            var group = batches
+                .Where(b => b.OrderItems.Any(i => i.Order.CustomerId == profile.Id))
+                .GroupBy(b => new { b.Season.FarmId, b.Id })
+                .Select(g => new { key = g.Key, count = g.Count() })
+                .OrderByDescending(kv => kv.count)
+                .ToList();
+
+            IEnumerable<ProductBatch> res = new List<ProductBatch>();
+
+            foreach (var g in group)
+            {
+                res.Append(batches.FirstOrDefault(b => b.Id == g.key.Id));
+            }
+
+            return Result<IEnumerable<ProductBatch>>.Success(res);
         }
     }
 }
