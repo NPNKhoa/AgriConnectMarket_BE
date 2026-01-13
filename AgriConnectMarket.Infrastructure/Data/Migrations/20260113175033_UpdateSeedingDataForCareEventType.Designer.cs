@@ -4,6 +4,7 @@ using AgriConnectMarket.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AgriConnectMarket.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260113175033_UpdateSeedingDataForCareEventType")]
+    partial class UpdateSeedingDataForCareEventType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,77 +197,77 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3c5e397b-7571-4750-bf5e-3e6386bcc164"),
+                            Id = new Guid("5c8929ed-9d25-4645-a310-b848ad434907"),
                             EventTypeDesc = "Prepare the soil before planting.",
                             EventTypeName = "Soil preparation",
                             PayloadFields = "[\"Method\",\"Equipment used\",\"Tillage depth (cm)\",\"Number of passes\",\"Soil amendment (type)\",\"Soil amendment (amount)\",\"Fuel consumed\",\"Notes\"]"
                         },
                         new
                         {
-                            Id = new Guid("65ba39c6-510c-4f10-b2bd-834363690adc"),
+                            Id = new Guid("f3e0247b-9a1b-4ab6-8326-23fcbef76715"),
                             EventTypeDesc = "Analyze soil samples and record results.",
                             EventTypeName = "Soil testing",
                             PayloadFields = "[\"Sampling location\",\"Laboratory\",\"Parameters tested\",\"Results\",\"Recommendations\"]"
                         },
                         new
                         {
-                            Id = new Guid("da780ddc-ce92-4556-9ab5-029d3c2bbb59"),
+                            Id = new Guid("980fbe6f-7f2f-42f1-b0da-9ab67cd4dcd9"),
                             EventTypeDesc = "Record the planting or transplanting process.",
                             EventTypeName = "Planting / transplanting",
                             PayloadFields = "[\"Variety / seed lot\",\"Supplier\",\"Spacing / density (plant/cm)\",\"Planting method\",\"Germination rate (%)\",\"Notes\"]"
                         },
                         new
                         {
-                            Id = new Guid("d1ba00f4-86c2-4c1f-9db3-0c58df90d247"),
+                            Id = new Guid("f7c4c500-aa8b-41e2-8125-ce1e4b5eec56"),
                             EventTypeDesc = "Provide water to crops.",
                             EventTypeName = "Irrigation",
                             PayloadFields = "[\"Irrigation method\",\"Duration (min)\",\"Water volume (l)\",\"Water source\",\"Water treatment\",\"Weather notes\"]"
                         },
                         new
                         {
-                            Id = new Guid("da76b141-29cb-4123-80dc-ab62c5599e63"),
+                            Id = new Guid("75890bb2-3535-4d2e-b14f-17c20c1f954e"),
                             EventTypeDesc = "Provide nutrients to the crop.",
                             EventTypeName = "Fertilization",
                             PayloadFields = "[\"Product name\",\"Formula\",\"Type (organic/synthetic)\",\"Rate\",\"Application method\",\"Withholding period\",\"Supplier\",\"Notes\"]"
                         },
                         new
                         {
-                            Id = new Guid("a7746933-711b-44df-8fd9-bf73342a1966"),
+                            Id = new Guid("e8f85c7e-34a6-4ecc-8045-709850b33925"),
                             EventTypeDesc = "Manage pests or diseases using biological or chemical methods.",
                             EventTypeName = "Pest and disease control",
                             PayloadFields = "[\"Target pest/disease\",\"Product name\",\"Active ingredient\",\"Rate (%)\",\"PHI (pre-harvest interval) - (days)\",\"REI (re-entry interval) - (days)\",\"Application equipment\",\"Weather during application\",\"Notes\"]"
                         },
                         new
                         {
-                            Id = new Guid("51954882-48ef-4dec-bcd6-bbf48e40cc31"),
+                            Id = new Guid("520809b7-5def-42b8-8c8f-d8a997b8f524"),
                             EventTypeDesc = "Remove weeds to reduce competition.",
                             EventTypeName = "Weeding",
                             PayloadFields = "[\"Method\",\"Area treated (ha)\",\"Labor\",\"Weed pressure (%)\",\"Notes\"]"
                         },
                         new
                         {
-                            Id = new Guid("442cf1cc-0903-440e-8a2a-cbd04e78c384"),
+                            Id = new Guid("c503b93a-176e-4104-b788-17d31ddb4af2"),
                             EventTypeDesc = "Adjust canopy, branches, or fruits to optimize growth.",
                             EventTypeName = "Pruning / training",
                             PayloadFields = "[\"Operation type\",\"Purpose\",\"Area / number of plants\",\"Waste handling\",\"Notes\"]"
                         },
                         new
                         {
-                            Id = new Guid("2426655e-248f-413e-bbb5-f95a16a48fa3"),
+                            Id = new Guid("126e6b2c-4cc1-4671-bf2b-420c51c19f48"),
                             EventTypeDesc = "Record plant growth and identify risks early.",
                             EventTypeName = "Growth monitoring",
                             PayloadFields = "[\"Observations\",\"Pest or disease signs\",\"Photos\",\"Recommendations\",\"Follow-up tasks\"]"
                         },
                         new
                         {
-                            Id = new Guid("61754173-efba-4aeb-91fa-409b0d1535e4"),
+                            Id = new Guid("4ebe9eb3-2b33-4548-b4a9-34fb3cdc3bb1"),
                             EventTypeDesc = "Support or record pollination activities.",
                             EventTypeName = "Pollination",
                             PayloadFields = "[\"Pollination method\",\"Hive placement\",\"Bee density (%)\",\"Estimated fruit set (%)\",\"Notes\"]"
                         },
                         new
                         {
-                            Id = new Guid("1e25268f-5be0-4cc7-86bd-0e19e9801506"),
+                            Id = new Guid("17a7f52b-e4eb-4249-b2eb-53a7eb797ae5"),
                             EventTypeDesc = "Record harvest timing and quantities.",
                             EventTypeName = "Harvest",
                             PayloadFields = "[\"Time (hour)\",\"Quantity (kg)\",\"Grade\",\"Worker team\",\"Bath code\",\"Destination\",\"Notes\"]"
@@ -669,9 +672,6 @@ namespace AgriConnectMarket.Infrastructure.Data.Migrations
 
                     b.Property<DateTime?>("HarvestDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsSelling")
-                        .HasColumnType("bit");
 
                     b.Property<DateTime>("PlantingDate")
                         .HasColumnType("datetime2");

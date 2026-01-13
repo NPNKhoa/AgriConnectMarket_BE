@@ -44,7 +44,7 @@ namespace AgriConnectMarket.WebApi.Controllers
                 return BadRequest(ApiResponse.FailResponse(result.Error));
             }
 
-            return Ok(ApiResponse.Success);
+            return Ok(ApiResponse.SuccessResponse(result.Value));
         }
     }
 }

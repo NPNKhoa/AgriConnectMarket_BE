@@ -220,5 +220,18 @@ namespace AgriConnectMarket.WebApi.Controllers
 
             return Ok(ApiResponse.SuccessResponse(result.Value));
         }
+
+        [HttpPatch("{batchId}/stop-selling")]
+        public async Task<IActionResult> StopSellingBatch([FromRoute] Guid batchId, CancellationToken ct)
+        {
+            var result = await _batchService.StopSellingAsync(batchId, ct);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse.FailResponse(result.Error));
+            }
+
+            return Ok(ApiResponse.SuccessResponse(result.Value));
+        }
     }
 }

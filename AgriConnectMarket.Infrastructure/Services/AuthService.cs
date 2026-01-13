@@ -226,6 +226,7 @@ namespace AgriConnectMarket.Infrastructure.Services
 
             account.ToggleAccountBannedStatus();
 
+            await _uow.AuthenRepository.UpdateAsync(account, ct);
             await _uow.SaveChangesAsync(ct);
 
             return Result<Account>.Success(account);

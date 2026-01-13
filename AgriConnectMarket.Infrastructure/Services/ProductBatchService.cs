@@ -126,6 +126,23 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<ProductBatch>.Success(batch);
         }
 
+        public async Task<Result<ProductBatch>> StopSellingAsync(Guid batchId, CancellationToken ct = default)
+        {
+            var batch = await _uow.ProductBatchRepository.GetByIdAsync(batchId, true, true, ct);
+
+            if (batch is null)
+            {
+                return Result<ProductBatch>.Fail(MessageConstant.BATCH_NOT_FOUND);
+            }
+
+            batch.StopSelling();
+
+            await _uow.ProductBatchRepository.UpdateAsync(batch, ct);
+            await _uow.SaveChangesAsync(ct);
+
+            return Result<ProductBatch>.Success(batch);
+        }
+
         public async Task<Result<IEnumerable<ProductBatch>>> GetBatchByFarmIdAsync(Guid farmId, CancellationToken ct = default)
         {
             var batch = await _uow.ProductBatchRepository.GetByFarmAsync(farmId, true, ct);

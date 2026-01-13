@@ -13,28 +13,28 @@ namespace AgriConnectMarket.Infrastructure.Data
                     Guid.NewGuid(),
                     "Soil preparation",
                     "Prepare the soil before planting.",
-                    "[\"Method\",\"Equipment used\",\"Tillage depth\",\"Number of passes\",\"Soil amendment (type)\",\"Soil amendment (amount)\",\"Fuel consumed\",\"Notes\"]"
+                    "[\"Method\",\"Equipment used\",\"Tillage depth (cm)\",\"Number of passes\",\"Soil amendment (type)\",\"Soil amendment (amount)\",\"Fuel consumed\",\"Notes\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
                     "Soil testing",
                     "Analyze soil samples and record results.",
-                    "[\"Sampling location\",\"Laboratory\",\"Parameters tested\",\"Results\",\"Recommendations\",\"Attachments\"]"
+                    "[\"Sampling location\",\"Laboratory\",\"Parameters tested\",\"Results\",\"Recommendations\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
                     "Planting / transplanting",
                     "Record the planting or transplanting process.",
-                    "[\"Variety / seed lot\",\"Supplier\",\"Spacing / density\",\"Planting method\",\"Germination rate\",\"Notes\"]"
+                    "[\"Variety / seed lot\",\"Supplier\",\"Spacing / density (plant/cm)\",\"Planting method\",\"Germination rate (%)\",\"Notes\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
                     "Irrigation",
                     "Provide water to crops.",
-                    "[\"Irrigation method\",\"Duration\",\"Water volume\",\"Water source\",\"Water treatment\",\"Weather notes\"]"
+                    "[\"Irrigation method\",\"Duration (min)\",\"Water volume (l)\",\"Water source\",\"Water treatment\",\"Weather notes\"]"
                 ),
                 new CareEventType
                 (
@@ -48,14 +48,14 @@ namespace AgriConnectMarket.Infrastructure.Data
                     Guid.NewGuid(),
                     "Pest and disease control",
                     "Manage pests or diseases using biological or chemical methods.",
-                    "[\"Target pest/disease\",\"Product name\",\"Active ingredient\",\"Rate\",\"Dilution\",\"PHI (pre-harvest interval)\",\"REI (re-entry interval)\",\"Application equipment\",\"Weather during application\",\"PPE confirmation\",\"Notes\"]"
+                    "[\"Target pest/disease\",\"Product name\",\"Active ingredient\",\"Rate (%)\",\"PHI (pre-harvest interval) - (days)\",\"REI (re-entry interval) - (days)\",\"Application equipment\",\"Weather during application\",\"Notes\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
                     "Weeding",
                     "Remove weeds to reduce competition.",
-                    "[\"Method\",\"Area treated\",\"Labor\",\"Weed pressure\",\"Notes\"]"
+                    "[\"Method\",\"Area treated (ha)\",\"Labor\",\"Weed pressure (%)\",\"Notes\"]"
                 ),
                 new CareEventType
                 (
@@ -69,21 +69,21 @@ namespace AgriConnectMarket.Infrastructure.Data
                     Guid.NewGuid(),
                     "Growth monitoring",
                     "Record plant growth and identify risks early.",
-                    "[\"Observations\",\"Growth/height\",\"Pest or disease signs\",\"Photos\",\"Recommendations\",\"Follow-up tasks\"]"
+                    "[\"Observations\",\"Pest or disease signs\",\"Photos\",\"Recommendations\",\"Follow-up tasks\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
                     "Pollination",
                     "Support or record pollination activities.",
-                    "[\"Pollination method\",\"Hive placement\",\"Bee density\",\"Estimated fruit set\",\"Notes\"]"
+                    "[\"Pollination method\",\"Hive placement\",\"Bee density (%)\",\"Estimated fruit set (%)\",\"Notes\"]"
                 ),
                 new CareEventType
                 (
                     Guid.NewGuid(),
                     "Harvest",
                     "Record harvest timing and quantities.",
-                    "[\"Time\",\"Quantity\",\"Grade\",\"Worker team\",\"Post-harvest lot\",\"Destination\",\"Notes\"]"
+                    "[\"Time (hour)\",\"Quantity (kg)\",\"Grade\",\"Worker team\",\"Bath code\",\"Destination\",\"Notes\"]"
                 )
             );
         }

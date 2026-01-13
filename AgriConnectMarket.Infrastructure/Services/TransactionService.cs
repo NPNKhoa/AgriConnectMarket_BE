@@ -31,13 +31,13 @@ namespace AgriConnectMarket.Infrastructure.Services
             return Result<Transaction>.Success(tx);
         }
 
-        public async Task<Result> ResolveTransactionAsync(Guid txId, CancellationToken ct = default)
+        public async Task<Result<Guid>> ResolveTransactionAsync(Guid txId, CancellationToken ct = default)
         {
             var tx = await _uow.TransactionRepository.GetByIdAsync(txId, ct);
 
             if (tx is null)
             {
-                return Result.Fail(MessageConstant.TRANSACTION_NOT_FOUND);
+                return Result<Guid>.Fail(MessageConstant.TRANSACTION_NOT_FOUND);
             }
 
             tx.ResolveTransaction();
@@ -45,7 +45,7 @@ namespace AgriConnectMarket.Infrastructure.Services
             await _uow.TransactionRepository.UpdateAsync(tx, ct);
             await _uow.SaveChangesAsync(ct);
 
-            return Result.Success();
+            return Result<Guid>.Success(tx.Id);
         }
     }
 }
