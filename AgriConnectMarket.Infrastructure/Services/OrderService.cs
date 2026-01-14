@@ -155,7 +155,7 @@ namespace AgriConnectMarket.Infrastructure.Services
         public async Task<Result<CreateOrderResponseDto>> CreateOrder(CreateOrderDto dto, CancellationToken ct = default)
         {
             // 1. Load customer
-            var customer = await _uow.ProfileRepository.GetByIdAsync(dto.CustomerId, ct);
+            var customer = await _uow.ProfileRepository.GetByIdAsync(dto.CustomerId, includeCart: true, ct);
             if (customer is null)
                 return Result<CreateOrderResponseDto>.Fail(MessageConstant.PROFILE_NOT_FOUND);
 
@@ -175,6 +175,8 @@ namespace AgriConnectMarket.Infrastructure.Services
                 dto.ShippingFee
             );
 
+            var cart = customer.Cart;
+
             // 4. Add all items
             foreach (var item in dto.OrderItems)
             {
@@ -183,10 +185,12 @@ namespace AgriConnectMarket.Infrastructure.Services
                     return Result<CreateOrderResponseDto>.Fail(MessageConstant.BATCH_NOT_FOUND);
 
                 order.AddItem(batch, item.Quantity);
+                cart.DeleteFromCart(item.BatchId);
             }
 
             // 5. Save
             await _uow.OrderRepository.AddAsync(order, ct);
+            await _uow.CartRepository.UpdateAsync(cart, ct);
             await _uow.SaveChangesAsync(ct);
 
             var newOrder = await _uow.OrderRepository.GetByIdAsync(order.Id, true, false, true, ct);

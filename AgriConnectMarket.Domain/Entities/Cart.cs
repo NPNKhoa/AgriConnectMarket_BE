@@ -60,6 +60,16 @@ namespace AgriConnectMarket.Domain.Entities
             ReCalculateTotalPrice();
         }
 
+        public void DeleteFromCart(Guid batchId)
+        {
+            Guard.AgainstNull(batchId, nameof(batchId));
+
+            var removingIndex = _cartItems.FindIndex(item => item.BatchId.Equals(batchId));
+            _cartItems.RemoveAt(removingIndex);
+
+            ReCalculateTotalPrice();
+        }
+
         public void DeleteAllFromCart()
         {
             _cartItems.Clear();
