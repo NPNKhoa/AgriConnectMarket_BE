@@ -16,9 +16,9 @@ namespace AgriConnectMarket.Infrastructure.Services
             return sb.ToString();
         }
 
-        public string BuildCareEventCanonical(string batchId, string eventKey, string dataJson, string occuredAt, string previousHash)
+        public string BuildCareEventCanonical(string batchId, string eventKey, string dataJson, string previousHash)
         {
-            return $"{batchId}|{eventKey}|{dataJson}|{occuredAt}|{previousHash}";
+            return $"{batchId}|{eventKey}|{dataJson}|{previousHash}";
         }
     }
 }

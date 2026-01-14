@@ -38,7 +38,6 @@ namespace AgriConnectMarket.Infrastructure.Services
                 dto.BatchId.ToString(),
                 eventType.EventTypeName,
                 payloadJson,
-                occurredAt.ToString("o"),
                 lastBlock is not null ? lastBlock.Hash : FIRST_HASH
             );
 
@@ -80,7 +79,6 @@ namespace AgriConnectMarket.Infrastructure.Services
                     batchId.ToString(),
                     e.EventType.EventTypeName,
                     e.Payload,
-                    DateTime.SpecifyKind(e.OccurredAt, DateTimeKind.Utc).ToString("o"),
                     prevHash
                 );
 
@@ -134,7 +132,6 @@ namespace AgriConnectMarket.Infrastructure.Services
                 var canonical = _hasher.BuildCareEventCanonical(
                     batchId.ToString(),
                     e.EventType.EventTypeName,
-                    e.OccurredAt.ToString("o"),
                     e.Payload,
                     prevHash
                 );

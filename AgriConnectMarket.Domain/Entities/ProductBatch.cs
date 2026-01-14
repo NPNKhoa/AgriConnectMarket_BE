@@ -15,6 +15,7 @@ namespace AgriConnectMarket.Domain.Entities
         public string? VerificationQr { get; set; }
         public DateTime PlantingDate { get; set; }
         public DateTime? HarvestDate { get; set; }
+        public bool IsSelling { get; set; } = false;
 
         // Navigation
         public Guid SeasonId { get; set; }
@@ -47,6 +48,7 @@ namespace AgriConnectMarket.Domain.Entities
             VerificationQr = null;
             HarvestDate = null;
             Price = 0;
+            IsSelling = false;
         }
 
         public static ProductBatch Create(Guid seasonId, decimal totalYield, DateTime plantingDate, string units = "kg")
@@ -81,6 +83,13 @@ namespace AgriConnectMarket.Domain.Entities
 
             this.AvailableQuantity = availableQuantity;
             this.Price = price;
+        }
+
+        public void StopSelling()
+        {
+            this.IsSelling = false;
+            this.Price = 0;
+            this.AvailableQuantity = 0;
         }
 
         public void UpdateInventory(decimal soldQuantity)

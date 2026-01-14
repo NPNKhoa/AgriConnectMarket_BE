@@ -56,7 +56,7 @@ namespace AgriConnectMarket.Infrastructure.Repositories
 
             if (includeCart)
             {
-                query = query.Include(u => u.Cart);
+                query = query.Include(u => u.Cart).ThenInclude(c => c.CartItems);
             }
 
             return await query.FirstOrDefaultAsync(ct);
