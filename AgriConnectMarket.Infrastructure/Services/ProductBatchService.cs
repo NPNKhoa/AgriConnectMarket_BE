@@ -12,7 +12,7 @@ using System.Data;
 
 namespace AgriConnectMarket.Infrastructure.Services
 {
-    public class ProductBatchService(IUnitOfWork _uow, IBatchCodeGenerator _codeGenerator, IDateTimeProvider _dateTimeProvider, IQrCodeGenerator _qrCodeGenerator)
+    public class ProductBatchService(IUnitOfWork _uow, IBatchCodeGenerator _codeGenerator, IDateTimeProvider _dateTimeProvider, IQrCodeGenerator _qrCodeGenerator, CareEventService _careEventService)
     {
         public async Task<Result<IEnumerable<ProductBatchResponseDto>>> GetAllBatchesAsync(CancellationToken ct = default)
         {

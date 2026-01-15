@@ -65,7 +65,8 @@ namespace AgriConnectMarket.Infrastructure.Services
                                 Units = batch.Units,
                                 Quantity = i.Quantity,
                                 IsOutOfStock = batch.AvailableQuantity - i.Quantity < 0,
-                                ItemPrice = i.ItemPrice
+                                ItemPrice = i.ItemPrice,
+                                IsSelling = batch.IsSelling
                             };
                         }).ToList()
                     };

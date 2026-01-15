@@ -77,14 +77,14 @@ namespace AgriConnectMarket.Infrastructure.Data
                     "Pollination",
                     "Support or record pollination activities.",
                     "[\"Pollination method\",\"Hive placement\",\"Bee density (%)\",\"Estimated fruit set (%)\",\"Notes\"]"
-                ),
-                new CareEventType
-                (
-                    Guid.NewGuid(),
-                    "Harvest",
-                    "Record harvest timing and quantities.",
-                    "[\"Time (hour)\",\"Quantity (kg)\",\"Grade\",\"Worker team\",\"Bath code\",\"Destination\",\"Notes\"]"
                 )
+            //new CareEventType
+            //(
+            //    Guid.NewGuid(),
+            //    "Harvest",
+            //    "Record harvest timing and quantities.",
+            //    "[\"Time (hour)\",\"Quantity (kg)\",\"Bath code\",\"Notes\"]"
+            //)
             );
         }
 
