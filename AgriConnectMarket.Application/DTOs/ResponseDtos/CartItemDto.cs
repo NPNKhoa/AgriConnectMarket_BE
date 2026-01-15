@@ -15,5 +15,6 @@
         public string Units { get; set; }
         public decimal ItemPrice { get; set; }
         public string SeasonStatus { get; set; }
+        public bool? IsSelling { get; set; } = true;
     }
 }
